@@ -412,7 +412,11 @@ function addSpells (data) {
 		if (!spell.damageInflict) spell.damageInflict = [];
 		spell._fMeta = getMetaFilterObj(spell);
 		spell._fClasses = spell.classes.fromClassList.map(c => getClassFilterStr(c));
-		spell._fSubclasses = spell.classes.fromSubclass ? spell.classes.fromSubclass.map(c => getClassFilterStr(c.subclass)) : [];
+		const scParents = [];
+		spell._fSubclasses = spell.classes.fromSubclass ? spell.classes.fromSubclass.map(c => {
+			scParents.push(getClassFilterStr(c.class));
+			return getClassFilterStr(c.subclass);
+		}) : [];
 		spell._fTimeType = spell.time.map(t => t.unit);
 		spell._fRangeType = getRangeType(spell.range);
 
@@ -432,8 +436,12 @@ function addSpells (data) {
 			</li>`;
 
 		// populate filters
-		spell._fClasses.forEach(c => classFilter.addIfAbsent(c));
-		spell._fSubclasses.forEach(sc => subclassFilter.addIfAbsent(sc));
+		spell._fClasses.forEach(c => classFilter.addIfAbsent(new FilterItem(c, (txt, val, data) => {
+			const it = subclassFilter.items
+			debugger
+		})));
+		spell._fSubclasses.forEach((sc, i) => subclassFilter.addIfAbsent(new FilterItem(sc, null, { parent: scParents[i] })));
+
 	}
 
 	let lastSearch = null;

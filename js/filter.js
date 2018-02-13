@@ -294,6 +294,7 @@ class FilterBox {
 				for (const item of filter.items) {
 					const iText = item instanceof FilterItem ? item.item : item;
 					const iChangeFn = item instanceof FilterItem ? item.changeFn : null;
+					const iData = item instanceof FilterItem ? item.data : null;
 
 					const $pill = $(`<div class="filter-pill"/>`);
 					const $miniPill = $(`<div class="mini-pill"/>`);
@@ -310,31 +311,31 @@ class FilterBox {
 					$miniPill.on(EVNT_CLICK, function () {
 						$pill.attr("state", FilterBox._PILL_STATES[0]);
 						$miniPill.attr("state", FilterBox._PILL_STATES[0]);
-						handlePillChange(iText, iChangeFn, FilterBox._PILL_STATES[0]);
+						handlePillChange(iText, iChangeFn, iData, FilterBox._PILL_STATES[0]);
 						self._fireValChangeEvent();
 					});
 
 					$pill.on(EVNT_CLICK, function () {
 						cycleState($pill, $miniPill, true);
-						handlePillChange(iText, iChangeFn, $pill.attr("state"));
+						handlePillChange(iText, iChangeFn, iData, $pill.attr("state"));
 					});
 
 					$pill.on("contextmenu", function (e) {
 						e.preventDefault();
 						cycleState($pill, $miniPill, false);
-						handlePillChange(iText, iChangeFn, $pill.attr("state"));
+						handlePillChange(iText, iChangeFn, iData, $pill.attr("state"));
 					});
 
 					// bind getters and resetters
 					$pill.data(
 						"setter",
 						function (toVal) {
-							_setter($pill, $miniPill, toVal, iText, iChangeFn, false);
+							_setter($pill, $miniPill, toVal, iText, iChangeFn, iData, false);
 						}
 					);
 					$pill.data("resetter",
 						function () {
-							_resetter($pill, $miniPill, iText, iChangeFn, false);
+							_resetter($pill, $miniPill, iText, iChangeFn, iData, false);
 						}
 					);
 
@@ -342,13 +343,13 @@ class FilterBox {
 					if (curValues) {
 						let valNum = curValues[filter.header][iText];
 						if (valNum < 0) valNum = 2;
-						_setter($pill, $miniPill, FilterBox._PILL_STATES[valNum], iText, iChangeFn, true);
+						_setter($pill, $miniPill, FilterBox._PILL_STATES[valNum], iText, iChangeFn, iData, true);
 					} else if (self.cookieValues && self.cookieValues[filter.header] && self.cookieValues[filter.header][iText] !== undefined) {
 						let valNum = self.cookieValues[filter.header][iText];
 						if (valNum < 0) valNum = 2;
-						_setter($pill, $miniPill, FilterBox._PILL_STATES[valNum], iText, iChangeFn, true);
+						_setter($pill, $miniPill, FilterBox._PILL_STATES[valNum], iText, iChangeFn, iData, true);
 					} else {
-						_resetter($pill, $miniPill, iText, iChangeFn, true);
+						_resetter($pill, $miniPill, iText, iChangeFn, iData, true);
 					}
 
 					// add a class to mark any items that are default deselected (used to add visual difference)
@@ -368,16 +369,16 @@ class FilterBox {
 				}
 
 				// allows silent (pill change function not triggered) sets
-				function _setter ($pill, $miniPill, toVal, iText, iChangeFn, silent) {
+				function _setter ($pill, $miniPill, toVal, iText, iChangeFn, iData, silent) {
 					$pill.attr("state", toVal);
 					$miniPill.attr("state", toVal);
 					if (!silent) {
-						handlePillChange(iText, iChangeFn, toVal);
+						handlePillChange(iText, iChangeFn, iData, toVal);
 					}
 				}
 
 				// allows silent (pill change function not triggered) resets
-				function _resetter ($pill, $miniPill, iText, iChangeFn, silent) {
+				function _resetter ($pill, $miniPill, iText, iChangeFn, iData, silent) {
 					if (filter.deselFn && filter.deselFn(iText)) {
 						$pill.attr("state", "no");
 						$miniPill.attr("state", "no");
@@ -389,13 +390,13 @@ class FilterBox {
 						$miniPill.attr("state", "ignore");
 					}
 					if (!silent) {
-						handlePillChange(iText, iChangeFn, $pill.attr("state"));
+						handlePillChange(iText, iChangeFn, iData, $pill.attr("state"));
 					}
 				}
 
-				function handlePillChange (iText, iChangeFn, val) {
+				function handlePillChange (iText, iChangeFn, iData, val) {
 					if (iChangeFn) {
-						iChangeFn(iText, val);
+						iChangeFn(iText, val, iData);
 					}
 				}
 
@@ -654,6 +655,7 @@ class Filter {
 	constructor (options) {
 		this.header = options.header;
 		this.items = options.items ? options.items : [];
+		this._compItems = JSON.parse(JSON.stringify(this.items));
 		this.displayFn = options.displayFn;
 		this.selFn = options.selFn;
 		this.deselFn = options.deselFn;
@@ -665,7 +667,11 @@ class Filter {
 	 * @param item the item to add
 	 */
 	addIfAbsent (item) {
-		if ($.inArray(item, this.items) === -1) this.items.push(item);
+		const comp = (item.item !== undefined || item.item !== null) ? item.item : item;
+		if ($.inArray(comp, this._compItems) === -1) {
+			this._compItems.push(comp);
+			this.items.push(item);
+		}
 	}
 
 	/**
@@ -761,10 +767,12 @@ class FilterItem {
 	 * An alternative to string `Filter.items` with a change-handling function
 	 * @param item string
 	 * @param changeFn called when this item is clicked/etc; calls `changeFn(item)`
+	 * @param data optional data to be used for specific implementations
 	 */
-	constructor (item, changeFn) {
+	constructor (item, changeFn, data) {
 		this.item = item;
 		this.changeFn = changeFn;
+		this.data = data;
 	}
 }
 
