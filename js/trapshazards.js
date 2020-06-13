@@ -1,57 +1,106 @@
 "use strict";
 
-const JSON_URL = "data/trapshazards.json";
-
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad);
-};
-
-let trapsAndHazardsList;
-function onJsonLoad (data) {
-	const hazardsList = data.hazard;
-	hazardsList.forEach(h => h.trapType = "HAZ");
-	trapsAndHazardsList = data.trap.concat(hazardsList);
-
-	let tempString = "";
-	trapsAndHazardsList.forEach((it, i) => {
-		const abvSource = Parser.sourceJsonToAbv(it.source);
-
-		tempString += `
-			<li class="row" ${FLTR_ID}="${i}">
-				<a id="${i}" href="#${UrlUtil.autoEncodeHash(it)}" title="${it.name}">
-					<span class="name col-xs-6">${it.name}</span>
-					<span class="trapType col-xs-4">${Parser.trapTypeToFull(it.trapType)}</span>
-					<span class="source col-xs-2 source${abvSource}" title="${Parser.sourceJsonToFull(it.source)}">${abvSource}</span>
-				</a>
-			</li>
-		`;
-	});
-	$(`#trapsHazardsList`).append(tempString);
-
-	const list = ListUtil.search({
-		valueNames: ["name", "trapType", "source"],
-		listClass: "trapshazards",
-		sortFunction: SortUtil.listSort
-	});
-
-	initHistory();
+function filterTypeSort (a, b) {
+	return SortUtil.ascSortLower(Parser.trapHazTypeToFull(a.item), Parser.trapHazTypeToFull(b.item));
 }
 
-const renderer = new EntryRenderer();
-function loadhash (jsonIndex) {
-	const it = trapsAndHazardsList[jsonIndex];
+class TrapsHazardsPage extends ListPage {
+	constructor () {
+		const pageFilter = new PageFilterTrapsHazards();
+		super({
+			dataSource: "data/trapshazards.json",
 
-	const renderStack = [];
+			pageFilter,
 
-	renderer.recursiveEntryRender({entries: it.entries}, renderStack, 2);
+			listClass: "trapshazards",
 
-	const $content = $(`#pagecontent`);
-	$content.html(`
-		${EntryRenderer.utils.getBorderTr()}
-		${EntryRenderer.utils.getNameTr(it)}
-		<tr class="text"><td colspan="6"><i>${Parser.trapTypeToFull(it.trapType)}</i></td>
-		<tr class="text"><td colspan="6">${renderStack.join("")}</td></tr>
-		${EntryRenderer.utils.getPageTr(it)}
-		${EntryRenderer.utils.getBorderTr()}
-	`);
+			sublistClass: "subtrapshazards",
+
+			dataProps: ["trap", "hazard"]
+		});
+	}
+
+	getListItem (it, thI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(it, isExcluded);
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const source = Parser.sourceJsonToAbv(it.source);
+		const hash = UrlUtil.autoEncodeHash(it);
+		const trapType = Parser.trapHazTypeToFull(it.trapHazType);
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="col-3 pl-0 text-center">${trapType}</span>
+			<span class="bold col-7">${it.name}</span>
+			<span class="col-2 text-center ${Parser.sourceJsonToColor(it.source)} pr-0" title="${Parser.sourceJsonToFull(it.source)}" ${BrewUtil.sourceJsonToStyle(it.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			thI,
+			eleLi,
+			it.name,
+			{
+				hash,
+				source,
+				trapType
+			},
+			{
+				uniqueId: it.uniqueId ? it.uniqueId : thI,
+				isExcluded
+			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._filterBox.getValues();
+		this._list.filter(item => this._pageFilter.toDisplay(f, this._dataList[item.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (it, pinId) {
+		const hash = UrlUtil.autoEncodeHash(it);
+		const trapType = Parser.trapHazTypeToFull(it.trapHazType);
+
+		const $ele = $(`<li class="row">
+			<a href="#${hash}" class="lst--border">
+				<span class="col-4 pr-0">${trapType}</span>
+				<span class="bold col-8 pl-0">${it.name}</span>
+			</a>
+		</li>`)
+			.contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			it.name,
+			{
+				hash,
+				trapType
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		Renderer.get().setFirstSection(true);
+		const it = this._dataList[id];
+
+		$(`#pagecontent`).empty().append(RenderTrapsHazards.$getRenderedTrapHazard(it));
+
+		ListUtil.updateSelected();
+	}
+
+	async pDoLoadSubHash (sub) {
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
+	}
 }
+
+const trapsHazardsPage = new TrapsHazardsPage();
+window.addEventListener("load", () => trapsHazardsPage.pOnLoad());

@@ -2,118 +2,166 @@
 <html lang="en">
 
 <head>
-	<!--5ETOOLS_VERSION-->
+	<!--5ETOOLS_CMP-->
+	<!--5ETOOLS_ANALYTICS-->
+	<!--5ETOOLS_ADCODE-->
 	<meta charset="utf-8">
+	<meta name="description" content="">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Stat Block Converter - 5etools</title>
+	<title>Text Converter - 5etools</title>
+
+	<link rel="manifest" href="manifest.webmanifest">
 
 	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/jquery-ui.css">
+	<link rel="stylesheet" href="css/jquery-ui-slider-pips.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon" href="favicon.png">
 
-	<style id="dynamicStyle"></style> <!-- populated with JS -->
+	<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js");</script>
 
-	<script type="text/javascript" src="lib/js-cookie.js"></script>
 	<script type="text/javascript" src="js/styleswitch.js"></script>
 	<script type="text/javascript" src="js/navigation.js"></script>
+	<script type="text/javascript" src="js/browsercheck.js"></script>
 
 	<style>
-		.inputArea {
-			width: 100%;
-			height: 75vh;
-		}
-
+		.inputArea,
 		.outputArea {
 			width: 100%;
-			height: 75vh;
+			height: 100%;
+		}
+
+		.select-inline {
+			display: inline-block;
+			width: initial;
+		}
+
+		#lastWarnings {
+			color: #df00ff;
+		}
+
+		#lastError {
+			color: red;
+		}
+
+		#lastWarnings,
+		#lastError {
+			margin-top: 5px;
+			margin-bottom: 10px;
+			display: none;
+			flex-shrink: 0;
+			padding: 9px;
+			font-size: 13px;
+			line-height: 1.4;
+			background-color: #f5f5f5;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		.night-mode #lastError {
+			border-color: #555;
+		}
+
+		.conv__head {
+			margin-top: 0;
+			margin-bottom: 2px;
+		}
+
+		.conv__out_control__wrp {
+			padding: 0 3rem 0 0;
+			flex-shrink: 0;
+		}
+
+		@media (max-width: 991px) {
+			.view-col-wrapper {
+				height: 40vh;
+			}
 		}
 	</style>
 </head>
 
 <body>
 <div class="viewport-wrapper">
-	<header class="hidden-xs hidden-sm">
+	<div class="sidemenu__toggle">
+		<div class="sidemenu__hotzone"></div>
+		<div class="sidemenu__burger"></div>
+		<div class="sidemenu__burger"></div>
+		<div class="sidemenu__burger"></div>
+		<div class="sidemenu"></div>
+	</div>
+
+	<header class="hidden-xs hidden-sm page__header">
 		<div class="container">
 
-			<h1>Stat Block Converter</h1>
-			<p>Input stat block on left, hit parse, copy JSON from right.</p>
+			<h1 class="page__title">Text Converter</h1>
+			<p class="page__subtitle">Input text on left, hit parse, copy JSON from right.</p>
 		</div>
 	</header>
-	<nav class="container" id="navigation">
-		<ul class="nav nav-pills" id="navbar">
+	<nav class="container page__nav" id="navigation">
+		<ul class="nav page__nav-inner" id="navbar">
 		</ul>
 	</nav>
-	<main class="bodyContent view-col-wrapper">
+
+	<div class="cancer__wrp-leaderboard cancer__anchor"><div class="cancer__disp-cancer"></div><div class="cancer__wrp-leaderboard-inner"><!--5ETOOLS_AD_LEADERBOARD--></div></div>
+
+	<div class="view-col-wrapper">
 
 		<div class="view-col">
-			<h3>Statblock
-				<button id="parsestatblock" class="btn">Parse</button>
-				<button id="parsestatblockadd" class="btn">Parse and Add</button>
-			</h3>
-			<pre id="statblock" class="inputArea">
-Mammon
-Huge fiend (devil), lawful evil
-Armor Class 20 (natural armor)
-Hit Points 378 (28d12 + 196)
-Speed 50 ft.
-STR DEX CON INT WIS CHA
-22 (+6) 13 (+1) 24 (+7) 23 (+6) 21 (+5) 26 (+8)
-Saving Throws Dex +9, Int +14, Wis +13, Cha +16
-Skills Deception +16, Insight +13, Perception +13, Persuasion +16
-Damage Resistances cold
-Damage Immunities fire, poison; bludgeoning, piercing, and slashing from weapons that aren't silvered
-Condition Immunities charmed, exhaustion, frightened, poisoned
-Senses truesight 120 ft., passive Perception 23
-Languages all, telepathy 120 ft.
-Challenge 25 (75,000 XP)
-Innate Spellcasting. Mammon's innate spellcasting ability is Charisma (spell save DC 24, +16 to hit with spell attacks). He can innately cast the following spells, requiring no material components:
-At will: charm person, detect magic, dispel magic, fabricate (Mammon can create valuable objects), heat metal, magic aura
-3/day each: animate objects, counterspell, creation, instant summons, legend lore, teleport
-1/day: imprisonment (minimus containment only, inside gems), sunburst
-Spellcasting. Mammon is a 6th level spellcaster. His spellcasting ability is Intelligence (spell save DC 13; +5 to hit with spell attacks). He has the following wizard spells prepared:
-Cantrips (at will): fire bolt, light, mage hand, prestidigitation
-1st level (4 slots): mage armor, magic missile, shield
-2nd level (3 slots): misty step, suggestion
-3rd level (3 slots): fly, lightning bolt
-Legendary Resistance (3/day). If Mammon fails a saving throw, he can choose to succeed instead.
-Magic Resistance. Mammon has advantage on saving throws against spells and other magical effects.
-Magic Weapons. Mammon's weapon attacks are magical.
-ACTIONS
-Multiattack. Mammon makes three attacks.
-Purse. Melee Weapon Attack: +14 to hit, reach 10 ft., one target. Hit: 19 (3d8 + 6) bludgeoning damage plus 18 (4d8) radiant damage.
-Molten Coins. Ranged Weapon Attack: +14 to hit, range 40/120 ft., one target. Hit: 16 (3d6 + 6) bludgeoning damage plus 18 (4d8) fire damage.
-Your Weight In Gold (Recharge 5-6). Mammon can use this ability as a bonus action immediately after hitting a creature with his purse attack. The creature must make a DC 24 Constitution saving throw. If the saving throw fails by 5 or more, the creature is instantly petrified by being turned to solid gold. Otherwise, a creature that fails the saving throw is restrained. A restrained creature repeats the saving throw at the end of its next turn, becoming petrified on a failure or ending the effect on a success. The petrification lasts until the creature receives a greater restoration spell or comparable magic.
-LEGENDARY ACTIONS
-Mammon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. Mammon regains spent legendary actions at the start of his turn.
-Attack. Mammon makes one purse or molten coins attack.
-Make It Rain! Mammon casts gold and jewels into a 5-foot radius within 60 feet. One creature within 60 feet of the treasure that can see it must make a DC 24 Wisdom saving throw. On a failure, the creature must use its reaction to move its speed toward the trinkets, which vanish at the end of the turn.
-Deep Pockets (3 actions). Mammon recharges his Your Weight In Gold ability.
-			</pre>
-			<select id="source"></select>
-			<input type="text" id="customsourcein" placeholder="Custom source">
-			<button id="addsource" class="btn btn-sm">Save</button>
-			<br>
-			<small>This parser is <em>very</em> particular about its input. Use at your own risk.</small>
+			<h3 class="conv__head">Input</h3>
+			<pre id="converter_input" class="inputArea ace_editor"></pre>
+			<div class="text-right">
+				<button id="parsestatblock" class="btn btn-sm btn-default">Parse</button>
+				<button id="parsestatblockadd" class="btn btn-sm btn-default">Parse and Add</button>
+			</div>
 		</div>
 
 		<div class="view-col">
-			<h3>Output</h3>
-			<textarea id="jsonoutput" readonly class="outputArea"></textarea>
-		</div>
-	</main>
+			<h3 class="conv__head">Output</h3>
 
-	<!--5ETOOLS_SCRIPT_ANCHOR-->
-	<script type="text/javascript" src="js/utils.js"></script>
-	<script type="text/javascript" src="js/omnisearch.js"></script>
-	<script type="text/javascript" src="js/entryrender.js"></script>
-	<script type="text/javascript" src="js/converter.js"></script>
-	<script type="text/javascript" src="lib/list.js"></script>
-	<script type="text/javascript" src="lib/jquery.js"></script>
-	<script type="text/javascript" src="lib/bootstrap.js"></script>
-	<script type="text/javascript" src="lib/elasticlunr.js"></script>
-	<script type="text/javascript" src="lib/ace.js"></script>
+			<pre id="converter_output" class="outputArea ace_editor"></pre>
+
+			<div class="split conv__out_control__wrp">
+				<button id="editable" class="btn btn-sm btn-default">Enable Editing</button>
+				<div>
+					<button id="save_local" class="btn btn-sm btn-default hidden">Save to Homebrew</button>
+					<button id="download" class="btn btn-sm btn-default">Download JSON</button>
+				</div>
+			</div>
+
+			<div id="lastWarnings" class="code"></div>
+			<div id="lastError" class="code"></div>
+		</div>
+	</div>
 </div>
+
+<!--5ETOOLS_SCRIPT_ANCHOR-->
+<!--5ETOOLS_AD_ADHESION-->
+<!--5ETOOLS_SCRIPT_ANCHOR__ACE-JS-->
+<script type="text/javascript" src="js/parser.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/utils-ui.js"></script>
+<script type="text/javascript" src="js/utils-proporder.js"></script>
+<script type="text/javascript" src="lib/localforage.js"></script>
+<script type="text/javascript" src="js/omnidexer.js"></script>
+<script type="text/javascript" src="js/omnisearch.js"></script>
+<script type="text/javascript" src="js/render.js"></script>
+<script type="text/javascript" src="js/render-markdown.js"></script>
+<script type="text/javascript" src="js/scalecreature.js"></script>
+<script type="text/javascript" src="js/converterutils.js"></script>
+<script type="text/javascript" src="js/converterutils-spell.js"></script>
+<script type="text/javascript" src="js/converterutils-item.js"></script>
+<script type="text/javascript" src="js/converter.js"></script>
+<script type="text/javascript" src="js/converter-creature.js"></script>
+<script type="text/javascript" src="js/converter-spell.js"></script>
+<script type="text/javascript" src="js/converter-item.js"></script>
+<script type="text/javascript" src="js/converter-table.js"></script>
+<script type="text/javascript" src="js/list2.js"></script>
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type="text/javascript" src="lib/jquery-ui.js"></script>
+<script type="text/javascript" src="lib/jquery-ui-slider-pip.js"></script>
+<script type="text/javascript" src="lib/elasticlunr.js"></script>
+<script type="text/javascript" src="lib/ace.js"></script>
 </body>
 </html>

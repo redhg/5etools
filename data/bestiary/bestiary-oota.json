@@ -1,25 +1,62 @@
 {
+	"_meta": {
+		"dependencies": {
+			"monster": [
+				"MM",
+				"MTF"
+			]
+		},
+		"otherSources": {
+			"monster": {
+				"MTF": "OotA"
+			}
+		}
+	},
 	"monster": [
 		{
 			"name": "Awakened Zurkhwood",
+			"source": "OotA",
+			"page": 230,
 			"size": "H",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "13 (natural armor)",
-			"hp": "59 (7d12+14)",
-			"speed": "20 ft.",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 13,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 59,
+				"formula": "7d12 + 14"
+			},
+			"speed": {
+				"walk": 20
+			},
 			"str": 19,
 			"dex": 6,
 			"con": 15,
 			"int": 10,
 			"wis": 10,
 			"cha": 7,
-			"resist": "bludgeoning, piercing",
-			"vulnerable": "fire",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"passive": 10,
-			"languages": "one language known by its creator",
+			"resist": [
+				"bludgeoning",
+				"piercing"
+			],
+			"vulnerable": [
+				"fire"
+			],
+			"languages": [
+				"one language known by its creator"
+			],
 			"cr": "2",
 			"trait": [
 				{
@@ -39,179 +76,63 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 14 (3d6+4) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 10 ft., one target. {@h}14 ({@damage 3d6 + 4}) bludgeoning damage."
 					]
 				}
 			],
-			"page": 230
-		},
-		{
-			"name": "Baphomet",
-			"size": "H",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "22 (natural armor)",
-			"hp": "333 (23d12+184)",
-			"speed": "40 ft.",
-			"str": 30,
-			"dex": 14,
-			"con": 26,
-			"int": 18,
-			"wis": 24,
-			"cha": 16,
-			"save": "Dex +9, Con +15, Wis +14",
-			"skill": {
-				"intimidation": "+17",
-				"perception": "+14"
-			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 24,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "23",
-			"trait": [
-				{
-					"name": "Charge",
-					"entries": [
-						"If Baphomet moves at least 10 feet straight toward a target and then hits it with a gore attack on the same turn, the target takes an extra 22 (4d10) piercing damage. If the target is a creature, it must succeed on a DC 25 Strength saving throw or be pushed up to 10 feet away and knocked prone."
-					]
-				},
-				{
-					"name": "Labyrinthine Recall",
-					"entries": [
-						"Baphomet can perfectly recall any path he has traveled, and he is immune to the maze spell."
-					]
-				},
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Baphomet fails a saving throw, he can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Baphomet has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Baphomet's weapon attacks are magical"
-					]
-				},
-				{
-					"name": "Reckless",
-					"entries": [
-						"At the start of his turn, Baphomet can gain advantage on all melee weapon attack rolls during that turn, but attack rolls against him have advantage until the start of his next turn."
-					]
-				}
+			"hasToken": true,
+			"traitTags": [
+				"False Appearance"
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Baphomet makes three attacks: one with Heartcleaver, one with his bite, and one with his gore attack."
-					]
-				},
-				{
-					"name": "Heartcleaver",
-					"entries": [
-						"Melee Weapon Attack: +17 to hit, reach 15 ft., one target. Hit: 24 (4d6+10) slashing damage"
-					]
-				},
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +17 to hit, reach 10 ft., one target. Hit: 19 (2d8+10) piercing damage."
-					]
-				},
-				{
-					"name": "Gore",
-					"entries": [
-						"Melee Weapon Attack: +17 to hit, reach 10 ft., one target. Hit: 21 (2d10+10) piercing damage."
-					]
-				},
-				{
-					"name": "Frightful Presence",
-					"entries": [
-						"Each creature of Baphomet's choice within 120 feet of him and aware of him must succeed on a DC 18 Wisdom saving throw or become frightened for 1 minute. A frightened creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. These later saves have disadvantage if Baphomet is within line of sight of the creature.",
-						"If a creature succeeds on any of these saves or the effect ends on it, the creature is immune is Baphomet's Frightful Presence for the next 24 hours."
-					]
-				}
+			"senseTags": [
+				"SD"
 			],
-			"legendaryGroup": "Baphomet",
-			"legendary": [
-				{
-					"name": "Heartcleaver attack",
-					"entries": [
-						"Baphomet makes a melee attack with Heartcleaver."
-					],
-					"attack": [
-						"|17|4d6+10"
-					]
-				},
-				{
-					"name": "Charge (Costs 2 actions)",
-					"entries": [
-						"Baphomet moves up to his speed, then makes a gore attack."
-					],
-					"attack": [
-						"|17|2d10+10"
-					]
-				}
+			"damageTags": [
+				"B"
 			],
-			"page": 235,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Baphomet's spellcasting ability is Charisma (spell save DC 18). He can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell detect magic}"
-					],
-					"daily": {
-						"3e": [
-							"{@spell dispel magic}",
-							"{@spell dominate beast}",
-							"{@spell hunter's mark}",
-							"{@spell maze}",
-							"{@spell wall of stone}"
-						],
-						"1e": [
-							"{@spell teleport}"
-						]
-					}
-				}
+			"miscTags": [
+				"MW",
+				"RCH"
 			]
 		},
 		{
 			"name": "Bridesmaid of Zuggtmoy",
+			"source": "OotA",
+			"page": 230,
 			"size": "M",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "13 (natural armor)",
-			"hp": "22 (5d8)",
-			"speed": "20 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 13,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 22,
+				"formula": "5d8"
+			},
+			"speed": {
+				"walk": 20
+			},
 			"str": 14,
 			"dex": 11,
 			"con": 11,
 			"int": 14,
 			"wis": 8,
 			"cha": 18,
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 9,
-			"languages": "understands Abyssal but can't speak",
+			"languages": [
+				"understands Abyssal but can't speak"
+			],
 			"cr": "1/8",
 			"trait": [
 				{
@@ -225,37 +146,94 @@
 				{
 					"name": "Hallucination Spores",
 					"entries": [
-						"The bridesmaid ejects spores at one creature it can see within 5 feet of it. The target must succeed on a DC 10 Constitution saving throw or be poisoned for 1 minute. While poisoned in this way, the target is incapacitated. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
+						"The bridesmaid ejects spores at one creature it can see within 5 feet of it. The target must succeed on a {@dc 10} Constitution saving throw or be {@condition poisoned} for 1 minute. While {@condition poisoned} in this way, the target is {@condition incapacitated}. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
 					]
 				},
 				{
 					"name": "Infestation Spores (1/Day)",
 					"entries": [
-						"The bridesmaid releases spores that burst out in a cloud that fills a 10-foot-radius sphere centered on it, and the cloud lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a DC 10 Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of indefinite madness (determined by rolling on the Madness of Zuggtmoy table in appendix D) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must be repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
+						"The bridesmaid releases spores that burst out in a cloud that fills a 10-foot-radius sphere centered on it, and the cloud lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a {@dc 10} Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of indefinite madness (determined by rolling on the Madness of Zuggtmoy table in appendix D) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must be repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
 					]
 				}
 			],
-			"page": 230
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"AB",
+				"CS"
+			],
+			"miscTags": [
+				"AOE"
+			],
+			"conditionInflict": [
+				"incapacitated",
+				"poisoned"
+			]
+		},
+		{
+			"name": "Buppido",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 6,
+			"_copy": {
+				"name": "Derro",
+				"source": "MTF",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the derro",
+						"with": "Buppido",
+						"flags": "i"
+					}
+				}
+			},
+			"hasToken": true
 		},
 		{
 			"name": "Chamberlain of Zuggtmoy",
+			"source": "OotA",
+			"page": 230,
 			"size": "L",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "13 (natural armor)",
-			"hp": "45 (6d10+12)",
-			"speed": "20 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 13,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 45,
+				"formula": "6d10 + 12"
+			},
+			"speed": {
+				"walk": 20
+			},
 			"str": 17,
 			"dex": 7,
 			"con": 14,
 			"int": 11,
 			"wis": 8,
 			"cha": 12,
-			"resist": "bludgeoning, piercing",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 9,
-			"languages": "Abyssal, Undercommon",
+			"resist": [
+				"bludgeoning",
+				"piercing"
+			],
+			"languages": [
+				"Abyssal",
+				"Undercommon"
+			],
 			"cr": "2",
 			"trait": [
 				{
@@ -267,17 +245,11 @@
 				{
 					"name": "Poison Spores",
 					"entries": [
-						"Whenever the chamberlain takes damage, it releases a cloud of spores. Creatures within 5 feet of the chamberlain when this happens must succeed on a DC 12 Constitution saving throw or be poisoned for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on a success."
+						"Whenever the chamberlain takes damage, it releases a cloud of spores. Creatures within 5 feet of the chamberlain when this happens must succeed on a {@dc 12} Constitution saving throw or be {@condition poisoned} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on a success."
 					]
 				}
 			],
 			"action": [
-				{
-					"name": "Hallucination Spores",
-					"entries": [
-						"The bridesmaid ejects spores at one creature it can see within 5 feet of it. The target must succeed on a DC 10 Constitution saving throw or be poisoned for 1 minute. While poisoned in this way, the target is incapacitated. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
-					]
-				},
 				{
 					"name": "Multiattack",
 					"entries": [
@@ -287,37 +259,83 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6+3) bludgeoning damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}10 ({@damage 2d6 + 3}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Infestation Spores (1/Day)",
 					"entries": [
-						"The chaberlain releases spores that burst out in a cloud that fills a 10-foot-radius sphere centered on it, and the cloud lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a DC 12 Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of indefinite madness (determined by rolling on the Madness of Zuggtmoy table in appendix D) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must be repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
+						"The chamberlain releases spores that burst out in a cloud that fills a 10-foot-radius sphere centered on it, and the cloud lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a {@dc 12} Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of indefinite madness (determined by rolling on the Madness of Zuggtmoy table in appendix D) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must be repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
 					]
 				}
 			],
-			"page": 230
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"AB",
+				"U"
+			],
+			"damageTags": [
+				"B"
+			],
+			"miscTags": [
+				"AOE",
+				"MW"
+			],
+			"conditionInflict": [
+				"poisoned"
+			]
 		},
 		{
 			"name": "Chuul Spore Servant",
+			"source": "OotA",
+			"page": 228,
 			"size": "L",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "16 (natural armor)",
-			"hp": "93 (11d10+33)",
-			"speed": "30 ft., swim 30 ft.",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 93,
+				"formula": "11d10 + 33"
+			},
+			"speed": {
+				"walk": 30,
+				"swim": 30
+			},
 			"str": 19,
 			"dex": 10,
 			"con": 16,
 			"int": 2,
 			"wis": 6,
 			"cha": 1,
-			"immune": "poison",
-			"conditionImmune": "blinded, charmed, frightened, paralyzed, poisoned",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"passive": 8,
+			"immune": [
+				"poison"
+			],
+			"conditionImmune": [
+				"blinded",
+				"charmed",
+				"frightened",
+				"paralyzed",
+				"poisoned"
+			],
 			"cr": "4",
 			"action": [
 				{
@@ -329,307 +347,197 @@
 				{
 					"name": "Pincer",
 					"entries": [
-						"Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 11 (2d6+4) bludgeoning damage. The target is grappled (Escape DC 14) if it is a Large or smaller creature and the spore servant doesn't have two other creatures grappled."
+						"{@atk mw} {@hit 6} to hit, reach 10 ft., one target. {@h}11 ({@damage 2d6 + 4}) bludgeoning damage. The target is {@condition grappled} (Escape {@dc 14}) if it is a Large or smaller creature and the spore servant doesn't have two other creatures {@condition grappled}."
 					]
 				}
 			],
-			"page": 228
-		},
-		{
-			"name": "Demogorgon",
-			"size": "H",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "22 (natural armor)",
-			"hp": "496 (34d12+272)",
-			"speed": "50 ft., swim 50 ft.",
-			"str": 29,
-			"dex": 14,
-			"con": 26,
-			"int": 20,
-			"wis": 17,
-			"cha": 25,
-			"save": "Dex +10, Con +16, Wis +11, Cha +15",
-			"skill": {
-				"insight": "+11",
-				"perception": "+19"
-			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 29,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "26",
-			"trait": [
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Demogorgon fails a saving throw, he can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Demogorgon has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Demogorgon's weapon attacks are magical"
-					]
-				},
-				{
-					"name": "Two Heads",
-					"entries": [
-						"Demogorgon has advantage on saving throws against being blinded, deafened, stunned, and knocked unconscious."
-					]
-				}
+			"hasToken": true,
+			"senseTags": [
+				"B"
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Demogorgon makes two tentacle attacks."
-					]
-				},
-				{
-					"name": "Tentacle",
-					"entries": [
-						"Melee Weapon Attack: +17 to hit, reach 10 ft., one target. Hit: 35 (4d12+9) bludgeoning damage. If the target is a creature, it must succeed on a DC 23 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if its hit point maximum is reduced to 0."
-					]
-				},
-				{
-					"name": "Gaze",
-					"entries": [
-						"Demogorgon turns his magical gaze toward one creature that he can see within 120 feet of him. That target must make a DC 23 Wisdom saving throw. Unless the target is incapacitated, it can avert its eyes to avoid the gaze and to automatically succeed on the save. If the target does so, it can't see Demogorgon until the start of his next turn. If the target looks at him in the meantime, it must immediately make the save.",
-						"If the target fails the save, the target suffers one of the following effects of Demogorgon's choice or at random:",
-						"1. Beguiling Gaze. The target is stunned until the start of Demogorgon's next turn or until Demogorgon is no longer within line of sight.",
-						"2. Hypnotic Gaze. The target is charmed by Demogorgon until the start of Demogorgon's next turn. Demogorgon chooses how the charmed target uses its actions, reactions, and movement. Because this gaze requires Demogorgon to focus both heads on the target, he can't use his Maddening Gaze legendary action until the start of his next turn.",
-						"3. Insanity Gaze. The target suffers the effect of the confusion spell without making a saving throw. The effect lasts until the start of Demogorgon's next turn. Demogorgon doesn't need to concentrate on the spell."
-					]
-				}
+			"actionTags": [
+				"Multiattack"
 			],
-			"legendaryGroup": "Demogorgon",
-			"legendaryActions": 2,
-			"legendary": [
-				{
-					"name": "Tail",
-					"entries": [
-						"Melee Weapon Attack: +17 to hit, reach 15 ft., one target. Hit: 31 (4d10+9) bludgeoning damage plus 22 (4d10) necrotic damage."
-					],
-					"attack": [
-						"|17|4d10+9+4d10"
-					]
-				},
-				{
-					"name": "Maddening Gaze",
-					"entries": [
-						"Demogorgon uses his Gaze action, and must choose either the Beguiling Gaze or the Insanity Gaze effect."
-					]
-				}
+			"damageTags": [
+				"B"
 			],
-			"page": 236,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Demogorgon's spellcasting ability is Charisma (spell save DC 23). Demogorgon can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell detect magic}",
-						"{@spell major image}"
-					],
-					"daily": {
-						"3e": [
-							"{@spell dispel magic}",
-							"{@spell fear}",
-							"{@spell telekinesis}"
-						],
-						"1e": [
-							"{@spell feeblemind}",
-							"{@spell project image}"
-						]
-					}
-				}
+			"miscTags": [
+				"MW",
+				"RCH"
+			],
+			"conditionInflict": [
+				"grappled"
 			]
 		},
 		{
-			"name": "Derro",
-			"size": "S",
+			"name": "Deepking Horgar Steelshadow V",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 82,
+			"size": "M",
 			"type": {
 				"type": "humanoid",
 				"tags": [
-					"derro"
+					"dwarf"
 				]
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "13 (leather armor)",
-			"hp": "13 (3d6+3)",
-			"speed": "30 ft.",
-			"str": 9,
-			"dex": 14,
-			"con": 12,
-			"int": 11,
-			"wis": 5,
-			"cha": 9,
-			"skill": {
-				"stealth": "+4"
-			},
-			"senses": "darkvision 120 ft.",
-			"passive": 7,
-			"languages": "Dwarvish, Undercommon",
-			"cr": "1/4",
-			"trait": [
+			"alignment": [
+				"L",
+				"E"
+			],
+			"ac": [
 				{
-					"name": "Insanity",
-					"entries": [
-						"The derro has advantage on saving throws against being charmed or frightened."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"The derro has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the derro has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+					"ac": 20,
+					"from": [
+						"{@item dwarven plate}"
 					]
 				}
 			],
-			"action": [
-				{
-					"name": "Hooked Shortspear",
-					"entries": [
-						"Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 1 (1d4-1) piercing damage. If the target is a creature, the derro can choose to deal no damage and try to trip the target instead, in which case the target must succeed on a DC 9 Strength saving throw or fall prone."
-					]
-				},
-				{
-					"name": "Light Repeating Crossbow",
-					"entries": [
-						"Ranged Weapon Attack: +4 to hit, range 40/160 ft., one target. Hit: 6 (1d8+2) piercing damage."
-					]
-				}
-			],
-			"page": 224
-		},
-		{
-			"name": "Derro Savant",
-			"size": "S",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"derro"
-				]
+			"hp": {
+				"average": 52,
+				"formula": "8d8 + 16"
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "13 (leather armor)",
-			"hp": "49 (11d6+11)",
-			"speed": "30 ft.",
-			"str": 9,
-			"dex": 14,
-			"con": 12,
+			"speed": {
+				"walk": 30
+			},
+			"str": 19,
+			"dex": 11,
+			"con": 14,
 			"int": 11,
-			"wis": 5,
-			"cha": 14,
-			"skill": {
-				"stealth": "+4"
+			"wis": 11,
+			"cha": 15,
+			"save": {
+				"con": "+4",
+				"wis": "+2"
 			},
-			"senses": "darkvision 120 ft.",
-			"passive": 7,
-			"languages": "Dwarvish, Undercommon",
+			"passive": 10,
+			"languages": [
+				"Draconic",
+				"Giant",
+				"Dwarvish"
+			],
 			"cr": "3",
 			"trait": [
 				{
-					"name": "Insanity",
+					"name": "(Optional) Indefinite Madness",
 					"entries": [
-						"The derro has advantage on saving throws against being charmed or frightened."
+						{
+							"type": "inline",
+							"entries": [
+								"Horgar has been affected by the demon lords let loose in the Abyss during the Rage of Demons storyline. Roll on the ",
+								{
+									"type": "link",
+									"href": {
+										"type": "internal",
+										"path": "variantrules.html",
+										"hash": "madness_dmg"
+									},
+									"text": "Indefinite Madness table"
+								},
+								" to determine Horgar's flaw."
+							]
+						}
 					]
 				},
 				{
-					"name": "Magic Resistance",
+					"name": "Duergar Resilience",
 					"entries": [
-						"The derro has advantage on saving throws against spells and other magical effects."
+						"Horgar has advantage on saving throws against poison, spells, and illusions, as well as to resist being {@condition charmed} or {@condition paralyzed}."
 					]
 				},
 				{
 					"name": "Sunlight Sensitivity",
 					"entries": [
-						"While in sunlight, the derro has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+						"While in sunlight, Horgar has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
+					]
+				},
+				{
+					"name": "Gauntlets of Ogre Power",
+					"entries": [
+						"Horgar wields {@item Gauntlets of Ogre Power} giving him a Strength score of 19 (+4)."
+					]
+				},
+				{
+					"name": "Brave",
+					"entries": [
+						"Horgar has advantage on saving throws against being {@condition frightened}."
 					]
 				}
 			],
 			"action": [
 				{
-					"name": "Hooked Shortspear",
+					"name": "Enlarge (Recharges after a Short or Long Rest)",
 					"entries": [
-						"Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 1 (1d4-1) piercing damage. If the target is a creature, the derro can choose to deal no damage and try to trip the target instead, in which case the target must succeed on a DC 9 Strength saving throw or fall prone."
+						"For 1 minute, Horgar magically increases in size, along with anything he is wearing or carrying. While enlarged, Horgar is Large, doubles his damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If Horgar lacks the room to become Large, he attains the maximum size possible in the space available."
 					]
 				},
 				{
-					"name": "Light Repeating Crossbow",
+					"name": "Invisibility (Recharges after a Short or Long Rest)",
 					"entries": [
-						"Ranged Weapon Attack: +4 to hit, range 40/160 ft., one target. Hit: 6 (1d8+2) piercing damage."
+						"Horgar magically turns {@condition invisible} until he attacks, casts a spell, or uses his Enlarge, or until his concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment Horgar wears or carries is {@condition invisible} with him."
+					]
+				},
+				{
+					"name": "Multiattack",
+					"entries": [
+						"Horgar makes two melee attacks."
+					]
+				},
+				{
+					"name": "+2 Warhammer",
+					"entries": [
+						"{@atk mw} {@hit 8} to hit, reach 5 ft., one target. {@h}10 ({@damage 1d8 + 6}) bludgeoning damage, or 11 ({@damage 1d10 + 6}) bludgeoning damage if used with two hands. While Horgar is enlarged, the damage increases to 15 ({@dice 2d8 + 6}) or 17 ({@damage 2d10 + 6}) bludgeoning damage, respectively."
+					]
+				},
+				{
+					"name": "Heavy Crossbow",
+					"entries": [
+						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. {@h}5 ({@damage 1d10}) piercing damage."
+					]
+				},
+				{
+					"name": "Leadership (Recharges after a Short or Long Rest)",
+					"entries": [
+						"For 1 minute, Horgar can utter a special command or warning whenever a nonhostile creature that he can see within 30 feet of Horgar makes an attack roll or a saving throw. The creature can add a {@dice d4} to its roll provided it can hear and understand Horgar. A creature can benefit from only one Leadership die at a time. This effect ends if Horgar is {@condition incapacitated}."
 					]
 				}
 			],
-			"page": 225,
-			"spellcasting": [
+			"reaction": [
 				{
-					"name": "Spellcasting",
-					"headerEntries": [
-						"The derro is a 5th-level spellcaster. It's spellcasting ability is Charisma (save DC 12, {@hit 4} to hit with spell attacks). The derro knows the following sorcerer spells:"
-					],
-					"spells": {
-						"0": {
-							"spells": [
-								"{@spell acid splash}",
-								"{@spell light}",
-								"{@spell mage hand}",
-								"{@spell message}",
-								"{@spell ray of frost}"
-							]
-						},
-						"1": {
-							"slots": 4,
-							"spells": [
-								"{@spell burning hands}",
-								"{@spell chromatic orb}",
-								"{@spell sleep}"
-							]
-						},
-						"2": {
-							"slots": 3,
-							"spells": [
-								"{@spell invisibility}",
-								"{@spell spider climb}"
-							]
-						},
-						"3": {
-							"slots": 2,
-							"spells": [
-								"{@spell blink}",
-								"{@spell lightning bolt}"
-							]
-						}
-					}
+					"name": "Parry",
+					"entries": [
+						"Horgar adds 2 to its AC against one melee attack that would hit him. To do so, Horgar must see the attacker and be wielding a melee weapon."
+					]
 				}
+			],
+			"hasToken": true,
+			"traitTags": [
+				"Sunlight Sensitivity"
+			],
+			"actionTags": [
+				"Multiattack",
+				"Parry"
+			],
+			"languageTags": [
+				"D",
+				"DR",
+				"GI"
+			],
+			"damageTags": [
+				"B",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RNG",
+				"RW"
 			]
 		},
 		{
 			"name": "Droki",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 231,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -637,11 +545,28 @@
 					"derro"
 				]
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "15 (studded leather)",
-			"hp": "31 (7d6+7)",
-			"speed": "30 ft. (60 ft. with boots of speed)",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"{@item studded leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 31,
+				"formula": "7d6 + 7"
+			},
+			"speed": {
+				"walk": {
+					"number": 30,
+					"condition": " (60 ft. with boots of speed)"
+				}
+			},
 			"str": 11,
 			"dex": 16,
 			"con": 13,
@@ -651,10 +576,34 @@
 			"skill": {
 				"stealth": "+5"
 			},
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"passive": 7,
-			"languages": "Dwarvish, Undercommon",
+			"languages": [
+				"Dwarvish",
+				"Undercommon"
+			],
 			"cr": "2",
+			"spellcasting": [
+				{
+					"name": "Innate Spellcasting",
+					"headerEntries": [
+						"Droki's innate spellcasting ability is Charisma (spell save {@dc 13}). He can innately cast the following spells, requiring no material components:"
+					],
+					"will": [
+						"{@spell minor illusion}"
+					],
+					"daily": {
+						"1e": [
+							"{@spell darkness}",
+							"{@spell fear}",
+							"{@spell shatter}"
+						]
+					},
+					"ability": "cha"
+				}
+			],
 			"trait": [
 				{
 					"name": "Special Equipment",
@@ -665,13 +614,13 @@
 				{
 					"name": "Insanity",
 					"entries": [
-						"Droki has advantage on saving throws against being charmed or frightened."
+						"Droki has advantage on saving throws against being {@condition charmed} or {@condition frightened}."
 					]
 				},
 				{
 					"name": "Sneak Attack (1/Turn)",
 					"entries": [
-						"Droki deals an extra 7 (2d6) damage when he hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of Droki that isn't incapacitated and Droki doesn't have disadvantage on the attack roll."
+						"Droki deals an extra 7 ({@dice 2d6}) damage when he hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of Droki that isn't {@condition incapacitated} and Droki doesn't have disadvantage on the attack roll."
 					]
 				},
 				{
@@ -683,7 +632,7 @@
 				{
 					"name": "Sunlight Sensitivity",
 					"entries": [
-						"While in sunlight, the derro has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+						"While in sunlight, the derro has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
 					]
 				}
 			],
@@ -697,7 +646,7 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit:6 (1d6+3) piercing damage. The sword is coated with serpent venom that wears off after the first hit. A target subjected to the venom must make a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage. The sword is coated with serpent venom that wears off after the first hit. A target subjected to the venom must make a {@dc 11} Constitution saving throw, taking 10 ({@damage 3d6}) poison damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
@@ -709,57 +658,101 @@
 					]
 				}
 			],
-			"page": 231,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Droki's innate spellcasting ability is Charisma (spell save DC 13). He can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell minor illusion}"
-					],
-					"daily": {
-						"1e": [
-							"{@spell darkness}",
-							"{@spell fear}",
-							"{@spell shatter}"
-						]
-					}
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Magic Resistance",
+				"Sneak Attack",
+				"Sunlight Sensitivity"
+			],
+			"senseTags": [
+				"SD"
+			],
+			"actionTags": [
+				"Multiattack",
+				"Parry"
+			],
+			"languageTags": [
+				"D",
+				"U"
+			],
+			"damageTags": [
+				"I",
+				"P"
+			],
+			"spellcastingTags": [
+				"I"
+			],
+			"miscTags": [
+				"MW"
+			],
+			"conditionInflictSpell": [
+				"frightened"
 			]
 		},
 		{
 			"name": "Drow Spore Servant",
+			"source": "OotA",
+			"page": 229,
 			"size": "M",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "15 (chain shirt)",
-			"hp": "13 (3d8)",
-			"speed": "20 ft.",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"{@item chain shirt|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 13,
+				"formula": "3d8"
+			},
+			"speed": {
+				"walk": 20
+			},
 			"str": 10,
 			"dex": 14,
 			"con": 10,
 			"int": 2,
 			"wis": 6,
 			"cha": 1,
-			"conditionImmune": "blinded, charmed, frightened, paralyzed",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"passive": 8,
+			"conditionImmune": [
+				"blinded",
+				"charmed",
+				"frightened",
+				"paralyzed"
+			],
 			"cr": "1/8",
 			"action": [
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6+2) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
-			"page": 229
+			"hasToken": true,
+			"senseTags": [
+				"B"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
 			"name": "Duergar Darkhaft",
+			"source": "OotA",
+			"page": 226,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -767,68 +760,49 @@
 					"dwarf"
 				]
 			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "16 (scale mail, shield)",
-			"hp": "26 (4d8+4)",
-			"speed": "25 ft.",
+			"alignment": [
+				"L",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"{@item scale mail|phb}",
+						"{@item shield|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 26,
+				"formula": "4d8 + 4"
+			},
+			"speed": {
+				"walk": 25
+			},
 			"str": 14,
 			"dex": 11,
 			"con": 14,
 			"int": 11,
 			"wis": 10,
 			"cha": 9,
-			"resist": "poison",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"passive": 10,
-			"languages": "Dwarvish, Undercommon",
+			"resist": [
+				"poison"
+			],
+			"languages": [
+				"Dwarvish",
+				"Undercommon"
+			],
 			"cr": "2",
-			"trait": [
-				{
-					"name": "Duergar Resilience",
-					"entries": [
-						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Enlarge (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, the duergar magically increases in size, along with anything it is wearing or carrying. While enlarged, the duergar is Large, doubles its damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If the duergar lacks the room to become Large, it attains the maximum size possible in the space available."
-					]
-				},
-				{
-					"name": "War Pick",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage, or 11 (2d8+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Javelin",
-					"entries": [
-						"Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 5 (1d6+2) piercing damage, or 9 (2d6+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Invisibility (Recharges after a Short or Long Rest)",
-					"entries": [
-						"The duergar magically turns invisible until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is invisible with it."
-					]
-				}
-			],
-			"page": 226,
 			"spellcasting": [
 				{
 					"name": "Innate Spellcasting (Psionics)",
 					"headerEntries": [
-						"The darkhaft's innate spellcasting ability is Intelligence (spell save DC 10) it can innately cast the following spells, requiring no components:"
+						"The darkhaft's innate spellcasting ability is Intelligence (spell save {@dc 10}) it can innately cast the following spells, requiring no components:"
 					],
 					"will": [
 						"{@spell friends}",
@@ -839,97 +813,81 @@
 							"{@spell disguise self}",
 							"{@spell sleep}"
 						]
-					}
+					},
+					"ability": "int"
 				}
+			],
+			"trait": [
+				{
+					"name": "Duergar Resilience",
+					"entries": [
+						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being {@condition charmed} or {@condition paralyzed}."
+					]
+				},
+				{
+					"name": "Sunlight Sensitivity",
+					"entries": [
+						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
+					]
+				}
+			],
+			"action": [
+				{
+					"name": "Enlarge (Recharges after a Short or Long Rest)",
+					"entries": [
+						"For 1 minute, the duergar magically increases in size, along with anything it is wearing or carrying. While enlarged, the duergar is Large, doubles its damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If the duergar lacks the room to become Large, it attains the maximum size possible in the space available."
+					]
+				},
+				{
+					"name": "War Pick",
+					"entries": [
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage, or 11 ({@damage 2d8 + 2}) piercing damage while enlarged."
+					]
+				},
+				{
+					"name": "Javelin",
+					"entries": [
+						"{@atk mw,rw} {@hit 4} to hit, reach 5 ft. or range 30/120 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage, or 9 ({@damage 2d6 + 2}) piercing damage while enlarged."
+					]
+				},
+				{
+					"name": "Invisibility (Recharges after a Short or Long Rest)",
+					"entries": [
+						"The duergar magically turns {@condition invisible} until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is {@condition invisible} with it."
+					]
+				}
+			],
+			"hasToken": true,
+			"traitTags": [
+				"Sunlight Sensitivity"
+			],
+			"senseTags": [
+				"SD"
+			],
+			"languageTags": [
+				"D",
+				"U"
+			],
+			"damageTags": [
+				"P"
+			],
+			"spellcastingTags": [
+				"I",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
+			],
+			"conditionInflictSpell": [
+				"unconscious"
 			]
 		},
 		{
-			"name": "Duergar Kavalrachni",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"dwarf"
-				]
-			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "16 (scale mail, shield)",
-			"hp": "26 (4d8+4)",
-			"speed": "25 ft.",
-			"str": 14,
-			"dex": 11,
-			"con": 14,
-			"int": 11,
-			"wis": 10,
-			"cha": 9,
-			"resist": "poison",
-			"senses": "darkvision 120 ft.",
-			"passive": 10,
-			"languages": "Dwarvish, Undercommon",
-			"cr": "2",
-			"trait": [
-				{
-					"name": "Mounted",
-					"entries": [
-						"The vicious kavalrachni are the duergar cavalry of Gracklstugh, riding giant tarantulas known as steeders (see the female steeder stat block)"
-					]
-				},
-				{
-					"name": "Cavalry Training",
-					"entries": [
-						"When the duergar hits a target with a melee attack while mounted on a female steeder, the steeder can make a melee attack against the same target as a reaction."
-					]
-				},
-				{
-					"name": "Duergar Resilience",
-					"entries": [
-						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Enlarge (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, the duergar magically increases in size, along with anything it is wearing or carrying. While enlarged, the duergar is Large, doubles its damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If the duergar lacks the room to become Large, it attains the maximum size possible in the space available."
-					]
-				},
-				{
-					"name": "War Pick",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage, or 11 (2d8+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Javelin",
-					"entries": [
-						"Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 5 (1d6+2) piercing damage, or 9 (2d6+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Heavy Crossbow",
-					"entries": [
-						"Ranged Weapon Attack: +4 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage."
-					]
-				},
-				{
-					"name": "Invisibility (Recharges after a Short or Long Rest)",
-					"entries": [
-						"The duergar magically turns invisible until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is invisible with it."
-					]
-				}
-			],
-			"page": 226
-		},
-		{
 			"name": "Duergar Keeper of the Flame",
+			"source": "OotA",
+			"page": 226,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -937,68 +895,49 @@
 					"dwarf"
 				]
 			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "16 (scale mail, shield)",
-			"hp": "26 (4d8+4)",
-			"speed": "25 ft.",
+			"alignment": [
+				"L",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"{@item scale mail|phb}",
+						"{@item shield|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 26,
+				"formula": "4d8 + 4"
+			},
+			"speed": {
+				"walk": 25
+			},
 			"str": 14,
 			"dex": 11,
 			"con": 14,
 			"int": 11,
 			"wis": 10,
 			"cha": 9,
-			"resist": "poison",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"passive": 10,
-			"languages": "Dwarvish, Undercommon",
+			"resist": [
+				"poison"
+			],
+			"languages": [
+				"Dwarvish",
+				"Undercommon"
+			],
 			"cr": "2",
-			"trait": [
-				{
-					"name": "Duergar Resilience",
-					"entries": [
-						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Enlarge (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, the duergar magically increases in size, along with anything it is wearing or carrying. While enlarged, the duergar is Large, doubles its damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If the duergar lacks the room to become Large, it attains the maximum size possible in the space available."
-					]
-				},
-				{
-					"name": "War Pick",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage, or 11 (2d8+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Javelin",
-					"entries": [
-						"Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 5 (1d6+2) piercing damage, or 9 (2d6+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Invisibility (Recharges after a Short or Long Rest)",
-					"entries": [
-						"The duergar magically turns invisible until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is invisible with it."
-					]
-				}
-			],
-			"page": 226,
 			"spellcasting": [
 				{
 					"name": "Innate Spellcasting (Psionics)",
 					"headerEntries": [
-						"The Keeper of the Flame's innate spellcasting ability is Wisdom (spell save DC 12.) It can innately cast the following spells, requiring no components:"
+						"The Keeper of the Flame's innate spellcasting ability is Wisdom (spell save {@dc 12}.) It can innately cast the following spells, requiring no components:"
 					],
 					"will": [
 						"{@spell friends}",
@@ -1008,12 +947,13 @@
 						"1e": [
 							"{@spell command}"
 						]
-					}
+					},
+					"ability": "wis"
 				},
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"The Keeper of the Flame is a 3rd-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 12, {@hit 4} to hit with spell attacks). The Keeper of the Flame has the following cleric spells prepared:"
+						"The Keeper of the Flame is a 3rd-level spellcaster. Its spellcasting ability is Wisdom (spell save {@dc 12}, {@hit 4} to hit with spell attacks). The Keeper of the Flame has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -1038,46 +978,21 @@
 								"{@spell spiritual weapon}"
 							]
 						}
-					}
+					},
+					"ability": "wis"
 				}
-			]
-		},
-		{
-			"name": "Duergar Soulblade",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"dwarf"
-				]
-			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "14 (leather armor)",
-			"hp": "18 (4d8)",
-			"speed": "25 ft.",
-			"str": 11,
-			"dex": 16,
-			"con": 10,
-			"int": 11,
-			"wis": 10,
-			"cha": 12,
-			"resist": "poison",
-			"senses": "darkvision 120 ft.",
-			"passive": 10,
-			"languages": "Dwarvish, Undercommon",
-			"cr": "1",
+			],
 			"trait": [
 				{
 					"name": "Duergar Resilience",
 					"entries": [
-						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
+						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being {@condition charmed} or {@condition paralyzed}."
 					]
 				},
 				{
 					"name": "Sunlight Sensitivity",
 					"entries": [
-						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
 					]
 				}
 			],
@@ -1089,211 +1004,151 @@
 					]
 				},
 				{
-					"name": "Create Soulblade",
+					"name": "War Pick",
 					"entries": [
-						"The duergar creates a visible, shortsword-sized blade of psionic energy. The weapon appears int he duergar's hand and vanishes if it leaves the duergar's grip, or if the duergar dies or is incapacitated."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage, or 11 ({@damage 2d8 + 2}) piercing damage while enlarged."
 					]
 				},
 				{
-					"name": "Soulblade",
+					"name": "Javelin",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) force damage, or 10 (2d6+3) force damage while enlarged. If the soulblade has advantage on the attack roll, the attack deals an extra 3 (1d6) force damage."
+						"{@atk mw,rw} {@hit 4} to hit, reach 5 ft. or range 30/120 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage, or 9 ({@damage 2d6 + 2}) piercing damage while enlarged."
 					]
 				},
 				{
 					"name": "Invisibility (Recharges after a Short or Long Rest)",
 					"entries": [
-						"The duergar magically turns invisible until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is invisible with it."
+						"The duergar magically turns {@condition invisible} until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is {@condition invisible} with it."
 					]
 				}
 			],
-			"page": 227,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting (Psionics)",
-					"headerEntries": [
-						"The duergar's innate spellcasting ability is Wisdom (spell save DC 12, {@hit 4} to hit with spell attacks). It can innately cast the following spells, requiring no components:"
-					],
-					"will": [
-						"{@spell blade ward}",
-						"{@spell true strike}"
-					],
-					"daily": {
-						"1e": [
-							"{@spell jump}",
-							"{@spell hunter's mark}"
-						]
-					}
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Sunlight Sensitivity"
+			],
+			"senseTags": [
+				"SD"
+			],
+			"languageTags": [
+				"D",
+				"U"
+			],
+			"damageTags": [
+				"P"
+			],
+			"spellcastingTags": [
+				"CC",
+				"I",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW",
+				"THW"
+			],
+			"conditionInflictSpell": [
+				"prone"
 			]
 		},
 		{
 			"name": "Duergar Spore Servant",
+			"source": "OotA",
+			"page": 229,
 			"size": "M",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "16 (scale armor, shield)",
-			"hp": "26 (4d8+8)",
-			"speed": "15 ft.",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"{@item scale mail|phb}",
+						"{@item shield|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 26,
+				"formula": "4d8 + 8"
+			},
+			"speed": {
+				"walk": 15
+			},
 			"str": 14,
 			"dex": 11,
 			"con": 14,
 			"int": 2,
 			"wis": 6,
 			"cha": 1,
-			"resist": "poison",
-			"conditionImmune": "blinded, charmed, frightened, paralyzed",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"passive": 8,
+			"resist": [
+				"poison"
+			],
+			"conditionImmune": [
+				"blinded",
+				"charmed",
+				"frightened",
+				"paralyzed"
+			],
 			"cr": "1/2",
 			"action": [
 				{
 					"name": "War Pick",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage."
 					]
 				}
 			],
-			"page": 229
+			"hasToken": true,
+			"senseTags": [
+				"B"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
-			"name": "Duergar Stone Guard",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"dwarf"
-				]
+			"name": "Eldeth Feldrun",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 6,
+			"_copy": {
+				"name": "Scout",
+				"source": "MM",
+				"_trait": {
+					"name": "Mountain Dwarf",
+					"source": "PHB"
+				},
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the scout",
+						"with": "Eldeth",
+						"flags": "i"
+					}
+				}
 			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "18 (chain mail, shield)",
-			"hp": "39 (6d8+12)",
-			"speed": "25 ft.",
-			"str": 18,
-			"dex": 11,
-			"con": 14,
-			"int": 11,
-			"wis": 10,
-			"cha": 9,
-			"resist": "poison",
-			"senses": "darkvision 120 ft.",
-			"passive": 10,
-			"languages": "Dwarvish, Undercommon",
-			"cr": "2",
-			"trait": [
-				{
-					"name": "Duergar Resilience",
-					"entries": [
-						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
-					]
-				}
+			"hasToken": true,
+			"senseTags": [
+				"D"
 			],
-			"action": [
-				{
-					"name": "Enlarge (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, the duergar magically increases in size, along with anything it is wearing or carrying. While enlarged, the duergar is Large, doubles its damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If the duergar lacks the room to become Large, it attains the maximum size possible in the space available."
-					]
-				},
-				{
-					"name": "King's Knife (Shortsword)",
-					"entries": [
-						"Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 7 (1d6+4) piercing damage, or 11 (2d6+4) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Javelin",
-					"entries": [
-						"Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 5 (1d6+2) piercing damage, or 9 (2d6+2) piercing damage while enlarged."
-					]
-				},
-				{
-					"name": "Invisibility (Recharges after a Short or Long Rest)",
-					"entries": [
-						"The duergar magically turns invisible until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is invisible with it."
-					]
-				}
-			],
-			"page": 227
+			"languageTags": [
+				"C",
+				"D",
+				"X"
+			]
 		},
 		{
-			"name": "Duergar Xarrorn",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"dwarf"
-				]
-			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "18 (platemail)",
-			"hp": "26 (4d8+8)",
-			"speed": "25 ft.",
-			"str": 16,
-			"dex": 11,
-			"con": 14,
-			"int": 11,
-			"wis": 10,
-			"cha": 9,
-			"resist": "poison",
-			"senses": "darkvision 120 ft.",
-			"passive": 10,
-			"languages": "Dwarvish, Undercommon",
-			"cr": "2",
-			"trait": [
-				{
-					"name": "Duergar Resilience",
-					"entries": [
-						"The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, the duergar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Enlarge (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, the duergar magically increases in size, along with anything it is wearing or carrying. While enlarged, the duergar is Large, doubles its damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If the duergar lacks the room to become Large, it attains the maximum size possible in the space available."
-					]
-				},
-				{
-					"name": "Fire Lance",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit (with disadvantage if the target is within 5 feet of the duergar), reach 10 ft., one target. Hit: 9 (1d12+3) piercing damage plus 3 (1d6) fire damage, or 16 (2d12+3) piercing damage plus 3 (1d6) fire damage while enlarged."
-					]
-				},
-				{
-					"name": "Fire Spray (Recharge 5\u20146)",
-					"entries": [
-						"From its fire lance, the duergar shoots a 15-foot cone of fire or a line of fire 30 feet long and 5 feet wide. Each creature in that area must make a DC 12 Dexterity saving throw, taking 10 (3d6) fire damage on a failed save, or half as much damage on a successful one."
-					]
-				},
-				{
-					"name": "Invisibility (Recharges after a Short or Long Rest)",
-					"entries": [
-						"The duergar magically turns invisible until it attacks, casts a spell, or uses its Enlarge, or until its concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment the duergar wears or carries is invisible with it."
-					]
-				}
-			],
-			"page": 226
-		},
-		{
-			"source": "OotA",
 			"name": "Emerald Enclave Scout",
+			"source": "OotA",
+			"page": 130,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1301,10 +1156,25 @@
 					"dwarf"
 				]
 			},
-			"alignment": "lawful neutral",
-			"ac": "16 (breastplate)",
-			"hp": "19 (3d8+6)",
-			"speed": "25 ft.",
+			"alignment": [
+				"L",
+				"N"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"{@item breastplate|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 19,
+				"formula": "3d8 + 6"
+			},
+			"speed": {
+				"walk": 25
+			},
 			"str": 11,
 			"dex": 14,
 			"con": 14,
@@ -1317,10 +1187,17 @@
 				"stealth": "+6",
 				"survival": "+5"
 			},
-			"resist": "poison",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 15,
-			"languages": "Common, Dwarvish",
+			"resist": [
+				"poison"
+			],
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "1/2",
 			"trait": [
 				{
@@ -1332,7 +1209,7 @@
 				{
 					"name": "Keen Hearing and Sight",
 					"entries": [
-						"The scout has advantage on Wisdom (Perception) checks that rely on hearing or sight."
+						"The scout has advantage on Wisdom ({@skill Perception}) checks that rely on hearing or sight."
 					]
 				}
 			],
@@ -1346,212 +1223,73 @@
 				{
 					"name": "War Pick",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d8+3) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) piercing damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"Ranged Weapon Attack: +3 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage."
+						"{@atk rw} {@hit 3} to hit, range 100/400 ft., one target. {@h}5 ({@damage 1d10}) piercing damage."
 					]
 				}
 			],
-			"page": 130
-		},
-		{
-			"name": "Female Steeder",
-			"size": "L",
-			"type": "beast",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "14 (natural armor)",
-			"hp": "30 (4d10+8)",
-			"speed": "30 ft., climb 30 ft.",
-			"str": 15,
-			"dex": 16,
-			"con": 14,
-			"int": 2,
-			"wis": 10,
-			"cha": 3,
-			"skill": {
-				"stealth": "+7"
-			},
-			"senses": "darkvision 120 ft.",
-			"passive": 10,
-			"cr": "1",
-			"trait": [
-				{
-					"name": "Spider Climb",
-					"entries": [
-						"The steeder can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
-					]
-				},
-				{
-					"name": "Leap",
-					"entries": [
-						"The steeder can expend all its movement on its turn to jump up to 90 feet vertically or horizontally, provided that is speed is at least 30 feet."
-					]
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Keen Senses"
 			],
-			"action": [
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8+3) piercing damage, and the target must make a DC 12 Constitution saving throw, taking 9 (2d8) acid damage on a failed save, or half as much damage on a successful one."
-					]
-				},
-				{
-					"name": "Sticky Leg (Recharges when the Steeder Has No Creatures Grappled)",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one Medium or smaller creature. Hit: The target is stuck on the steeder's leg and grappled until it escapes (escape DC 12)"
-					]
-				}
+			"senseTags": [
+				"D"
 			],
-			"page": 231
-		},
-		{
-			"name": "Fraz-Urb'luu",
-			"size": "L",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "18 (natural armor)",
-			"hp": "350 (28d10+196)",
-			"speed": "40 ft., fly 40 ft.",
-			"str": 29,
-			"dex": 12,
-			"con": 25,
-			"int": 26,
-			"wis": 24,
-			"cha": 26,
-			"save": "Dex +8, Con +15, Int +15, Wis +14",
-			"skill": {
-				"deception": "+15",
-				"perception": "+14",
-				"stealth": "+8"
-			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 24,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "23",
-			"trait": [
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Fraz-Urb'luu fails a saving throw, he can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Fraz-Urb'luu has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Fraz-Urb'luu's weapon attacks are magical."
-					]
-				},
-				{
-					"name": "Undetectable",
-					"entries": [
-						"Fraz-Urb'luu can't be targeted by divination magic, perceived through magical scrying sensors, or detected by abilities that sense demons or fiends."
-					]
-				}
+			"actionTags": [
+				"Multiattack"
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Fraz-Urb'luu makes three attacks: one with his bite and two with his fists."
-					]
-				},
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +16 to hit, reach 10 ft., one target. Hit: 23 (4d6+9) piercing damage."
-					]
-				},
-				{
-					"name": "Fist",
-					"entries": [
-						"Melee Weapon Attack: +16 to hit, reach 10 ft., one target. Hit: 27 (4d8+9) bludgeoning damage."
-					]
-				}
+			"languageTags": [
+				"C",
+				"D"
 			],
-			"legendaryGroup": "Fraz-Urb'luu",
-			"legendary": [
-				{
-					"name": "Tail",
-					"entries": [
-						"Melee Weapon Attack: +16 to hit, reach 15 ft., one target. Hit: 31 (4d10+9) bludgeoning damage. If the target is a Large or smaller creature, it is also grappled (escape DC 24). The grappled target is also restrained. Fraz-Urb'luu can grapple only one creature with his tail at a time."
-					],
-					"attack": [
-						"|16|4d10+9"
-					]
-				},
-				{
-					"name": "Phantasmal Killer (Costs 2 Actions)",
-					"entries": [
-						"Fraz-Urb'luu casts phantasmal killer, no concentration required."
-					]
-				}
+			"damageTags": [
+				"P"
 			],
-			"page": 238,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Fraz-Urb'luu's spellcasting ability is Charisma (spell save DC 23). Fraz-Urb'luu can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell alter self} (can become Medium-sized when changing his appearance)",
-						"{@spell detect magic}",
-						"{@spell dispel magic}",
-						"{@spell phantasmal force}"
-					],
-					"daily": {
-						"3e": [
-							"{@spell confusion}",
-							"{@spell dream}",
-							"{@spell mislead}",
-							"{@spell programmed illusion}",
-							"{@spell seeming}"
-						],
-						"1e": [
-							"{@spell mirage arcane}",
-							"{@spell modify memory}",
-							"{@spell project image}"
-						]
-					}
-				}
+			"miscTags": [
+				"MW",
+				"RNG",
+				"RW"
 			]
 		},
 		{
-			"source": "OotA",
 			"name": "Giant Riding Lizard",
+			"source": "OotA",
+			"page": 131,
 			"size": "L",
 			"type": "beast",
-			"alignment": "unaligned",
-			"ac": "12 (natural armor)",
-			"hp": "19 (3d10+3)",
-			"speed": "30 ft., climb 30ft.",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 12,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 19,
+				"formula": "3d10 + 3"
+			},
+			"speed": {
+				"walk": 30,
+				"climb": 30
+			},
 			"str": 15,
 			"dex": 12,
 			"con": 13,
 			"int": 2,
 			"wis": 10,
 			"cha": 5,
-			"senses": "darkvision 30 ft.",
+			"senses": [
+				"darkvision 30 ft."
+			],
 			"passive": 10,
 			"cr": "1/4",
 			"trait": [
@@ -1566,153 +1304,63 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage."
 					]
 				}
 			],
-			"page": 131
+			"hasToken": true,
+			"traitTags": [
+				"Spider Climb"
+			],
+			"senseTags": [
+				"D"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
-			"name": "Graz'zt",
-			"size": "L",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon",
-					"shapechanger"
-				]
-			},
+			"name": "Giant Rocktopus",
 			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "20 (natural armor)",
-			"hp": "378 (36d10+180)",
-			"speed": "40 ft.",
-			"str": 22,
-			"dex": 15,
-			"con": 21,
-			"int": 23,
-			"wis": 21,
-			"cha": 26,
-			"save": "Dex +9, Con +12, Wis +12",
-			"skill": {
-				"deception": "+15",
-				"insight": "+12",
-				"perception": "+12",
-				"persuasion": "+15"
+			"page": 28,
+			"_copy": {
+				"name": "Giant Octopus",
+				"source": "MM",
+				"_mod": {
+					"trait": [
+						{
+							"mode": "replaceArr",
+							"replace": "Underwater Camouflage",
+							"items": {
+								"name": "Camouflage",
+								"entries": [
+									"The octopus has advantage on Dexterity (Stealth) checks."
+								]
+							}
+						},
+						{
+							"mode": "removeArr",
+							"names": "Hold Breath"
+						}
+					]
+				}
 			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 22,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "24",
-			"trait": [
-				{
-					"name": "Shapechanger",
-					"entries": [
-						"Graz'zt can use his action to polymorph into a form that resembles a Medium humanoid, or back into his true form. Aside from his size, his statistics are the same in each form, Any equipment he is wearing or carrying isn't transformed."
-					]
-				},
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Graz'zt fails a saving throw, he can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Graz'zt has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Graz'zt's weapon attacks are magical."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Graz'zt attacks twice with the Wave of Sorrow."
-					]
-				},
-				{
-					"name": "Wave of Sorrow (Greatsword)",
-					"entries": [
-						"Melee Weapon Attack: +13 to hit, reach 10 ft., one target, Hit; 20 (4d6+6) slashing damage plus 14 (4d6) acid damage."
-					]
-				},
-				{
-					"name": "Teleport",
-					"entries": [
-						"Graz'zt magically teleports, along with any equipment he is wearing or carrying, up to 120 feet to an unoccupied space he can see."
-					]
-				}
-			],
-			"legendaryGroup": "Graz'zt",
-			"legendary": [
-				{
-					"name": "Attack",
-					"entries": [
-						"Graz'zt attacks once with the Wave of Sorrow."
-					]
-				},
-				{
-					"name": "Dance, My Puppet!",
-					"entries": [
-						"One creature charmed by Graz'zt that Graz'zt can see must use its reaction to move up to its speed as Graz'zt directs."
-					]
-				},
-				{
-					"name": "Sow Discord",
-					"entries": [
-						"Graz'zt casts crown of madness or dissonant whispers."
-					]
-				},
-				{
-					"name": "Teleport",
-					"entries": [
-						"Graz'zt uses his Teleport action."
-					]
-				}
-			],
-			"page": 241,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Graz'zt's spellcasting ability is Charisma (spell save DC 23). Graz'zt can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell charm person}",
-						"{@spell crown of madness}",
-						"{@spell detect magic}",
-						"{@spell dispel magic}",
-						"{@spell dissonant whispers}"
-					],
-					"daily": {
-						"3e": [
-							"{@spell counterspell}",
-							"{@spell darkness}",
-							"{@spell dominate person}",
-							"{@spell sanctuary}",
-							"{@spell telekinesis}",
-							"{@spell teleport}"
-						],
-						"1e": [
-							"{@spell dominate monster}",
-							"{@spell greater invisibility}"
-						]
-					}
-				}
+			"speed": {
+				"walk": 20,
+				"climb": 10
+			},
+			"traitTags": [
+				"Water Breathing"
 			]
 		},
 		{
 			"name": "Grisha",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 232,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -1723,45 +1371,51 @@
 					}
 				]
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "18 (chain mail, shield)",
-			"hp": "33 (6d8+6)",
-			"speed": "30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 18,
+					"from": [
+						"{@item chain mail|phb}",
+						"{@item shield|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 33,
+				"formula": "6d8 + 6"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 14,
 			"dex": 12,
 			"con": 12,
 			"int": 11,
 			"wis": 14,
 			"cha": 16,
-			"save": "Wis +4, Cha +5",
+			"save": {
+				"wis": "+4",
+				"cha": "+5"
+			},
 			"skill": {
 				"persuasion": "+5",
 				"religion": "+2"
 			},
 			"passive": 12,
-			"languages": "Common, Undercommon",
-			"cr": "2",
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Grisha makes two attacks with his +1 flail."
-					]
-				},
-				{
-					"name": "+1 Flail",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit:7 (1d8+3) bludgeoning damage"
-					]
-				}
+			"languages": [
+				"Common",
+				"Undercommon"
 			],
-			"page": 232,
+			"cr": "2",
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"Grisha is a 6th-level-spellcaster. His spellcasting ability is Wisdom (spell save DC 12, {@hit 4} to hit with spell attacks). He has the following cleric spells prepared:"
+						"Grisha is a 6th-level-spellcaster. His spellcasting ability is Wisdom (spell save {@dc 12}, {@hit 4} to hit with spell attacks). He has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -1799,29 +1453,86 @@
 								"{@spell spirit guardians}"
 							]
 						}
-					}
+					},
+					"ability": "wis"
 				}
+			],
+			"action": [
+				{
+					"name": "Multiattack",
+					"entries": [
+						"Grisha makes two attacks with his +1 flail."
+					]
+				},
+				{
+					"name": "+1 Flail",
+					"entries": [
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) bludgeoning damage"
+					]
+				}
+			],
+			"hasToken": true,
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"U"
+			],
+			"damageTags": [
+				"B"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
 			"name": "Hook Horror Spore Servant",
+			"source": "OotA",
+			"page": 68,
 			"size": "M",
 			"type": "plant",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "15 (natural armor)",
-			"hp": "75 (10d10+10)",
-			"speed": "20 ft., climb 20 ft.",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 75,
+				"formula": "10d10 + 10"
+			},
+			"speed": {
+				"walk": 20,
+				"climb": 20
+			},
 			"str": 18,
 			"dex": 10,
 			"con": 15,
 			"int": 2,
 			"wis": 6,
 			"cha": 1,
-			"resist": "poison",
-			"conditionImmune": "blinded, charmed, frightened, paralyzed",
-			"senses": "blindsight 30 ft. (blind beyond this radius)",
+			"senses": [
+				"blindsight 30 ft. (blind beyond this radius)"
+			],
 			"passive": 8,
+			"resist": [
+				"poison"
+			],
+			"conditionImmune": [
+				"blinded",
+				"charmed",
+				"frightened",
+				"paralyzed"
+			],
 			"cr": "3",
 			"action": [
 				{
@@ -1833,36 +1544,71 @@
 				{
 					"name": "Hook",
 					"entries": [
-						"Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 11 (2d6+4) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 10 ft., one target. {@h}11 ({@damage 2d6 + 4}) piercing damage."
 					]
 				}
 			],
-			"page": 68
+			"hasToken": true,
+			"senseTags": [
+				"B"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RCH"
+			]
 		},
 		{
 			"name": "Ixitxachitl",
+			"source": "OotA",
+			"page": 225,
 			"size": "S",
 			"type": "aberration",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "15 (natural armor)",
-			"hp": "18 (4d6+4)",
-			"speed": "0 ft., swim 30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 18,
+				"formula": "4d6 + 4"
+			},
+			"speed": {
+				"walk": 0,
+				"swim": 30
+			},
 			"str": 12,
 			"dex": 16,
 			"con": 13,
 			"int": 12,
 			"wis": 13,
 			"cha": 7,
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Abyssal, Ixitxachitl",
+			"languages": [
+				"Abyssal",
+				"Ixitxachitl"
+			],
 			"cr": "1/4",
 			"action": [
 				{
 					"name": "Bite",
 					"entries": [
-						"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6+1) piercing damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d6 + 1}) piercing damage."
 					]
 				}
 			],
@@ -1871,54 +1617,71 @@
 					"name": "Barbed Tail",
 					"entries": [
 						"When a creature provokes an opportunity attack from the ixitxachitl, the ixitxachitl can make the following attack instead of using its bite.",
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8+3) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) piercing damage."
 					]
 				}
 			],
-			"page": 225
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"AB",
+				"OTH"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
 			"name": "Ixitxachitl Cleric",
+			"source": "OotA",
+			"page": 225,
 			"size": "S",
 			"type": "aberration",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "15 (natural armor)",
-			"hp": "18 (4d6+4)",
-			"speed": "0 ft., swim 30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 18,
+				"formula": "4d6 + 4"
+			},
+			"speed": {
+				"walk": 0,
+				"swim": 30
+			},
 			"str": 12,
 			"dex": 16,
 			"con": 13,
 			"int": 12,
 			"wis": 13,
 			"cha": 7,
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Abyssal, Ixitxachitl",
+			"languages": [
+				"Abyssal",
+				"Ixitxachitl"
+			],
 			"cr": "1/4",
-			"action": [
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6+1) piercing damage."
-					]
-				}
-			],
-			"reaction": [
-				{
-					"name": "Barbed Tail",
-					"entries": [
-						"When a creature provokes an opportunity attack from the ixitxachitl, the ixitxachitl can make the following attack instead of using its bite.",
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8+3) piercing damage."
-					]
-				}
-			],
-			"page": 225,
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"The ixitxachitl is a 5th-level spellcaster that uses Wisdom as its spellcasting ability (spell save DC 11, {@hit 3} to hit with spell attacks). The ixitxachitl has the following cleric spells prepared:"
+						"The ixitxachitl is a 5th-level spellcaster that uses Wisdom as its spellcasting ability (spell save {@dc 11}, {@hit 3} to hit with spell attacks). The ixitxachitl has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -1948,147 +1711,49 @@
 								"{@spell tongues}"
 							]
 						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Juiblex",
-			"size": "H",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "18 (natural armor)",
-			"hp": "350 (28d12+168)",
-			"speed": "30 ft.",
-			"str": 24,
-			"dex": 10,
-			"con": 23,
-			"int": 20,
-			"wis": 20,
-			"cha": 16,
-			"save": "Dex +7, Con +13, Wis +12",
-			"skill": {
-				"perception": "+12"
-			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "blinded, charmed, deafened, exhaustion, frightened, grappled, paralyzed, petrified, poisoned, prone, restrained, stunned, unconscious",
-			"senses": "truesight 120 ft.",
-			"passive": 22,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "23",
-			"trait": [
-				{
-					"name": "Foul",
-					"entries": [
-						"Any creature, other than an ooze, that starts its turn within 10 feet of Juiblex must succeed on a DC 21 Constitution saving throw or be poisoned until the start of the creature's next turn."
-					]
-				},
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Juiblex fails a saving throw, it can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Juiblex has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Juiblex's weapon attacks are magical."
-					]
-				},
-				{
-					"name": "Regeneration",
-					"entries": [
-						"Juiblex regains 20 hit points at the start of its turn. If it takes fire or radiant damage, this trait doesn't function at the start of its next turn. Juiblex dies only if it starts its turn with 0 hit points and doesn't regenerate."
-					]
-				},
-				{
-					"name": "Spider Climb",
-					"entries": [
-						"Juiblex can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
-					]
+					},
+					"ability": "wis"
 				}
 			],
 			"action": [
 				{
-					"name": "Multiattack",
+					"name": "Bite",
 					"entries": [
-						"Juiblex makes three acid lash attacks."
-					]
-				},
-				{
-					"name": "Acid Lash",
-					"entries": [
-						"Melee Weapon Attack: +14 to hit, reach 10 ft., one target. Hit: 21 (4d6+7) acid damage. Any creature killed by this attack is drawn into Juiblex's body, and the corpse is obliterated after 1 minute."
-					]
-				},
-				{
-					"name": "Eject Slime (Recharge 5\u20146)",
-					"entries": [
-						"Juiblex spews out a corrosive slime, targeting one creature that it can see within 60 feet of it. The target must make a DC 21 Dexterity saving throw. On a failure, the target takes 55 (10d10) acid damage. Unless the target avoids taking any of this damage, any metal armor worn by the target takes a permanent -1 penalty to the AC it offers, and any metal weapon it is carrying or wearing takes a permanent -1 penalty to damage rolls. The penalty worsens each time a target is subjected to this effect. If the penalty on an object drops to -5, the object is destroyed."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d6 + 1}) piercing damage."
 					]
 				}
 			],
-			"legendaryGroup": "Juiblex",
-			"legendary": [
+			"reaction": [
 				{
-					"name": "Acid Splash",
+					"name": "Barbed Tail",
 					"entries": [
-						"Juiblex casts acid splash."
-					]
-				},
-				{
-					"name": "Attack",
-					"entries": [
-						"Juiblex makes one acid lash attack."
-					]
-				},
-				{
-					"name": "Corrupting Touch (Costs 2 Actions)",
-					"entries": [
-						"Melee Weapon Attack: +14 to hit, reach 10 ft., one creature. Hit: 21 (4d6+7) poison damage, and the target is slimed. Until the slime is scraped off with an action, the target is poisoned, and any creature, other than an ooze, is poisoned while Within 10 of the target."
-					],
-					"attack": [
-						"|14|4d6+7"
+						"When a creature provokes an opportunity attack from the ixitxachitl, the ixitxachitl can make the following attack instead of using its bite.",
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) piercing damage."
 					]
 				}
 			],
-			"page": 243,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Juiblex's spellcasting ability is Charisma (spell save DC 18, {@hit 10} to hit with spell attacks). Juiblex can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell acid splash} (17th level)",
-						"{@spell detect magic}"
-					],
-					"daily": {
-						"3e": [
-							"{@spell blight}",
-							"{@spell contagion}",
-							"{@spell gaseous form}"
-						]
-					}
-				}
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"AB",
+				"OTH"
+			],
+			"damageTags": [
+				"P"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
-			"source": "OotA",
 			"name": "Lords' Alliance Guard",
+			"source": "OotA",
+			"page": 131,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2096,10 +1761,26 @@
 					"dwarf"
 				]
 			},
-			"alignment": "chaotic good",
-			"ac": "16 (chain shirt, shield)",
-			"hp": "11 (2d8+2)",
-			"speed": "30ft.",
+			"alignment": [
+				"C",
+				"G"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"{@item chain shirt|phb}",
+						"{@item shield|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 11,
+				"formula": "2d8 + 2"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 14,
 			"dex": 12,
 			"con": 12,
@@ -2109,7 +1790,9 @@
 			"skill": {
 				"perception": "+2"
 			},
-			"senses": "darkvision 60ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 12,
 			"cr": "1/4",
 			"trait": [
@@ -2124,15 +1807,26 @@
 				{
 					"name": "Halberd",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 10ft., one target. Hit: 7 (1d10+2) slashing damage."
+						"{@atk mw} {@hit 4} to hit, reach 10 ft., one target. {@h}7 ({@damage 1d10 + 2}) slashing damage."
 					]
 				}
 			],
-			"page": 131
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"damageTags": [
+				"S"
+			],
+			"miscTags": [
+				"MW",
+				"RCH"
+			]
 		},
 		{
-			"source": "OotA",
 			"name": "Lords' Alliance Spy",
+			"source": "OotA",
+			"page": 131,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2140,10 +1834,24 @@
 					"human"
 				]
 			},
-			"alignment": "neutral",
-			"ac": "13 (leather armor)",
-			"hp": "27 (6d8)",
-			"speed": "30ft.",
+			"alignment": [
+				"N"
+			],
+			"ac": [
+				{
+					"ac": 13,
+					"from": [
+						"{@item leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 27,
+				"formula": "6d8"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 10,
 			"dex": 15,
 			"con": 10,
@@ -2160,7 +1868,10 @@
 				"stealth": "+4"
 			},
 			"passive": 16,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "1",
 			"trait": [
 				{
@@ -2172,7 +1883,7 @@
 				{
 					"name": "Sneak Attack (1/Turn)",
 					"entries": [
-						"The spy deals an extra 7 (2d6) damage when it hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of the spy that isn't incapacitated and the spy doesn't have disadvantage on the attack roll."
+						"The spy deals an extra 7 ({@dice 2d6}) damage when it hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of the spy that isn't {@condition incapacitated} and the spy doesn't have disadvantage on the attack roll."
 					]
 				}
 			],
@@ -2186,71 +1897,41 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6+2) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				},
 				{
 					"name": "Hand Crossbow",
 					"entries": [
-						"Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 5 (1d6+2) piercing damage."
+						"{@atk rw} {@hit 4} to hit, range 30/120 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				}
 			],
-			"page": 131
-		},
-		{
-			"name": "Male Steeder",
-			"size": "M",
-			"type": "beast",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "12 (natural armor)",
-			"hp": "13 (2d8+4)",
-			"speed": "30 ft., climb 30 ft.",
-			"str": 15,
-			"dex": 12,
-			"con": 14,
-			"int": 2,
-			"wis": 10,
-			"cha": 3,
-			"skill": {
-				"stealth": "+5"
-			},
-			"senses": "darkvision 120 ft.",
-			"passive": 10,
-			"cr": "1/4",
-			"trait": [
-				{
-					"name": "Spider Climb",
-					"entries": [
-						"The steeder can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
-					]
-				},
-				{
-					"name": "Leap",
-					"entries": [
-						"The steeder can expend all its movement on its turn to jump up to 60 feet vertically or horizontally, provided that is speed is at least 30 feet."
-					]
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Sneak Attack"
 			],
-			"action": [
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 7 (1d8+2) piercing damage, and the target must make a DC 12 Constitution saving throw, taking 4 (1d8) acid damage on a failed save, or half as much damage on a successful one."
-					]
-				},
-				{
-					"name": "Sticky Leg (Recharges when the Steeder Has No Creatures Grappled)",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one Small or Tiny creature. Hit: The target is stuck on the steeder's leg and grappled until it escapes (escape DC 12)"
-					]
-				}
+			"actionTags": [
+				"Multiattack"
 			],
-			"page": 231
+			"languageTags": [
+				"C",
+				"D"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RNG",
+				"RW"
+			]
 		},
 		{
 			"name": "Narrak",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 232,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -2258,11 +1939,25 @@
 					"derro"
 				]
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "12 (15 to mage armor)",
-			"hp": "40 (9d6+9)",
-			"speed": "30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				12,
+				{
+					"ac": 15,
+					"condition": "with {@spell mage armor}",
+					"braces": true
+				}
+			],
+			"hp": {
+				"average": 40,
+				"formula": "9d6 + 9"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 9,
 			"dex": 14,
 			"con": 13,
@@ -2273,15 +1968,50 @@
 				"arcana": "+4",
 				"stealth": "+4"
 			},
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"passive": 7,
-			"languages": "Dwarvish, Undercommon",
+			"languages": [
+				"Dwarvish",
+				"Undercommon"
+			],
 			"cr": "2",
+			"spellcasting": [
+				{
+					"name": "Spellcasting",
+					"headerEntries": [
+						"Narrak is a 5th-level spellcaster. His spellcasting ability is Charisma (Save {@dc 13}, {@hit 5} to hit with spell attacks) Narrak has two 2nd-level spell slots, which he regains after finishing a short or long rest, and knows the following warlock spells:"
+					],
+					"spells": {
+						"0": {
+							"spells": [
+								"{@spell eldritch blast}",
+								"{@spell friends}",
+								"{@spell poison spray}"
+							]
+						},
+						"2": {
+							"lower": 1,
+							"slots": 2,
+							"spells": [
+								"{@spell armor of Agathys}",
+								"{@spell charm person}",
+								"{@spell hex}",
+								"{@spell hold person}",
+								"{@spell ray of enfeeblement}",
+								"{@spell spider climb}"
+							]
+						}
+					},
+					"ability": "cha"
+				}
+			],
 			"trait": [
 				{
 					"name": "Insanity",
 					"entries": [
-						"Narrak has advantage on saving throws against being charmed or frightened."
+						"Narrak has advantage on saving throws against being {@condition charmed} or {@condition frightened}."
 					]
 				},
 				{
@@ -2293,7 +2023,7 @@
 				{
 					"name": "Sunlight Sensitivity",
 					"entries": [
-						"While in sunlight, Narrak has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+						"While in sunlight, Narrak has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
 					]
 				}
 			],
@@ -2307,182 +2037,175 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit:5 (1d6+2) piercing damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
 					]
 				},
 				{
 					"name": "One with Shadows",
 					"entries": [
-						"While he is in a dim light or darkness, Narrak can become invisible. He remains so until he moves or takes an action or reaction."
+						"While he is in a dim light or darkness, Narrak can become {@condition invisible}. He remains so until he moves or takes an action or reaction."
 					]
 				}
 			],
-			"page": 232,
-			"spellcasting": [
-				{
-					"name": "Spellcasting",
-					"headerEntries": [
-						"Narrak is a 5th-level spellcaster. His spellcasting ability is Charisma (Save DC 13, {@hit 5} to hit with spell attacks) Narrak has two 2nd-level spell slots, which he regains after finishing a short or long rest, and knows the following Warlock spells:"
-					],
-					"spells": {
-						"0": {
-							"spells": [
-								"{@spell eldritch blast}",
-								"{@spell friends}",
-								"{@spell poison spray}"
-							]
-						},
-						"1": {
-							"slots": 0,
-							"spells": [
-								"{@spell armor of Agathys}",
-								"{@spell charm person}",
-								"{@spell hex}"
-							]
-						},
-						"2": {
-							"slots": 2,
-							"spells": [
-								"{@spell hold person}",
-								"{@spell ray of enfeeblement}",
-								"{@spell spider climb}"
-							]
-						}
-					}
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Magic Resistance",
+				"Sunlight Sensitivity"
+			],
+			"senseTags": [
+				"SD"
+			],
+			"languageTags": [
+				"D",
+				"U"
+			],
+			"damageTags": [
+				"P"
+			],
+			"spellcastingTags": [
+				"CL"
+			],
+			"miscTags": [
+				"MW"
+			],
+			"conditionInflictSpell": [
+				"charmed",
+				"paralyzed"
 			]
 		},
 		{
-			"name": "Orcus",
-			"size": "H",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
+			"name": "Prince Derendil",
+			"isNpc": true,
 			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "17 (natural armor)",
-			"hp": "405 (30d12+210)",
-			"speed": "40 ft., fly 40 ft.",
-			"str": 27,
-			"dex": 14,
-			"con": 25,
-			"int": 20,
-			"wis": 20,
-			"cha": 25,
-			"save": "Dex +10, Con +15, Wis +13",
-			"skill": {
-				"arcana": "+12",
-				"perception": "+12"
+			"page": 6,
+			"_copy": {
+				"name": "Quaggoth",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the quaggoth",
+						"with": "Prince Derendil",
+						"flags": "i"
+					}
+				}
 			},
-			"resist": "cold, fire, lightning",
-			"immune": "necrotic, poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 22,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "26",
+			"hasToken": true
+		},
+		{
+			"name": "Spider King",
+			"source": "OotA",
+			"page": 74,
+			"size": "L",
+			"type": "beast",
+			"alignment": [
+				"U"
+			],
+			"ac": [
+				{
+					"ac": 14,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 44,
+				"formula": "4d10 + 4"
+			},
+			"speed": {
+				"walk": 30,
+				"climb": 30
+			},
+			"str": 14,
+			"dex": 16,
+			"con": 12,
+			"int": 2,
+			"wis": 11,
+			"cha": 4,
+			"save": {
+				"con": "+3",
+				"wis": "+2"
+			},
+			"skill": {
+				"stealth": "+7",
+				"perception": "+4"
+			},
+			"senses": [
+				"blindsight 10 ft.",
+				"darkvision 60 ft."
+			],
+			"passive": 14,
+			"cr": "1",
 			"trait": [
 				{
-					"name": "Wand of Orcus",
+					"name": "Two Heads",
 					"entries": [
-						"The wand has 7 charges, and any of its properties that require a saving throw have a save DC of 18. While holding it, Orcus can use an action to cast animate dead, blight, or speak with dead. Alternatively, he can expend or 1 or more of the wand's charges to cast one of the following spells from it: circle of death (1 charge), finger of death (1 charge), or power word kill (2 charges). The wand regains 1d4+3 charges daily at dawn.",
-						"While holding the wand, Orcus gains +3 AC and can use an action to conjure undead creatures whose combined average hit points don't exceed 500, These undead magically rise up from the ground or otherwise form in unoccupied spaces within 300 feet of Orcus and obey his commands until they are destroyed or until he dismisses them as an action. Once this property of the wand is used, the property can't be used again until the next dawn."
+						"Because of its two heads, the Spider King has advantage on Wisdom ({@skill Perception}) checks and on saving throws against being {@condition blinded}, {@condition charmed}, {@condition deafened}, {@condition frightened}, {@condition stunned}, and knocked {@condition unconscious}."
 					]
 				},
 				{
-					"name": "Legendary Resistance (3/Day)",
+					"name": "Spider Climb",
 					"entries": [
-						"If Orcus fails a saving throw, he can choose to succeed instead."
+						"The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
 					]
 				},
 				{
-					"name": "Magic Resistance",
+					"name": "Web Sense",
 					"entries": [
-						"Orcus has advantage on saving throws against spells and other magical effects."
+						"While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
 					]
 				},
 				{
-					"name": "Magic Weapon",
+					"name": "Web Walker",
 					"entries": [
-						"Orcus's weapon attacks are magical."
-					]
-				},
-				{
-					"name": "Master of Undeath",
-					"entries": [
-						"When Orcus casts animate dead or create undead, he chooses the level at which the spell is cast, and the creatures created by the spells remain under his control indefinitely. Additionally, he can cast create undead even when it isn't night."
+						"The spider ignores movement restrictions caused by webbing."
 					]
 				}
 			],
 			"action": [
 				{
-					"name": "Multiattack",
+					"name": "Bite",
 					"entries": [
-						"Orcus makes two Wand of Orcus attacks."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one creature. {@h}7 ({@damage 1d8 + 3}) piercing damage, and the target must make a {@dc 11} Constitution saving throw, taking 9 ({@damage 2d8}) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but {@condition poisoned} for 1 hour, even after regaining hit points, and is {@condition paralyzed} while {@condition poisoned} in this way."
 					]
 				},
 				{
-					"name": "Wand of Orcus",
+					"name": "Web {@recharge 5}",
 					"entries": [
-						"Melee Weapon Attack: +19 to hit, reach 10 ft., one target. Hit: 21 (3d8+8) bludgeoning damage plus 13 (2d12) necrotic damage."
-					]
-				},
-				{
-					"name": "Tail",
-					"entries": [
-						"Melee Weapon Attack: +17 to hit, reach 10 ft., one target. Hit: 21 (3d8+8) piercing damage plus 18 (4d8) poison damage."
+						"{@atk rw} {@hit 5} to hit, range 30/60 ft., one creature. {@h}The target is {@condition restrained} by webbing. As an action, the {@condition restrained} target can make a {@dc 12} Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage)."
 					]
 				}
 			],
-			"legendaryGroup": "Orcus",
-			"legendary": [
-				{
-					"name": "Tail",
-					"entries": [
-						"Orcus makes one tail attack."
-					]
-				},
-				{
-					"name": "A Taste of Undeath",
-					"entries": [
-						"Orcus casts chill touch (17th level)."
-					]
-				},
-				{
-					"name": "Creeping Death (Costs 2 Actions)",
-					"entries": [
-						"Orcus chooses a point on the ground that he can see within 100 feet of him. A cylinder of swirling necrotic energy 60 feet tall and with a 10-foot radius rises from that point and lasts until the end of Orcus's next turn. Creatures in that area are vulnerable to necrotic damage."
-					]
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Spider Climb",
+				"Web Sense",
+				"Web Walker"
 			],
-			"page": 245,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Orcus's spellcasting ability is Charisma (spell save DC 23, {@hit 15} to hit with spell attacks). He can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell chill touch} (17th level)",
-						"{@spell detect magic}"
-					],
-					"daily": {
-						"1": [
-							"{@spell time stop}"
-						],
-						"3e": [
-							"{@spell create undead}",
-							"{@spell dispel magic}"
-						]
-					}
-				}
+			"senseTags": [
+				"B",
+				"D"
+			],
+			"damageTags": [
+				"I",
+				"P"
+			],
+			"miscTags": [
+				"MW",
+				"RW"
+			],
+			"conditionInflict": [
+				"paralyzed",
+				"poisoned",
+				"restrained"
 			]
 		},
 		{
 			"name": "The Pudding King",
+			"isNpc": true,
+			"source": "OotA",
+			"page": 233,
 			"size": "S",
 			"type": {
 				"type": "humanoid",
@@ -2491,76 +2214,64 @@
 					"shapechanger"
 				]
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "13 (16 with mage armor)",
-			"hp": "49 (9d6+18)",
-			"speed": "30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				13,
+				{
+					"ac": 16,
+					"condition": "with {@spell mage armor}",
+					"braces": true
+				}
+			],
+			"hp": {
+				"average": 49,
+				"formula": "9d6 + 18"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 10,
 			"dex": 16,
 			"con": 14,
 			"int": 12,
 			"wis": 8,
 			"cha": 17,
-			"save": "Con +5, Cha +6",
+			"save": {
+				"con": "+5",
+				"cha": "+6"
+			},
 			"skill": {
 				"arcana": "+4",
 				"perception": "+2",
 				"stealth": "+6",
 				"survival": "+2"
 			},
-			"resist": "acid, poison",
-			"conditionImmune": "poisoned",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 12,
-			"languages": "Abyssal, Gnomish, Terran, Undercommon",
+			"resist": [
+				"acid",
+				"poison"
+			],
+			"conditionImmune": [
+				"poisoned"
+			],
+			"languages": [
+				"Abyssal",
+				"Gnomish",
+				"Terran",
+				"Undercommon"
+			],
 			"cr": "4",
-			"trait": [
-				{
-					"name": "Stone Camouflage",
-					"entries": [
-						"The Pudding King has advantage on Dexterity (Stealth) checks made to hide in rocky terrain."
-					]
-				},
-				{
-					"name": "Gnome Cunning",
-					"entries": [
-						"The Pudding King has advantage on Intelligence, Wisdom, and Charisma saving throws against magic."
-					]
-				},
-				{
-					"name": "Insanity",
-					"entries": [
-						"The Pudding King has advantage on saving throws against being charmed or frightened."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "War Pick",
-					"entries": [
-						"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit 4 (1d8) piercing damage."
-					]
-				},
-				{
-					"name": "Change Shape",
-					"entries": [
-						"The Pudding King magically transforms into an ooze, or back into his true form. He reverts to his true form if he dies. Any equipment he is wearing or carrying is absorbed by the new form. In ooze form, the Pudding King retains his alignment, hit points, Hit Dice, and Intelligence, Wisdom, and Charisma scores, as well as this action. His statistics and capabilities are otherwise replaced by those of the new form."
-					]
-				},
-				{
-					"name": "Create Green Slime (Recharges after a Long Rest)",
-					"entries": [
-						"The Pudding King creates a patch of green slime (see \"Dungeon Hazards\" in chapter 5 of the Dungeon Master's Guide). The slime appears on a section of wall, ceiling, or floor within 30 feet of the Pudding King."
-					]
-				}
-			],
-			"page": 233,
 			"spellcasting": [
 				{
 					"name": "Innate Spellcasting",
 					"headerEntries": [
-						"The Pudding King's innate spellcasting ability is Intelligence (spell save DC 12). He can innately cast the following spells, requiring no material components:"
+						"The Pudding King's innate spellcasting ability is Intelligence (spell save {@dc 12}). He can innately cast the following spells, requiring no material components:"
 					],
 					"will": [
 						"{@spell nondetection} (self only)"
@@ -2571,12 +2282,13 @@
 							"{@spell blur}",
 							"{@spell disguise self}"
 						]
-					}
+					},
+					"ability": "int"
 				},
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"The Pudding King is a 9th-level spellcaster. His spellcasting ability is Charisma (spell save DC 14, {@hit 6} to hit with spell attacks). The Pudding King knows the following sorcerer spells:"
+						"The Pudding King is a 9th-level spellcaster. His spellcasting ability is Charisma (spell save {@dc 14}, {@hit 6} to hit with spell attacks). The Pudding King knows the following sorcerer spells:"
 					],
 					"spells": {
 						"0": {
@@ -2624,12 +2336,81 @@
 								"{@spell cloudkill}"
 							]
 						}
-					}
+					},
+					"ability": "cha"
 				}
+			],
+			"trait": [
+				{
+					"name": "Stone Camouflage",
+					"entries": [
+						"The Pudding King has advantage on Dexterity (Stealth) checks made to hide in rocky terrain."
+					]
+				},
+				{
+					"name": "Gnome Cunning",
+					"entries": [
+						"The Pudding King has advantage on Intelligence, Wisdom, and Charisma saving throws against magic."
+					]
+				},
+				{
+					"name": "Insanity",
+					"entries": [
+						"The Pudding King has advantage on saving throws against being {@condition charmed} or {@condition frightened}."
+					]
+				}
+			],
+			"action": [
+				{
+					"name": "War Pick",
+					"entries": [
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d8}) piercing damage."
+					]
+				},
+				{
+					"name": "Change Shape",
+					"entries": [
+						"The Pudding King magically transforms into an ooze, or back into his true form. He reverts to his true form if he dies. Any equipment he is wearing or carrying is absorbed by the new form. In ooze form, the Pudding King retains his alignment, hit points, Hit Dice, and Intelligence, Wisdom, and Charisma scores, as well as this action. His statistics and capabilities are otherwise replaced by those of the new form."
+					]
+				},
+				{
+					"name": "Create Green Slime (Recharges after a Long Rest)",
+					"entries": [
+						"The Pudding King creates a patch of green slime (see \"Dungeon Hazards\" in chapter 5 of the Dungeon Master's Guide). The slime appears on a section of wall, ceiling, or floor within 30 feet of the Pudding King."
+					]
+				}
+			],
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"AB",
+				"G",
+				"T",
+				"U"
+			],
+			"damageTags": [
+				"P"
+			],
+			"spellcastingTags": [
+				"CS",
+				"I"
+			],
+			"miscTags": [
+				"MW"
+			],
+			"conditionInflictSpell": [
+				"blinded",
+				"charmed",
+				"deafened",
+				"poisoned"
 			]
 		},
 		{
 			"name": "Troglodyte Champion of Laogzed",
+			"source": "OotA",
+			"page": 229,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2637,25 +2418,43 @@
 					"troglodyte"
 				]
 			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "14 (natural armor)",
-			"hp": "59 (7d8+28)",
-			"speed": "30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 14,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 59,
+				"formula": "7d8 + 28"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 18,
 			"dex": 12,
 			"con": 18,
 			"int": 8,
-			"wis": 23,
+			"wis": 12,
 			"cha": 12,
 			"skill": {
 				"athletics": "+6",
 				"intimidation": "+3",
 				"stealth": "+3"
 			},
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Troglodyte",
+			"languages": [
+				"Troglodyte"
+			],
 			"cr": "3",
 			"trait": [
 				{
@@ -2667,13 +2466,13 @@
 				{
 					"name": "Stench",
 					"entries": [
-						"Any creature other than a troglodyte that starts its turn within 5 feet of the troglodyte must succeed on a DC 14 Constitution saving throw or be poisoned until the start of the creature's next turn. On a successful saving throw, the creature is immune to the stench of all troglodytes for 1 hour."
+						"Any creature other than a troglodyte that starts its turn within 5 feet of the troglodyte must succeed on a {@dc 14} Constitution saving throw or be {@condition poisoned} until the start of the creature's next turn. On a successful saving throw, the creature is immune to the stench of all troglodytes for 1 hour."
 					]
 				},
 				{
 					"name": "Sunlight Sensitivity",
 					"entries": [
-						"While in sunlight, the troglodyte has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+						"While in sunlight, the troglodyte has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
 					]
 				}
 			],
@@ -2687,54 +2486,100 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 6 (1d4+4) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d4 + 4}) piercing damage."
 					]
 				},
 				{
 					"name": "Claw",
 					"entries": [
-						"Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 6 (1d4+4) slashing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d4 + 4}) slashing damage."
 					]
 				},
 				{
 					"name": "Greatclub",
 					"entries": [
-						"Melee Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8+4) bludgeoning damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}8 ({@damage 1d8 + 4}) bludgeoning damage."
 					]
 				},
 				{
-					"name": "Acid Spray (Recharge 6)",
+					"name": "Acid Spray {@recharge}",
 					"entries": [
-						"The troglodyte spits acid in a line 15 feet long and 5 feet wide. Each creature in that line must make a DC 14 Dexterity saving throw, taking 10 (3d6) acid damage on a failed save, or half as much damage on a successful one."
+						"The troglodyte spits acid in a line 15 feet long and 5 feet wide. Each creature in that line must make a {@dc 14} Dexterity saving throw, taking 10 ({@damage 3d6}) acid damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
-			"page": 229
+			"hasToken": true,
+			"traitTags": [
+				"Sunlight Sensitivity"
+			],
+			"senseTags": [
+				"D"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"OTH"
+			],
+			"damageTags": [
+				"A",
+				"B",
+				"P",
+				"S"
+			],
+			"miscTags": [
+				"MW"
+			],
+			"conditionInflict": [
+				"poisoned"
+			]
 		},
 		{
 			"name": "Vampiric Ixitxachitl",
+			"source": "OotA",
+			"page": 226,
 			"size": "M",
 			"type": "aberration",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "16 (natural armor)",
-			"hp": "44 (8d8+8)",
-			"speed": "0 ft., swim 30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 44,
+				"formula": "8d8 + 8"
+			},
+			"speed": {
+				"walk": 0,
+				"swim": 30
+			},
 			"str": 14,
 			"dex": 18,
 			"con": 13,
 			"int": 12,
 			"wis": 13,
 			"cha": 7,
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Abyssal, Ixitxachitl",
+			"languages": [
+				"Abyssal",
+				"Ixitxachitl"
+			],
 			"cr": "2",
 			"action": [
 				{
 					"name": "Vampiric Bite",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage. The target must succeed on a DC 11 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken, and the ixitxachitl regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if its hit point maximum is reduced to 0."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage. The target must succeed on a {@dc 11} Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken, and the ixitxachitl regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if its hit point maximum is reduced to 0."
 					]
 				}
 			],
@@ -2743,54 +2588,71 @@
 					"name": "Barbed Tail",
 					"entries": [
 						"When a creature provokes an opportunity attack from the ixitxachitl, the ixitxachitl can make the following attack instead of using its bite.",
-						"Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 9 (1d10+4) piercing damage."
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}9 ({@damage 1d10 + 4}) piercing damage."
 					]
 				}
 			],
-			"page": 226
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"AB",
+				"OTH"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
 			"name": "Vampiric Ixitxachitl Cleric",
+			"source": "OotA",
+			"page": 226,
 			"size": "M",
 			"type": "aberration",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "16 (natural armor)",
-			"hp": "44 (8d8+8)",
-			"speed": "0 ft., swim 30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 44,
+				"formula": "8d8 + 8"
+			},
+			"speed": {
+				"walk": 0,
+				"swim": 30
+			},
 			"str": 14,
 			"dex": 18,
 			"con": 13,
 			"int": 12,
 			"wis": 13,
 			"cha": 7,
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Abyssal, Ixitxachitl",
+			"languages": [
+				"Abyssal",
+				"Ixitxachitl"
+			],
 			"cr": "2",
-			"action": [
-				{
-					"name": "Vampiric Bite",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8+2) piercing damage. The target must succeed on a DC 11 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken, and the ixitxachitl regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if its hit point maximum is reduced to 0."
-					]
-				}
-			],
-			"reaction": [
-				{
-					"name": "Barbed Tail",
-					"entries": [
-						"When a creature provokes an opportunity attack from the ixitxachitl, the ixitxachitl can make the following attack instead of using its bite.",
-						"Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 9 (1d10+4) piercing damage."
-					]
-				}
-			],
-			"page": 226,
 			"spellcasting": [
 				{
 					"name": "Spellcasting",
 					"headerEntries": [
-						"The ixitxachitl is a 5th-level spellcaster that uses Wisdom as its spellcasting ability (Spell save DC 11, {@hit 3} to hit with spell attacks). The ixitxachitl has the following cleric spells prepared:"
+						"The ixitxachitl is a 5th-level spellcaster that uses Wisdom as its spellcasting ability (Spell save {@dc 11}, {@hit 3} to hit with spell attacks). The ixitxachitl has the following cleric spells prepared:"
 					],
 					"spells": {
 						"0": {
@@ -2820,13 +2682,49 @@
 								"{@spell tongues}"
 							]
 						}
-					}
+					},
+					"ability": "wis"
 				}
+			],
+			"action": [
+				{
+					"name": "Vampiric Bite",
+					"entries": [
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) piercing damage. The target must succeed on a {@dc 11} Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken, and the ixitxachitl regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if its hit point maximum is reduced to 0."
+					]
+				}
+			],
+			"reaction": [
+				{
+					"name": "Barbed Tail",
+					"entries": [
+						"When a creature provokes an opportunity attack from the ixitxachitl, the ixitxachitl can make the following attack instead of using its bite.",
+						"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}9 ({@damage 1d10 + 4}) piercing damage."
+					]
+				}
+			],
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"AB",
+				"OTH"
+			],
+			"damageTags": [
+				"P"
+			],
+			"spellcastingTags": [
+				"CC"
+			],
+			"miscTags": [
+				"MW"
 			]
 		},
 		{
-			"source": "OotA",
 			"name": "Veteran Of The Gauntlet",
+			"source": "OotA",
+			"page": 130,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -2834,10 +2732,25 @@
 					"human"
 				]
 			},
-			"alignment": "lawful good",
-			"ac": "17 (splint)",
-			"hp": "58 (9d8+18)",
-			"speed": "30ft.",
+			"alignment": [
+				"L",
+				"G"
+			],
+			"ac": [
+				{
+					"ac": 17,
+					"from": [
+						"{@item splint armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 58,
+				"formula": "9d8 + 18"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 16,
 			"dex": 13,
 			"con": 14,
@@ -2849,182 +2762,102 @@
 				"perception": "+2"
 			},
 			"passive": 12,
-			"languages": "Common, Dwarvish",
+			"languages": [
+				"Common",
+				"Dwarvish"
+			],
 			"cr": "3",
 			"action": [
 				{
 					"name": "Multiattack",
 					"entries": [
-						"The veteran makes two longsword attacks. If it has a shorts word drawn, it can also make a shortsword attack."
+						"The veteran makes two longsword attacks. If it has a shortsword drawn, it can also make a shortsword attack."
 					]
 				},
 				{
 					"name": "Longsword",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8+3) slashing damage, or 8 (1d10+3) slashing damage if used with two hands."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}7 ({@damage 1d8 + 3}) slashing damage, or 8 ({@damage 1d10 + 3}) slashing damage if used with two hands."
 					]
 				},
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) piercing damage."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"Ranged Weapon Attack: +3 to hit, range 100/400 ft., one target. Hit: 6 (1d10+1) piercing damage."
+						"{@atk rw} {@hit 3} to hit, range 100/400 ft., one target. {@h}6 ({@damage 1d10 + 1}) piercing damage."
 					]
 				}
 			],
-			"page": 130
-		},
-		{
-			"name": "Yeenoghu",
-			"size": "H",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "22 (natural armor)",
-			"hp": "348 (24d12+192)",
-			"speed": "50 ft.",
-			"str": 29,
-			"dex": 16,
-			"con": 23,
-			"int": 15,
-			"wis": 24,
-			"cha": 15,
-			"save": "Dex +10, Con +15, Wis +14",
-			"skill": {
-				"intimidation": "+9",
-				"perception": "+14"
-			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 24,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "24",
-			"trait": [
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Yeenoghu fails a saving throw, he can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Yeenoghu has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Yeenoghu's weapon attacks are magical."
-					]
-				},
-				{
-					"name": "Rampage",
-					"entries": [
-						"When Yeenoghu reduces a creature to 0 hit points with a melee attack on his turn, Yeenoghu can take a bonus action to move up to half his speed and make a bite attack."
-					]
-				}
+			"hasToken": true,
+			"actionTags": [
+				"Multiattack"
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Yeenoghu makes three flail attacks. If an attack hits, he can cause it to create an additional effect of his choice or at random (each effect can be used only once per Multi attack):",
-						"1. The attack deals an extra 13 (2d12) bludgeoning damage.",
-						"2. The target must succeed on a DC 17 Constitution saving throw or be paralyzed until the start of Yeenoghu's next turn.",
-						"3. The target must succeed on a DC 17 Wisdom saving throw or be affected by the confusion spell until the start of Yeenoghu's next turn."
-					]
-				},
-				{
-					"name": "Flail",
-					"entries": [
-						"Melee Weapon Attack: +16 to hit, reach 15 ft., one target. Hit: 22 (2d12+9) bludgeoning damage."
-					]
-				},
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +16 to hit, reach 10 ft., one target. Hit: 31 (4d10+9) piercing damage."
-					]
-				}
+			"languageTags": [
+				"C",
+				"D"
 			],
-			"legendaryGroup": "Yeenoghu",
-			"legendary": [
-				{
-					"name": "Charge",
-					"entries": [
-						"Yeenoghu moves up to his speed."
-					]
-				},
-				{
-					"name": "Swat Away",
-					"entries": [
-						"Yeenoghu makes a flail attack. If the attack hits, the target must succeed on a DC 24 Strength saving throw or be pushed 15 feet in a straight line away from Yeenoghu. If the saving throw fails by 5 or more, the target falls prone."
-					]
-				},
-				{
-					"name": "Savage (Costs 2 Actions)",
-					"entries": [
-						"Yeenoghu makes a bite attack against each creature within 10 feet of him."
-					]
-				}
+			"damageTags": [
+				"P",
+				"S"
 			],
-			"page": 247,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Yeenoghu's spellcasting ability is Charisma (spell save DC 17, {@hit 9} to hit with spell attacks). He can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell detect magic}",
-						"{@spell spiritual weapon} (8th-level spell, 4d8+2 force damage on a hit, appears as a flail)"
-					],
-					"daily": {
-						"1": [
-							"{@spell teleport}"
-						],
-						"3e": [
-							"{@spell dispel magic}",
-							"{@spell fear}",
-							"{@spell invisibility}"
-						]
-					}
-				}
+			"miscTags": [
+				"MW",
+				"RNG",
+				"RW"
 			]
 		},
 		{
 			"name": "Yestabrod",
+			"isNpc": true,
+			"isNamedCreature": true,
+			"source": "OotA",
+			"page": 233,
 			"size": "L",
 			"type": "monstrosity",
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "15 (natural armor)",
-			"hp": "75 (10d10+20)",
-			"speed": "30 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 75,
+				"formula": "10d10 + 20"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 12,
 			"dex": 10,
 			"con": 14,
 			"int": 13,
 			"wis": 15,
 			"cha": 10,
-			"immune": "poison",
-			"conditionImmune": "poisoned",
-			"senses": "darkvision 120 ft.",
+			"senses": [
+				"darkvision 120 ft."
+			],
 			"passive": 12,
-			"languages": "Abyssal, telepathy 60 ft.",
+			"immune": [
+				"poison"
+			],
+			"conditionImmune": [
+				"poisoned"
+			],
+			"languages": [
+				"Abyssal",
+				"telepathy 60 ft."
+			],
 			"cr": "4",
 			"trait": [
 				{
@@ -3038,19 +2871,19 @@
 				{
 					"name": "Slam",
 					"entries": [
-						"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 8 (3d4+1) bludgeoning damage plus 7 (3d4) poison damage."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}8 ({@damage 3d4 + 1}) bludgeoning damage plus 7 ({@damage 3d4}) poison damage."
 					]
 				},
 				{
 					"name": "Caustic Spores (1/Day)",
 					"entries": [
-						"Yestabrod releases spores in a 30-foot cone. Each creature in that area must succeed on a DC 12 Dexterity saving throw or take 1d6 acid damage at the start of each of Yestbrod's turns. A creature can repeat the saving throw at the end of each of its turn, ending the effect on itself on a success."
+						"Yestabrod releases spores in a 30-foot cone. Each creature in that area must succeed on a {@dc 12} Dexterity saving throw or take {@dice 1d6} acid damage at the start of each of Yestabrod's turns. A creature can repeat the saving throw at the end of each of its turn, ending the effect on itself on a success."
 					]
 				},
 				{
 					"name": "Infestation Spores (1/Day)",
 					"entries": [
-						"Yestabrod releases spores that burst out in a cloud that fills a 10-foot-radius sphere centered on it, and the cloud lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a DC 12 Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of indefinite madness (determined by rolling on the Madness of Zuggtmoy table in appendix D) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must be repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
+						"Yestabrod releases spores that burst out in a cloud that fills a 10-foot-radius sphere centered on it, and the cloud lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a {@dc 12} Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of indefinite madness (determined by rolling on the Madness of Zuggtmoy table in appendix D) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must be repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
 					]
 				}
 			],
@@ -3059,131 +2892,41 @@
 				{
 					"name": "Corpse Burst",
 					"entries": [
-						"Gore, offal, and acid erupt from a corpse within 20 feet of Yestabrod. Creatures within 10 feet of the corpse must succeed on a DC 12 Dexterity saving throw or take 7 (2d6) acid damage."
-					],
-					"attack": [
-						"||2d6"
+						"Gore, offal, and acid erupt from a corpse within 20 feet of Yestabrod. Creatures within 10 feet of the corpse must succeed on a {@dc 12} Dexterity saving throw or take 7 ({@damage 2d6}) acid damage."
 					]
 				},
 				{
 					"name": "Foul Absorption",
 					"entries": [
-						"Yestabrod absorbs putrescence from a corpse within 5 feet of it, regaining 1d8+2 hit points"
-					],
-					"attack": [
-						"||1d8+2"
+						"Yestabrod absorbs putrescence from a corpse within 5 feet of it, regaining {@dice 1d8 + 2} hit points"
 					]
 				}
 			],
-			"page": 233
+			"hasToken": true,
+			"traitTags": [
+				"Legendary Resistances"
+			],
+			"senseTags": [
+				"SD"
+			],
+			"languageTags": [
+				"AB",
+				"TP"
+			],
+			"damageTags": [
+				"A",
+				"B",
+				"I"
+			],
+			"miscTags": [
+				"AOE",
+				"MW"
+			]
 		},
 		{
-			"name": "Deepking Horgar Steelshadow V",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"dwarf"
-				]
-			},
-			"source": "OotA",
-			"alignment": "lawful evil",
-			"ac": "20 (dwarven plate)",
-			"hp": "52 (8d8+16)",
-			"speed": "30 ft.",
-			"str": 19,
-			"dex": 11,
-			"con": 14,
-			"int": 11,
-			"wis": 11,
-			"cha": 15,
-			"save": "Con +4, Wis +2",
-			"passive": 10,
-			"languages": "Draconic, Giant, and Dwarvish",
-			"cr": "3",
-			"trait": [
-				{
-					"name": "(Optional) Indefinite Madness",
-					"entries": [
-						"Horgar has been affected by the demon lords let loose in the Abyss during the Rage of Demons storyline. Roll on the Indefinite Madness table to determine Horgar's flaw."
-					]
-				},
-				{
-					"name": "Duergar Resilience",
-					"entries": [
-						"Horgar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
-					]
-				},
-				{
-					"name": "Sunlight Sensitivity",
-					"entries": [
-						"While in sunlight, Horgar has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
-					]
-				},
-				{
-					"name": "Gauntlets of Ogre Power",
-					"entries": [
-						"Horgar wields {@item Gauntlets of Ogre Power} giving him a Strength score of 19 (+4)."
-					]
-				},
-				{
-					"name": "Brave",
-					"entries": [
-						"Horgar has advantage on saving throws against being frightened."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Enlarge (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, Horgar magically increases in size, along with anything he is wearing or carrying. While enlarged, Horgar is Large, doubles his damage dice on Strength-based weapon attacks (included in the attacks), and makes Strength checks and Strength saving throws with advantage. If Horgar lacks the room to become Large, he attains the maximum size possible in the space available."
-					]
-				},
-				{
-					"name": "Invisibility (Recharges after a Short or Long Rest)",
-					"entries": [
-						"Horgar magically turns invisible until he attacks, casts a spell, or uses his Enlarge, or until his concentration is broken, up to 1 hour (as if concentrating on a spell). Any equipment Horgar wears or carries is invisible with him."
-					]
-				},
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Horgar makes two melee attacks."
-					]
-				},
-				{
-					"name": "+2 Warhammer",
-					"entries": [
-						"Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 10 (1d8+6) bludgeoning damage, or 11 (1d10+6) bludgeoning damage if used with two hands. While Horgar is enlarged, the damage increases to 15 (2d8+6) or 17 (2d10+6) bludgeoning damage, respectively."
-					]
-				},
-				{
-					"name": "Heavy Crossbow",
-					"entries": [
-						"Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage."
-					]
-				},
-				{
-					"name": "Leadership (Recharges after a Short or Long Rest)",
-					"entries": [
-						"For 1 minute, Horgar can utter a special command or warning whenever a nonhostile creature that he can see within 30 ft. of Horgar makes an attack roll or a saving throw. The creature can add a d4 to its roll provided it can hear and understand Horgar. A creature can benefit from only one Leadership die at a time. This effect ends if Horgar is incapacitated."
-					]
-				}
-			],
-			"reaction": [
-				{
-					"name": "Parry",
-					"entries": [
-						"Horgar adds 2 to its AC against one melee attack that would hit him. To do so, Horgar must see the attacker and be wielding a melee weapon."
-					]
-				}
-			],
-			"page": 82
-		},
-		{
-			"source": "OotA",
 			"name": "Zhentarim Thug",
+			"source": "OotA",
+			"page": 131,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -3191,10 +2934,24 @@
 					"human"
 				]
 			},
-			"alignment": "neutral",
-			"ac": "11 (leather armor)",
-			"hp": "32 (5d8+10)",
-			"speed": "30ft.",
+			"alignment": [
+				"N"
+			],
+			"ac": [
+				{
+					"ac": 11,
+					"from": [
+						"{@item leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 32,
+				"formula": "5d8 + 10"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 15,
 			"dex": 11,
 			"con": 14,
@@ -3205,12 +2962,15 @@
 				"intimidation": "+2"
 			},
 			"passive": 10,
+			"languages": [
+				"Common"
+			],
 			"cr": "1/2",
 			"trait": [
 				{
 					"name": "Pack Tactics",
 					"entries": [
-						"The thug has advantage on an attack roll against a creature if at least one of the thug's allies is within 5 feet of the creature and the ally isn't incapacitated."
+						"The thug has advantage on an attack roll against a creature if at least one of the thug's allies is within 5 feet of the creature and the ally isn't {@condition incapacitated}."
 					]
 				}
 			],
@@ -3224,200 +2984,34 @@
 				{
 					"name": "Mace",
 					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6+2) bludgeoning damage."
+						"{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) bludgeoning damage."
 					]
 				},
 				{
 					"name": "Heavy Crossbow",
 					"entries": [
-						"Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage."
+						"{@atk rw} {@hit 2} to hit, range 100/400 ft., one target. {@h}5 ({@damage 1d10}) piercing damage."
 					]
 				}
 			],
-			"page": 131
-		},
-		{
-			"name": "Spider King",
-			"size": "L",
-			"type": "beast",
-			"source": "OotA",
-			"alignment": "unaligned",
-			"ac": "14 (natural armor)",
-			"hp": "44 (4d10+22)",
-			"speed": "30 ft., climb 30 ft.",
-			"str": 14,
-			"dex": 16,
-			"con": 12,
-			"int": 2,
-			"wis": 11,
-			"cha": 4,
-			"save": "Con +3, Wis +2",
-			"skill": {
-					"stealth": "+7",
-					"perception": "+4"
-			},
-			"senses": "blindsight 10 ft., darkvision 60 ft.",
-			"passive": 14,
-			"cr": "1",
-			"trait": [
-				{
-					"name": "Two Heads",
-						"entries": [
-								"Because of its two heads, the Spider King has advantage on Wisdom (Perception) checks and on saving throws against being blinded, charmed, deafened, frightened, stunned, and knocked unconscious."
-										]
-				},
-				{
-					"name": "Spider Climb",
-					"entries": [
-						"The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
-					]
-				},
-				{
-					"name": "Web Sense",
-					"entries": [
-						"While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
-					]
-				},
-				{
-					"name": "Web Walker",
-					"entries": [
-						"The spider ignores movement restrictions caused by webbing."
-					]
-				}
+			"hasToken": true,
+			"traitTags": [
+				"Pack Tactics"
 			],
-			"action": [
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8+3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
-					]
-				},
-				{
-					"name": "Web (Recharge 5-6)",
-					"entries": [
-						"Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage)."
-					]
-				}
+			"actionTags": [
+				"Multiattack"
 			],
-			"page": 74
-		},
-		{
-			"name": "Zuggtmoy",
-			"size": "L",
-			"type": {
-				"type": "fiend",
-				"tags": [
-					"demon"
-				]
-			},
-			"source": "OotA",
-			"alignment": "chaotic evil",
-			"ac": "18 (natural armor)",
-			"hp": "304 (32d10+128)",
-			"speed": "30 ft.",
-			"str": 22,
-			"dex": 15,
-			"con": 18,
-			"int": 20,
-			"wis": 19,
-			"cha": 24,
-			"save": "Dex +9, Con +11, Wis +11",
-			"skill": {
-				"perception": "+11"
-			},
-			"resist": "cold, fire, lightning",
-			"immune": "poison; bludgeoning, piercing, and slashing that is nonmagical",
-			"conditionImmune": "charmed, exhaustion, frightened, poisoned",
-			"senses": "truesight 120 ft.",
-			"passive": 21,
-			"languages": "all, telepathy 120 ft.",
-			"cr": "23",
-			"trait": [
-				{
-					"name": "Legendary Resistance (3/Day)",
-					"entries": [
-						"If Zuggtmoy fails a saving throw, she can choose to succeed instead."
-					]
-				},
-				{
-					"name": "Magic Resistance",
-					"entries": [
-						"Zuggtmoy has advantage on saving throws against spells and other magical effects."
-					]
-				},
-				{
-					"name": "Magic Weapon",
-					"entries": [
-						"Zuggtmoy's weapon attacks are magical."
-					]
-				}
+			"languageTags": [
+				"C"
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"Zuggtmoy makes four pseudopod attacks."
-					]
-				},
-				{
-					"name": "Pseudopod",
-					"entries": [
-						"Melee Weapon Attack: +13 to hit, reach 10 ft., one target. Hit: 15 (2d8+6) bludgeoning damage plus 9 (2d8) poison damage."
-					]
-				},
-				{
-					"name": "Infestation Spores (3/Day)",
-					"entries": [
-						"Zuggtmoy releases spores that burst out in cloud fills a 20-foof-radius sphere centered on her, and it lingers for 1 minute. Any flesh-and-blood creature in the cloud when it appears, or that enters it later, must make a DC 19 Constitution saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the spores of Zuggtmoy and also gains a random form of madness (determined by rolling on the Madness of Zuggtmoy table) that lasts until the creature is cured of the disease or dies. While infected in this way, the creature can't be reinfected, and it must repeat the saving throw at the end of every 24 hours, ending the infection on a success. On a failure, the infected creature's body is slowly taken over by fungal growth, and after three such failed saves, the creature dies and is reanimated as a spore servant if it's a type of creature that can be (see the \"Myconids\" entry in the Monster Manual)."
-					]
-				},
-				{
-					"name": "Mind Control Spores (Recharge 5\u20146)",
-					"entries": [
-						"Zuggtmoy releases spores that burst out in a cloud that fills a 20-foot-radius sphere centered on her, and it lingers for 1 minute. Humanoids and beasts in the cloud when it appears, or that enter it later, must make a DC 19 Wisdom saving throw. On a successful save, the creature can't be infected by these spores for 24 hours. On a failed save, the creature is infected with a disease called the influence of Zuggtmoy for 24 hours. While infected, the creature is charmed by her and can't be reinfected by these spores."
-					]
-				}
+			"damageTags": [
+				"B",
+				"P"
 			],
-			"legendaryGroup": "Zuggtmoy",
-			"legendary": [
-				{
-					"name": "Attack",
-					"entries": [
-						"Zuggtmoy makes one pseudopod attack."
-					]
-				},
-				{
-					"name": "Exert Will",
-					"entries": [
-						"One creature charmed by Zuggtmoy that she can see must use its reaction to move up to its speed as she directs or to make a weapon attack against a target that she designates."
-					]
-				}
-			],
-			"page": 249,
-			"spellcasting": [
-				{
-					"name": "Innate Spellcasting",
-					"headerEntries": [
-						"Zuggtmoy's spellcasting ability is Charisma (spell save DC 22). She can innately cast the following spells, requiring no material components:"
-					],
-					"will": [
-						"{@spell detect magic}",
-						"{@spell locate animals or plants}",
-						"{@spell ray of sickness}"
-					],
-					"daily": {
-						"1": [
-							"{@spell etherealness}",
-							"{@spell teleport}"
-						],
-						"3e": [
-							"{@spell dispel magic}",
-							"{@spell ensnaring strike}",
-							"{@spell entangle}",
-							"{@spell plant growth}"
-						]
-					}
-				}
+			"miscTags": [
+				"MW",
+				"RNG",
+				"RW"
 			]
 		}
 	]

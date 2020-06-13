@@ -1,1501 +1,425 @@
 // ************************************************************************* //
 // Strict mode should not be used, as the roll20 script depends on this file //
+// Do not use classes                                                        //
 // ************************************************************************* //
+if (typeof module !== "undefined") require("./parser.js");
 
-// in deployment, `_IS_DEPLOYED = "<version number>";` should be prepended here
-IS_DEPLOYED = typeof _IS_DEPLOYED !== "undefined" && _IS_DEPLOYED;
-VERSION_NUMBER = IS_DEPLOYED ? _IS_DEPLOYED : "-1";
-DEPLOYED_STATIC_ROOT = "https://static.5etools.com/";
+// in deployment, `IS_DEPLOYED = "<version number>";` should be set below.
+IS_DEPLOYED = undefined;
+VERSION_NUMBER = /* 5ETOOLS_VERSION__OPEN */"1.106.2"/* 5ETOOLS_VERSION__CLOSE */;
+DEPLOYED_STATIC_ROOT = ""; // "https://static.5etools.com/"; // FIXME re-enable this when we have a CDN again
 // for the roll20 script to set
-IS_ROLL20 = false;
+IS_VTT = false;
 
+IMGUR_CLIENT_ID = `abdea4de492d3b0`;
+
+// TODO refactor into VeCt
 HASH_PART_SEP = ",";
 HASH_LIST_SEP = "_";
 HASH_SUB_LIST_SEP = "~";
 HASH_SUB_KV_SEP = ":";
-HASH_START = "#";
-HASH_SUBCLASS = "sub:";
 HASH_BLANK = "blankhash";
+HASH_SUB_NONE = "null";
 
-STR_EMPTY = "";
-STR_VOID_LINK = "javascript:void(0)";
-STR_SLUG_DASH = "-";
-STR_APOSTROPHE = "\u2019";
+VeCt = {
+	STR_NONE: "None",
+	STR_SEE_CONSOLE: "See the console (CTRL+SHIFT+J) for details.",
 
-ID_SEARCH_BAR = "filter-search-input-group";
-ID_RESET_BUTTON = "reset";
+	HASH_MON_SCALED: "scaled",
 
-ELE_SPAN = "span";
-ELE_UL = "ul";
-ELE_LI = "li";
-ELE_A = "a";
-ELE_P = "p";
-ELE_DIV = "div";
-ELE_BUTTON = "button";
-ELE_INPUT = "input";
+	FILTER_BOX_SUB_HASH_SEARCH_PREFIX: "fbsr",
 
-EVNT_MOUSEOVER = "mouseover";
-EVNT_MOUSEOUT = "mouseout";
-EVNT_MOUSELEAVE = "mouseleave";
-EVNT_MOUSEENTER = "mouseenter";
-EVNT_CLICK = "click";
+	JSON_HOMEBREW_INDEX: `homebrew/index.json`,
 
-ATB_ID = "id";
-ATB_CLASS = "class";
-ATB_TITLE = "title";
-ATB_VALUE = "value";
-ATB_HREF = "href";
-ATB_STYLE = "style";
-ATB_CHECKED = "checked";
-ATB_TYPE = "type";
-ATB_ONCLICK = "onclick";
+	STORAGE_HOMEBREW: "HOMEBREW_STORAGE",
+	STORAGE_HOMEBREW_META: "HOMEBREW_META_STORAGE",
+	STORAGE_EXCLUDES: "EXCLUDES_STORAGE",
+	STORAGE_DMSCREEN: "DMSCREEN_STORAGE",
+	STORAGE_DMSCREEN_TEMP_SUBLIST: "DMSCREEN_TEMP_SUBLIST",
+	STORAGE_ROLLER_MACRO: "ROLLER_MACRO_STORAGE",
+	STORAGE_ENCOUNTER: "ENCOUNTER_STORAGE",
+	STORAGE_POINTBUY: "POINTBUY_STORAGE",
 
-STL_DISPLAY_INITIAL = "display: initial";
-STL_DISPLAY_NONE = "display: none";
-
-FLTR_ID = "filterId";
-
-CLSS_NON_STANDARD_SOURCE = "spicy-sauce";
-CLSS_HOMEBREW_SOURCE = "refreshing-brew";
-CLSS_SUBCLASS_FEATURE = "subclass-feature";
-
-ATB_DATA_LIST_SEP = "||";
-ATB_DATA_PART_SEP = "::";
-ATB_DATA_SC = "data-subclass";
-ATB_DATA_SRC = "data-source";
-
-STR_CANTRIP = "Cantrip";
-STR_NONE = "None";
-STR_ANY = "Any";
-
-RNG_SPECIAL = "special";
-RNG_POINT = "point";
-RNG_LINE = "line";
-RNG_CUBE = "cube";
-RNG_CONE = "cone";
-RNG_RADIUS = "radius";
-RNG_SPHERE = "sphere";
-RNG_HEMISPHERE = "hemisphere";
-RNG_SELF = "self";
-RNG_SIGHT = "sight";
-RNG_UNLIMITED = "unlimited";
-RNG_UNLIMITED_SAME_PLANE = "plane";
-RNG_TOUCH = "touch";
-
-UNT_FEET = "feet";
-UNT_MILES = "miles";
-
-ABIL_STR = "Strength";
-ABIL_DEX = "Dexterity";
-ABIL_CON = "Constitution";
-ABIL_INT = "Intelligence";
-ABIL_WIS = "Wisdom";
-ABIL_CHA = "Charisma";
-ABIL_CH_ANY = "Choose Any";
-
-HOMEBREW_STORAGE = "HOMEBREW_STORAGE";
+	DUR_INLINE_NOTIFY: 500
+};
 
 // STRING ==============================================================================================================
-// Appropriated from StackOverflow (literally, the site uses this code)
-String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
-	function () {
-		let str = this.toString();
-		if (arguments.length) {
-			const t = typeof arguments[0];
-			let key;
-			const args = t === "string" || t === "number"
-				? Array.prototype.slice.call(arguments)
-				: arguments[0];
+String.prototype.uppercaseFirst = String.prototype.uppercaseFirst || function () {
+	const str = this.toString();
+	if (str.length === 0) return str;
+	if (str.length === 1) return str.charAt(0).toUpperCase();
+	return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
-			for (key in args) {
-				str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+String.prototype.lowercaseFirst = String.prototype.lowercaseFirst || function () {
+	const str = this.toString();
+	if (str.length === 0) return str;
+	if (str.length === 1) return str.charAt(0).toLowerCase();
+	return str.charAt(0).toLowerCase() + str.slice(1);
+};
+
+String.prototype.toTitleCase = String.prototype.toTitleCase || function () {
+	let str;
+	str = this.replace(/([^\W_]+[^\s-/]*) */g, function (txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
+
+	if (!StrUtil._TITLE_LOWER_WORDS_RE) {
+		// Require space surrounded, as title-case requires a full word on either side
+		StrUtil._TITLE_LOWER_WORDS_RE = StrUtil.TITLE_LOWER_WORDS.map(it => new RegExp(`\\s${it}\\s`, "gi"));
+	}
+
+	for (let i = 0; i < StrUtil.TITLE_LOWER_WORDS.length; i++) {
+		str = str.replace(
+			StrUtil._TITLE_LOWER_WORDS_RE[i],
+			(txt) => {
+				return txt.toLowerCase();
+			});
+	}
+
+	if (!StrUtil._TITLE_UPPER_WORDS_RE) {
+		StrUtil._TITLE_UPPER_WORDS_RE = StrUtil.TITLE_UPPER_WORDS.map(it => new RegExp(`\\b${it}\\b`, "g"));
+	}
+
+	for (let i = 0; i < StrUtil.TITLE_UPPER_WORDS.length; i++) {
+		str = str.replace(
+			StrUtil._TITLE_UPPER_WORDS_RE[i],
+			StrUtil.TITLE_UPPER_WORDS[i].toUpperCase()
+		);
+	}
+
+	return str;
+};
+
+String.prototype.toSentenceCase = String.prototype.toSentenceCase || function () {
+	const out = [];
+	const re = /([^.!?]+)([.!?]\s*|$)/gi;
+	let m;
+	do {
+		m = re.exec(this);
+		if (m) {
+			out.push(m[0].toLowerCase().uppercaseFirst());
+		}
+	} while (m);
+	return out.join("");
+};
+
+String.prototype.toSpellCase = String.prototype.toSpellCase || function () {
+	return this.toLowerCase().replace(/(^|of )(bigby|otiluke|mordenkainen|evard|hadar|agathys|abi-dalzim|aganazzar|drawmij|leomund|maximilian|melf|nystul|otto|rary|snilloc|tasha|tenser|jim)('s|$| )/g, (...m) => `${m[1]}${m[2].toTitleCase()}${m[3]}`);
+};
+
+String.prototype.toCamelCase = String.prototype.toCamelCase || function () {
+	return this.split(" ").map((word, index) => {
+		if (index === 0) return word.toLowerCase();
+		return `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
+	}).join("");
+};
+
+String.prototype.escapeQuotes = String.prototype.escapeQuotes || function () {
+	return this.replace(/'/g, `&apos;`).replace(/"/g, `&quot;`);
+};
+
+String.prototype.unescapeQuotes = String.prototype.unescapeQuotes || function () {
+	return this.replace(/&apos;/g, `'`).replace(/&quot;/g, `"`);
+};
+
+String.prototype.encodeApos = String.prototype.encodeApos || function () {
+	return this.replace(/'/g, `%27`);
+};
+
+/**
+ * Calculates the Damerau-Levenshtein distance between two strings.
+ * https://gist.github.com/IceCreamYou/8396172
+ */
+String.prototype.distance = String.prototype.distance || function (target) {
+	let source = this; let i; let j;
+	if (!source) return target ? target.length : 0;
+	else if (!target) return source.length;
+
+	const m = source.length; const n = target.length; const INF = m + n; const score = new Array(m + 2); const sd = {};
+	for (i = 0; i < m + 2; i++) score[i] = new Array(n + 2);
+	score[0][0] = INF;
+	for (i = 0; i <= m; i++) {
+		score[i + 1][1] = i;
+		score[i + 1][0] = INF;
+		sd[source[i]] = 0;
+	}
+	for (j = 0; j <= n; j++) {
+		score[1][j + 1] = j;
+		score[0][j + 1] = INF;
+		sd[target[j]] = 0;
+	}
+
+	for (i = 1; i <= m; i++) {
+		let DB = 0;
+		for (j = 1; j <= n; j++) {
+			const i1 = sd[target[j - 1]]; const j1 = DB;
+			if (source[i - 1] === target[j - 1]) {
+				score[i + 1][j + 1] = score[i][j];
+				DB = j;
+			} else {
+				score[i + 1][j + 1] = Math.min(score[i][j], Math.min(score[i + 1][j], score[i][j + 1])) + 1;
 			}
+			score[i + 1][j + 1] = Math.min(score[i + 1][j + 1], score[i1] ? score[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1) : Infinity);
 		}
+		sd[source[i - 1]] = i;
+	}
+	return score[m + 1][n + 1];
+};
 
-		return str;
-	};
+String.prototype.isNumeric = String.prototype.isNumeric || function () {
+	return !isNaN(parseFloat(this)) && isFinite(this);
+};
 
-String.prototype.uppercaseFirst = String.prototype.uppercaseFirst ||
-	function () {
-		const str = this.toString();
-		if (str.length === 0) return str;
-		if (str.length === 1) return str.charAt(0).toUpperCase();
-		return str.charAt(0).toUpperCase() + str.slice(1);
-	};
+String.prototype.last = String.prototype.last || function () {
+	return this[this.length - 1];
+};
 
-String.prototype.lowercaseFirst = String.prototype.lowercaseFirst ||
-	function () {
-		const str = this.toString();
-		if (str.length === 0) return str;
-		if (str.length === 1) return str.charAt(0).toLowerCase();
-		return str.charAt(0).toLowerCase() + str.slice(1);
-	};
+String.prototype.escapeRegexp = String.prototype.escapeRegexp || function () {
+	return this.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+};
 
-String.prototype.toTitleCase = String.prototype.toTitleCase ||
-	function () {
-		let str;
-		str = this.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
-			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-		});
+String.prototype.toUrlified = String.prototype.toUrlified || function () {
+	return encodeURIComponent(this).toLowerCase();
+};
 
-		if (!StrUtil._TITLE_LOWER_WORDS_RE) {
-			StrUtil._TITLE_LOWER_WORDS_RE = StrUtil.TITLE_LOWER_WORDS.map(it => new RegExp(`\\s${it}\\s`, 'g'));
+String.prototype.toChunks = String.prototype.toChunks || function (size) {
+	// https://stackoverflow.com/a/29202760/5987433
+	const numChunks = Math.ceil(this.length / size)
+	const chunks = new Array(numChunks)
+	for (let i = 0, o = 0; i < numChunks; ++i, o += size) chunks[i] = this.substr(o, size);
+	return chunks
+};
+
+Array.prototype.joinConjunct = Array.prototype.joinConjunct || function (joiner, lastJoiner, nonOxford) {
+	if (this.length === 0) return "";
+	if (this.length === 1) return this[0];
+	if (this.length === 2) return this.join(lastJoiner);
+	else {
+		let outStr = "";
+		for (let i = 0; i < this.length; ++i) {
+			outStr += this[i];
+			if (i < this.length - 2) outStr += joiner;
+			else if (i === this.length - 2) outStr += `${(!nonOxford && this.length > 2 ? joiner.trim() : "")}${lastJoiner}`;
 		}
-
-		for (let i = 0; i < StrUtil.TITLE_LOWER_WORDS.length; i++) {
-			str = str.replace(
-				StrUtil._TITLE_LOWER_WORDS_RE[i],
-				(txt) => {
-					return txt.toLowerCase();
-				});
-		}
-
-		if (!StrUtil._TITLE_UPPER_WORDS_RE) {
-			StrUtil._TITLE_UPPER_WORDS_RE = StrUtil.TITLE_UPPER_WORDS.map(it => new RegExp(`\\b${it}\\b`, 'g'));
-		}
-
-		for (let i = 0; i < StrUtil.TITLE_UPPER_WORDS.length; i++) {
-			str = str.replace(
-				StrUtil._TITLE_UPPER_WORDS_RE[i],
-				StrUtil.TITLE_UPPER_WORDS[i].toUpperCase()
-			);
-		}
-
-		return str;
-	};
-
-// as we're targeting ES6
-String.prototype.ltrim = String.prototype.ltrim ||
-	function () {
-		return this.replace(/^\s+/, "");
-	};
-
-String.prototype.rtrim = String.prototype.rtrim ||
-	function () {
-		return this.replace(/\s+$/, "");
-	};
+		return outStr;
+	}
+};
 
 StrUtil = {
-	joinPhraseArray: function (array, joiner, lastJoiner) {
-		if (array.length === 0) return "";
-		if (array.length === 1) return array[0];
-		if (array.length === 2) return array.join(lastJoiner);
-		else {
-			let outStr = "";
-			for (let i = 0; i < array.length; ++i) {
-				outStr += array[i];
-				if (i < array.length - 2) outStr += joiner;
-				else if (i === array.length - 2) outStr += lastJoiner
-			}
-			return outStr;
-		}
-	},
+	COMMAS_NOT_IN_PARENTHESES_REGEX: /,\s?(?![^(]*\))/g,
+	COMMA_SPACE_NOT_IN_PARENTHESES_REGEX: /, (?![^(]*\))/g,
 
 	uppercaseFirst: function (string) {
 		return string.uppercaseFirst();
 	},
 	// Certain minor words should be left lowercase unless they are the first or last words in the string
-	TITLE_LOWER_WORDS: ["A", "An", "The", "And", "But", "Or", "For", "Nor", "As", "At", "By", "For", "From", "In", "Into", "Near", "Of", "On", "Onto", "To", "With"],
+	TITLE_LOWER_WORDS: ["a", "an", "the", "and", "but", "or", "for", "nor", "as", "at", "by", "for", "from", "in", "into", "near", "of", "on", "onto", "to", "with"],
 	// Certain words such as initialisms or acronyms should be left uppercase
-	TITLE_UPPER_WORDS: ["Id", "Tv"],
+	TITLE_UPPER_WORDS: ["Id", "Tv", "Dm"],
 
 	padNumber: (n, len, padder) => {
 		return String(n).padStart(len, padder);
-	}
-};
+	},
 
-RegExp.escape = function (string) {
-	return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
-};
+	elipsisTruncate (str, atLeastPre = 5, atLeastSuff = 0, maxLen = 20) {
+		if (maxLen >= str.length) return str;
 
-// TEXT COMBINING ======================================================================================================
-function utils_combineText (textList, tagPerItem, textBlockInlineTitle) {
-	tagPerItem = tagPerItem === undefined ? null : tagPerItem;
-	textBlockInlineTitle = textBlockInlineTitle === undefined ? null : textBlockInlineTitle;
-	let textStack = "";
-	if (typeof textList === "string") {
-		return getString(textList, true)
-	}
-	for (let i = 0; i < textList.length; ++i) {
-		if (typeof textList[i] === "object") {
-			if (textList[i].islist === "YES") {
-				textStack += utils_makeOldList(textList[i]);
-			}
-			if (textList[i].type === "list") {
-				textStack += utils_makeList(textList[i]);
-			}
-			if (textList[i].hassubtitle === "YES") {
-				// if required, add inline header before we go deeper
-				if (textBlockInlineTitle !== null && i === 0) {
-					textStack += textBlockInlineTitle;
-				}
-				textStack += utils_combineText(textList[i].text, tagPerItem, utils_makeSubHeader(textList[i].title));
-			}
-			if (textList[i].istable === "YES") {
-				textStack += utils_makeTable(textList[i]);
-			}
-			if (textList[i].hassavedc === "YES") {
-				textStack += utils_makeAttDc(textList[i]);
-			}
-			if (textList[i].hasattackmod === "YES") {
-				textStack += utils_makeAttAttackMod(textList[i]);
-			}
-		} else {
-			textStack += getString(textList[i], textBlockInlineTitle !== null && i === 0)
+		maxLen = Math.max(atLeastPre + atLeastSuff + 3, maxLen);
+		let out = "";
+		let remain = maxLen - (3 + atLeastPre + atLeastSuff);
+		for (let i = 0; i < str.length - atLeastSuff; ++i) {
+			const c = str[i];
+			if (i < atLeastPre) out += c;
+			else if ((remain--) > 0) out += c;
 		}
-	}
-	return textStack;
-
-	function getString (text, addTitle) {
-		const openTag = tagPerItem === null ? "" : "<" + tagPerItem + ">";
-		const closeTag = tagPerItem === null ? "" : "</" + tagPerItem + ">";
-		const inlineTitle = addTitle ? textBlockInlineTitle : "";
-		return openTag + inlineTitle + text + closeTag;
-	}
-}
-
-function utils_makeTable (tableObject) {
-	let tableStack = "<table>";
-	if (tableObject.caption !== undefined) {
-		tableStack += "<caption>" + tableObject.caption + "</caption>";
-	}
-	tableStack += "<thead><tr>";
-
-	for (let i = 0; i < tableObject.thead.length; ++i) {
-		tableStack += "<th" + makeTableThClassText(tableObject, i) + ">" + tableObject.thead[i] + "</th>"
-	}
-
-	tableStack += "</tr></thead><tbody>";
-	for (let i = 0; i < tableObject.tbody.length; ++i) {
-		tableStack += "<tr>";
-		for (let j = 0; j < tableObject.tbody[i].length; ++j) {
-			tableStack += "<td" + makeTableTdClassText(tableObject, j) + ">" + tableObject.tbody[i][j] + "</td>";
-		}
-		tableStack += "</tr>";
-	}
-	tableStack += "</tbody></table>";
-	return tableStack;
-}
-
-function utils_makeAttDc (attDcObj) {
-	return "<p class='spellabilitysubtext'><span>" + attDcObj.name + " save DC</span> = 8 + your proficiency bonus + your " + utils_makeAttChoose(attDcObj.attributes) + "</p>"
-}
-
-function utils_makeAttAttackMod (attAtkObj) {
-	return "<p class='spellabilitysubtext'><span>" + attAtkObj.name + " attack modifier</span> = your proficiency bonus + your " + utils_makeAttChoose(attAtkObj.attributes) + "</p>"
-}
-
-function utils_makeLink (linkObj) {
-	let href;
-	if (linkObj.href.type === "internal") {
-		href = `${linkObj.href.path}#`;
-		if (linkObj.href.hash !== undefined) {
-			if (linkObj.href.hash.type === "constant") {
-				href += linkObj.href.hash.value;
-			} else if (linkObj.href.hash.type === "multipart") {
-				const partStack = [];
-				for (let i = 0; i < linkObj.href.hash.parts.length; i++) {
-					const part = linkObj.href.hash.parts[i];
-					partStack.push(`${part.key}:${part.value}`)
-				}
-				href += partStack.join(",");
-			}
-		}
-	} else if (linkObj.href.type === "external") {
-		href = linkObj.href.url;
-	}
-	return `<a href='${href}' target='_blank'>${linkObj.text}</a>`;
-}
-
-function utils_makeOldList (listObj) { // to handle islist === "YES"
-	let outStack = "<ul>";
-	for (let i = 0; i < listObj.items.length; ++i) {
-		const cur = listObj.items[i];
-		outStack += "<li>";
-		for (let j = 0; j < cur.entries.length; ++j) {
-			if (cur.entries[j].hassubtitle === "YES") {
-				outStack += "<br>" + utils_makeListSubHeader(cur.entries[j].title) + cur.entries[j].entries;
-			} else {
-				outStack += cur.entries[j];
-			}
-		}
-		outStack += "</li>";
-	}
-	return outStack + "</ul>";
-}
-
-function utils_makeList (listObj) { // to handle type === "list"
-	let listTag = "ul";
-	const subtype = listObj.subtype;
-	let suffix = "";
-	if (subtype === "ordered") {
-		listTag = "ol";
-		if (listObj.ordering) suffix = " type=\"" + listObj.ordering + "\"";
-	} // NOTE: "description" lists are more complex - can handle those later if required
-	let outStack = "<" + listTag + suffix + ">";
-	for (let i = 0; i < listObj.items.length; ++i) {
-		const listItem = listObj.items[i];
-		outStack += "<li>";
-		for (let j = 0; j < listItem.length; ++j) {
-			if (listItem[j].type === "link") {
-				outStack += utils_makeLink(listItem[j]);
-			} else {
-				outStack += listItem[j];
-			}
-		}
-		outStack += "</li>";
-	}
-	return outStack + "</" + listTag + ">";
-}
-
-function utils_makeSubHeader (text) {
-	return "<span class='stats-sub-header'>" + text + ".</span> "
-}
-
-function utils_makeListSubHeader (text) {
-	return "<span class='stats-list-sub-header'>" + text + ".</span> "
-}
-
-function utils_makeAttChoose (attList) {
-	if (attList.length === 1) {
-		return Parser.attAbvToFull(attList[0]) + " modifier";
-	} else {
-		const attsTemp = [];
-		for (let i = 0; i < attList.length; ++i) {
-			attsTemp.push(Parser.attAbvToFull(attList[i]));
-		}
-		return attsTemp.join(" or ") + " modifier (your choice)";
-	}
-}
-
-DICE_REGEX = /([1-9]\d*)?d([1-9]\d*)(\s?[+-]\s?\d+)?/g;
-
-function utils_makeRoller (text) {
-	return text.replace(DICE_REGEX, "<span class='roller' data-roll='$&'>$&</span>").replace(/(-|\+)?\d+(?= to hit)/g, "<span class='roller' data-roll='1d20$&'>$&</span>").replace(/(-|\+)?\d+(?= bonus to)/g, "<span class='roller' data-roll='1d20$&'>$&</span>").replace(/(bonus of )(=?-|\+\d+)/g, "$1<span class='roller' data-roll='1d20$2'>$2</span>");
-}
-
-function makeTableThClassText (tableObject, i) {
-	return tableObject.thstyleclass === undefined || i >= tableObject.thstyleclass.length ? "" : " class=\"" + tableObject.thstyleclass[i] + "\"";
-}
-
-function makeTableTdClassText (tableObject, i) {
-	if (tableObject.tdstyleclass !== undefined) {
-		return tableObject.tdstyleclass === undefined || i >= tableObject.tdstyleclass.length ? "" : " class=\"" + tableObject.tdstyleclass[i] + "\"";
-	} else {
-		return makeTableThClassText(tableObject, i);
-	}
-}
-
-class AbilityData {
-	constructor (asText, asTextShort, asCollection, areNegative) {
-		this.asText = asText;
-		this.asTextShort = asTextShort;
-		this.asCollection = asCollection;
-		this.areNegative = areNegative;
-	}
-}
-
-function utils_getAbilityData (abObj) {
-	const ABILITIES = ["Str", "Dex", "Con", "Int", "Wis", "Cha"];
-	const mainAbs = [];
-	const allAbs = [];
-	const negMods = [];
-	const abs = [];
-	const shortAbs = [];
-	if (abObj !== undefined) {
-		handleAllAbilities(abObj);
-		handleAbilitiesChoose();
-		return new AbilityData(abs.join("; "), shortAbs.join("; "), allAbs, negMods);
-	}
-	return new AbilityData("", "", [], []);
-
-	function handleAllAbilities (abilityList) {
-		for (let a = 0; a < ABILITIES.length; ++a) {
-			handleAbility(abilityList, ABILITIES[a])
-		}
-	}
-
-	function handleAbility (parent, ab) {
-		if (parent[ab.toLowerCase()] !== undefined) {
-			const isNegMod = parent[ab.toLowerCase()] < 0;
-			const toAdd = `${ab} ${(isNegMod ? "" : "+")}${parent[ab.toLowerCase()]}`;
-			abs.push(toAdd);
-			shortAbs.push(toAdd);
-			mainAbs.push(ab);
-			allAbs.push(ab.toLowerCase());
-			if (isNegMod) negMods.push(ab.toLowerCase());
-		}
-	}
-
-	function handleAbilitiesChoose () {
-		if (abObj.choose !== undefined) {
-			for (let i = 0; i < abObj.choose.length; ++i) {
-				const item = abObj.choose[i];
-				let outStack = "";
-				if (item.predefined !== undefined) {
-					for (let j = 0; j < item.predefined.length; ++j) {
-						const subAbs = [];
-						handleAllAbilities(subAbs, item.predefined[j]);
-						outStack += subAbs.join(", ") + (j === item.predefined.length - 1 ? "" : " or ");
-					}
-				} else {
-					const allAbilities = item.from.length === 6;
-					const allAbilitiesWithParent = isAllAbilitiesWithParent(item);
-					let amount = item.amount === undefined ? 1 : item.amount;
-					amount = (amount < 0 ? "" : "+") + amount;
-					if (allAbilities) {
-						outStack += "any ";
-					} else if (allAbilitiesWithParent) {
-						outStack += "any other ";
-					}
-					if (item.count !== undefined && item.count > 1) {
-						outStack += getNumberString(item.count) + " ";
-					}
-					if (allAbilities || allAbilitiesWithParent) {
-						outStack += amount;
-					} else {
-						for (let j = 0; j < item.from.length; ++j) {
-							let suffix = "";
-							if (item.from.length > 1) {
-								if (j === item.from.length - 2) {
-									suffix = " or ";
-								} else if (j < item.from.length - 2) {
-									suffix = ", "
-								}
-							}
-							let thsAmount = " " + amount;
-							if (item.from.length > 1) {
-								if (j !== item.from.length - 1) {
-									thsAmount = "";
-								}
-							}
-							outStack += item.from[j].uppercaseFirst() + thsAmount + suffix;
-						}
-					}
-				}
-				abs.push("Choose " + outStack);
-				shortAbs.push(outStack.uppercaseFirst());
-			}
-		}
-	}
-
-	function isAllAbilitiesWithParent (chooseAbs) {
-		const tempAbilities = [];
-		for (let i = 0; i < mainAbs.length; ++i) {
-			tempAbilities.push(mainAbs[i].toLowerCase());
-		}
-		for (let i = 0; i < chooseAbs.from.length; ++i) {
-			const ab = chooseAbs.from[i].toLowerCase();
-			if (!tempAbilities.includes(ab)) tempAbilities.push(ab);
-			if (!allAbs.includes(ab.toLowerCase)) allAbs.push(ab.toLowerCase());
-		}
-		return tempAbilities.length === 6;
-	}
-
-	function getNumberString (amount) {
-		if (amount === 1) return "one";
-		if (amount === 2) return "two";
-		if (amount === 3) return "three";
-		else return amount;
-	}
-}
-
-// PARSING =============================================================================================================
-Parser = {};
-Parser._parse_aToB = function (abMap, a) {
-	if (a === undefined || a === null) throw new Error("undefined or null object passed to parser");
-	if (typeof a === "string") a = a.trim();
-	if (abMap[a] !== undefined) return abMap[a];
-	return a;
-};
-
-Parser._parse_bToA = function (abMap, b) {
-	if (b === undefined || b === null) throw new Error("undefined or null object passed to parser");
-	if (typeof b === "string") b = b.trim();
-	for (const v in abMap) {
-		if (!abMap.hasOwnProperty(v)) continue;
-		if (abMap[v] === b) return v
-	}
-	return b;
-};
-
-Parser.attAbvToFull = function (abv) {
-	return Parser._parse_aToB(Parser.ATB_ABV_TO_FULL, abv);
-};
-
-Parser.attFullToAbv = function (full) {
-	return Parser._parse_bToA(Parser.ATB_ABV_TO_FULL, full);
-};
-
-Parser.sizeAbvToFull = function (abv) {
-	return Parser._parse_aToB(Parser.SIZE_ABV_TO_FULL, abv);
-};
-
-Parser.getAbilityModNumber = function (abilityScore) {
-	return Math.floor((abilityScore - 10) / 2);
-};
-
-Parser.getAbilityModifier = function (abilityScore) {
-	let modifier = Parser.getAbilityModNumber(abilityScore);
-	if (modifier >= 0) modifier = "+" + modifier;
-	return modifier;
-};
-
-Parser._addCommas = function (intNum) {
-	return (intNum + "").replace(/(\d)(?=(\d{3})+$)/g, "$1,");
-};
-
-Parser.crToXp = function (cr) {
-	if (cr === "Unknown" || cr === undefined) return "Unknown";
-	if (cr === "0") return "0 or 10";
-	if (cr === "1/8") return "25";
-	if (cr === "1/4") return "50";
-	if (cr === "1/2") return "100";
-	return Parser._addCommas(Parser.XP_CHART[parseInt(cr) - 1]);
-};
-
-LEVEL_TO_XP_EASY = [0, 25, 50, 75, 125, 250, 300, 350, 450, 550, 600, 800, 1000, 1100, 1250, 1400, 1600, 2000, 2100, 2400, 2800];
-LEVEL_TO_XP_MEDIUM = [0, 50, 100, 150, 250, 500, 600, 750, 900, 1100, 1200, 1600, 2000, 2200, 2500, 2800, 3200, 3900, 4100, 4900, 5700];
-LEVEL_TO_XP_HARD = [0, 75, 150, 225, 375, 750, 900, 1100, 1400, 1600, 1900, 2400, 3000, 3400, 3800, 4300, 4800, 5900, 6300, 7300, 8500];
-LEVEL_TO_XP_DEADLY = [0, 100, 200, 400, 500, 1100, 1400, 1700, 2100, 2400, 2800, 3600, 4500, 5100, 5700, 6400, 7200, 8800, 9500, 10900, 12700];
-
-Parser.levelToXpThreshold = function (level) {
-	return [LEVEL_TO_XP_EASY[level], LEVEL_TO_XP_MEDIUM[level], LEVEL_TO_XP_HARD[level], LEVEL_TO_XP_DEADLY[level]];
-};
-
-Parser.crToNumber = function (cr) {
-	if (cr === "Unknown" || cr === undefined) return 100;
-	const parts = cr.trim().split("/");
-	if (parts.length === 1) return Number(parts[0]);
-	else if (parts.length === 2) return Number(parts[0]) / Number(parts[1]);
-	else return 0;
-};
-
-Parser.armorFullToAbv = function (armor) {
-	return Parser._parse_bToA(Parser.ARMOR_ABV_TO_FULL, armor);
-};
-
-Parser._getSourceStringFromSource = function (source) {
-	if (source && source.source) return source.source;
-	return source;
-};
-Parser.sourceJsonToFull = function (source) {
-	source = Parser._getSourceStringFromSource(source);
-	return Parser._parse_aToB(Parser.SOURCE_JSON_TO_FULL, source).replace(/'/g, STR_APOSTROPHE);
-};
-Parser.sourceJsonToFullCompactPrefix = function (source) {
-	source = Parser._getSourceStringFromSource(source);
-	return Parser._parse_aToB(Parser.SOURCE_JSON_TO_FULL, source)
-		.replace(/'/g, STR_APOSTROPHE)
-		.replace(UA_PREFIX, UA_PREFIX_SHORT)
-		.replace(AL_PREFIX, AL_PREFIX_SHORT)
-		.replace(PS_PREFIX, PS_PREFIX_SHORT);
-};
-Parser.sourceJsonToAbv = function (source) {
-	source = Parser._getSourceStringFromSource(source);
-	return Parser._parse_aToB(Parser.SOURCE_JSON_TO_ABV, source);
-};
-
-Parser.stringToSlug = function (str) {
-	return str.toLowerCase().replace(/[^\w ]+/g, STR_EMPTY).replace(/ +/g, STR_SLUG_DASH);
-};
-
-Parser.stringToCasedSlug = function (str) {
-	return str.replace(/[^\w ]+/g, STR_EMPTY).replace(/ +/g, STR_SLUG_DASH);
-};
-
-Parser.itemTypeToAbv = function (type) {
-	return Parser._parse_aToB(Parser.ITEM_TYPE_JSON_TO_ABV, type);
-};
-
-Parser.dmgTypeToFull = function (dmgType) {
-	return Parser._parse_aToB(Parser.DMGTYPE_JSON_TO_FULL, dmgType);
-};
-
-Parser.skillToExplanation = function (skillType) {
-	return Parser._parse_aToB(Parser.SKILL_JSON_TO_FULL, skillType);
-};
-
-Parser.actionToExplanation = function (actionType) {
-	return Parser._parse_aToB(Parser.ACTION_JSON_TO_FULL, actionType);
-};
-
-Parser.numberToString = function (num) {
-	if (num === 0) return "zero";
-	else return parse_hundreds(num);
-
-	function parse_hundreds (num) {
-		if (num > 99) {
-			return Parser.NUMBERS_ONES[Math.floor(num / 100)] + " hundred " + parse_tens(num % 100);
-		} else {
-			return parse_tens(num);
-		}
-	}
-
-	function parse_tens (num) {
-		if (num < 10) return Parser.NUMBERS_ONES[num];
-		else if (num >= 10 && num < 20) return Parser.NUMBERS_TEENS[num - 10];
-		else {
-			return Parser.NUMBERS_TENS[Math.floor(num / 10)] + " " + Parser.NUMBERS_ONES[num % 10];
-		}
-	}
-};
-
-// sp-prefix functions are for parsing spell data, and shared with the roll20 script
-Parser.spSchoolAbvToFull = function (school) {
-	return Parser._parse_aToB(Parser.SP_SCHOOL_ABV_TO_FULL, school);
-};
-
-Parser.spSchoolAbvToShort = function (school) {
-	return Parser._parse_aToB(Parser.SP_SCHOOL_ABV_TO_SHORT, school);
-};
-
-Parser.spLevelToFull = function (level) {
-	if (level === 0) return STR_CANTRIP;
-	if (level === 1) return level + "st";
-	if (level === 2) return level + "nd";
-	if (level === 3) return level + "rd";
-	return level + "th";
-};
-
-Parser.spMetaToFull = function (meta) {
-	// these tags are (so far) mutually independent, so we don't need to combine the text
-	if (meta && meta.ritual) return " (ritual)";
-	if (meta && meta.technomagic) return " (technomagic)";
-	return "";
-};
-
-Parser.spLevelSchoolMetaToFull = function (level, school, meta) {
-	const levelPart = level === 0 ? Parser.spLevelToFull(level).toLowerCase() : Parser.spLevelToFull(level) + "-level";
-	let levelSchoolStr = level === 0 ? `${Parser.spSchoolAbvToFull(school)} ${levelPart}` : `${levelPart} ${Parser.spSchoolAbvToFull(school).toLowerCase()}`;
-	return levelSchoolStr + Parser.spMetaToFull(meta);
-};
-
-Parser.spTimeListToFull = function (times) {
-	return times.map(t => `${Parser.getTimeToFull(t)}${t.condition ? `, ${t.condition}` : ""}`).join(" or ");
-};
-
-Parser.getTimeToFull = function (time) {
-	return `${time.number} ${time.unit === "bonus" ? "bonus action" : time.unit}${time.number > 1 ? "s" : ""}`
-};
-
-Parser.spRangeToFull = function (range) {
-	switch (range.type) {
-		case RNG_SPECIAL:
-			return "Special";
-		case RNG_POINT:
-			return renderPoint();
-		case RNG_LINE:
-		case RNG_CUBE:
-		case RNG_CONE:
-		case RNG_RADIUS:
-		case RNG_SPHERE:
-		case RNG_HEMISPHERE:
-			return renderArea();
-	}
-
-	function renderPoint () {
-		const dist = range.distance;
-		switch (dist.type) {
-			case UNT_FEET:
-			case UNT_MILES:
-				return `${dist.amount} ${dist.amount === 1 ? Parser.getSingletonUnit(dist.type) : dist.type}`;
-			case RNG_SELF:
-				return "Self";
-			case RNG_SIGHT:
-				return "Sight";
-			case RNG_UNLIMITED:
-				return "Unlimited";
-			case RNG_UNLIMITED_SAME_PLANE:
-				return "Unlimited on the same plane";
-			case RNG_TOUCH:
-				return "Touch";
-		}
-	}
-
-	function renderArea () {
-		const size = range.distance;
-		return `Self (${size.amount}-${Parser.getSingletonUnit(size.type)}${getAreaStyleStr()})`;
-
-		function getAreaStyleStr () {
-			switch (range.type) {
-				case RNG_SPHERE:
-					return "-radius";
-				case RNG_HEMISPHERE:
-					return `-radius ${range.type}`;
-				default:
-					return ` ${range.type}`
-			}
-		}
-	}
-};
-
-Parser.getSingletonUnit = function (unit) {
-	if (unit === UNT_FEET) return "foot";
-	if (unit.charAt(unit.length - 1) === "s") return unit.slice(0, -1);
-	return unit;
-};
-
-Parser.spComponentsToFull = function (comp) {
-	const out = [];
-	if (comp.v) out.push("V");
-	if (comp.s) out.push("S");
-	if (comp.m) out.push("M" + (comp.m.length ? ` (${comp.m})` : ""));
-	return out.join(", ");
-};
-
-Parser.spDurationToFull = function (dur) {
-	return dur.map(d => {
-		switch (d.type) {
-			case "special":
-				return "Special";
-			case "instant":
-				return `Instantaneous${d.condition ? ` (${d.condition})` : ""}`;
-			case "timed":
-				return `${d.concentration ? "Concentration, " : ""}${d.duration.upTo && d.concentration ? "u" : d.duration.upTo ? "U" : ""}${d.duration.upTo ? "p to " : ""}${d.duration.amount} ${d.duration.amount === 1 ? Parser.getSingletonUnit(d.duration.type) : d.duration.type}`;
-			case "permanent":
-				if (d.ends) {
-					return `Until ${d.ends.map(m => m === "dispell" ? "dispelled" : m === "trigger" ? "triggered" : m === "discharge" ? "discharged" : undefined).join(" or ")}`
-				} else {
-					return "Permanent";
-				}
-		}
-	}).join(" or ") + (dur.length > 1 ? " (see below)" : "");
-};
-
-Parser.spClassesToFull = function (classes) {
-	const fromSubclasses = Parser.spSubclassesToFull(classes);
-	return Parser.spMainClassesToFull(classes) + (fromSubclasses ? ", " + fromSubclasses : "");
-};
-
-Parser.spMainClassesToFull = function (classes) {
-	return classes.fromClassList
-		.sort((a, b) => SortUtil.ascSort(a.name, b.name))
-		.map(c => `<span title="Source: ${Parser.sourceJsonToFull(c.source)}">${c.name}</span>`)
-		.join(", ");
-};
-
-Parser.spSubclassesToFull = function (classes) {
-	if (!classes.fromSubclass) return "";
-	return classes.fromSubclass
-		.sort((a, b) => {
-			const byName = SortUtil.ascSort(a.class.name, b.class.name);
-			return byName || SortUtil.ascSort(a.subclass.name, b.subclass.name);
-		})
-		.map(c => Parser._spSubclassItem(c))
-		.join(", ");
-};
-
-Parser._spSubclassItem = function (fromSubclass) {
-	return `<span class="italic" title="Source: ${Parser.sourceJsonToFull(fromSubclass.subclass.source)}">${fromSubclass.subclass.name}${fromSubclass.subclass.subSubclass ? ` (${fromSubclass.subclass.subSubclass})` : ""}</span> <span title="Source: ${Parser.sourceJsonToFull(fromSubclass.class.source)}">${fromSubclass.class.name}</span>`;
-};
-
-// mon-prefix functions are for parsing monster data, and shared with the roll20 script
-Parser.monTypeToFullObj = function (type) {
-	const out = {type: "", tags: [], asText: ""};
-
-	if (typeof type === "string") {
-		// handles e.g. "fey"
-		out.type = type;
-		out.asText = type;
+		if (remain < 0) out += "...";
+		out += str.substring(str.length - atLeastSuff, str.length);
 		return out;
+	},
+
+	toTitleCase (str) {
+		return str.toTitleCase();
 	}
-
-	const tempTags = [];
-	if (type.tags) {
-		for (const tag of type.tags) {
-			if (typeof tag === "string") {
-				// handles e.g. "fiend (devil)"
-				out.tags.push(tag);
-				tempTags.push(tag);
-			} else {
-				// handles e.g. "humanoid (Chondathan human)"
-				out.tags.push(tag.tag);
-				tempTags.push(`${tag.prefix} ${tag.tag}`);
-			}
-		}
-	}
-	out.type = type.type;
-	if (type.swarmSize) {
-		out.tags.push("swarm");
-		out.asText = `swarm of ${Parser.sizeAbvToFull(type.swarmSize).toLowerCase()} ${Parser.monTypeToPlural(type.type)}`;
-	} else {
-		out.asText = `${type.type}`;
-	}
-	if (tempTags.length) out.asText += ` (${tempTags.join(", ")})`;
-	return out;
 };
 
-Parser.monTypeToPlural = function (type) {
-	return Parser._parse_aToB(Parser.MON_TYPE_TO_PLURAL, type);
-};
-
-// psi-prefix functions are for parsing psionic data, and shared with the roll20 script
-Parser.PSI_ABV_TYPE_TALENT = "T";
-Parser.PSI_ABV_TYPE_DISCIPLINE = "D";
-Parser.PSI_ORDER_NONE = "None";
-Parser.psiTypeToFull = (type) => {
-	if (type === Parser.PSI_ABV_TYPE_TALENT) return "Talent";
-	else if (type === Parser.PSI_ABV_TYPE_DISCIPLINE) return "Discipline";
-	else return type;
-};
-
-Parser.psiOrderToFull = (order) => {
-	return order === undefined ? Parser.PSI_ORDER_NONE : order;
-};
-
-Parser.levelToFull = function (level) {
-	if (isNaN(level)) return "";
-	if (level === "2") return level + "nd";
-	if (level === "3") return level + "rd";
-	if (level === "1") return level + "st";
-	return level + "th";
-};
-
-Parser.invoSpellToFull = function (spell) {
-	if (spell === "Eldritch Blast") return EntryRenderer.getDefaultRenderer().renderEntry(`{@spell ${spell}} cantrip`);
-	if (spell === "Hex/Curse") return EntryRenderer.getDefaultRenderer().renderEntry("{@spell Hex} spell or a warlock feature that curses");
-	return STR_NONE
-};
-
-Parser.invoPactToFull = function (pact) {
-	if (pact === "Chain") return "Pact of the Chain";
-	if (pact === "Tome") return "Pact of the Tome";
-	if (pact === "Blade") return "Pact of the Blade";
-	return STR_ANY;
-};
-
-Parser.invoPatronToShort = function (patron) {
-	if (patron === STR_ANY) return STR_ANY;
-	return /^The (.*?)$/.exec(patron)[1];
-};
-
-Parser.dtAlignmentToFull = function (alignment) {
-	alignment = alignment.toUpperCase();
-	switch (alignment) {
-		case "L":
-			return "Lawful";
-		case "N":
-			return "Neutral";
-		case "C":
-			return "Chaotic";
-		case "G":
-			return "Good";
-		case "E":
-			return "Evil";
-	}
-	return alignment;
-};
-
-Parser.CAT_ID_CREATURE = 1;
-Parser.CAT_ID_SPELL = 2;
-Parser.CAT_ID_BACKGROUND = 3;
-Parser.CAT_ID_ITEM = 4;
-Parser.CAT_ID_CLASS = 5;
-Parser.CAT_ID_CONDITION = 6;
-Parser.CAT_ID_FEAT = 7;
-Parser.CAT_ID_ELDRITCH_INVOCATION = 8;
-Parser.CAT_ID_PSIONIC = 9;
-Parser.CAT_ID_RACE = 10;
-Parser.CAT_ID_OTHER_REWARD = 11;
-Parser.CAT_ID_VARIANT_OPTIONAL_RULE = 12;
-Parser.CAT_ID_ADVENTURE = 13;
-Parser.CAT_ID_DEITY = 14;
-Parser.CAT_ID_OBJECT = 15;
-Parser.CAT_ID_TRAP = 16;
-Parser.CAT_ID_HAZARD = 17;
-Parser.CAT_ID_QUICKREF = 18;
-
-Parser.CAT_ID_TO_FULL = {};
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_CREATURE] = "Bestiary";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_SPELL] = "Spell";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_BACKGROUND] = "Background";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_ITEM] = "Item";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_CLASS] = "Class";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_CONDITION] = "Condition";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_FEAT] = "Feat";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_ELDRITCH_INVOCATION] = "Eldritch Invocation";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_PSIONIC] = "Psionic";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_RACE] = "Race";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_OTHER_REWARD] = "Other Reward";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_VARIANT_OPTIONAL_RULE] = "Variant/Optional Rule";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_ADVENTURE] = "Adventure";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_DEITY] = "Deity";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_OBJECT] = "Object";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_TRAP] = "Trap";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_HAZARD] = "Hazard";
-Parser.CAT_ID_TO_FULL[Parser.CAT_ID_QUICKREF] = "Quick Reference";
-
-Parser.pageCategoryToFull = function (catId) {
-	return Parser._parse_aToB(Parser.CAT_ID_TO_FULL, catId);
-};
-
-/**
- * Build a pair of strings; one with all current subclasses, one with all legacy subclasses
- *
- * @param classes a spell.classes JSON item
- * @returns {*[]} A two-element array. First item is a string of all the current subclasses, second item a string of
- * all the legacy/superceded subclasses
- */
-Parser.spSubclassesToCurrentAndLegacyFull = function (classes) {
-	const out = [[], []];
-	if (!classes.fromSubclass) return out;
-	const curNames = new Set();
-	const toCheck = [];
-	classes.fromSubclass
-		.sort((a, b) => {
-			const byName = SortUtil.ascSort(a.class.name, b.class.name);
-			return byName || SortUtil.ascSort(a.subclass.name, b.subclass.name);
-		})
-		.forEach(c => {
-			const nm = c.subclass.name;
-			const src = c.subclass.source;
-			const toAdd = Parser._spSubclassItem(c);
-			if (hasBeenReprinted(nm, src)) {
-				out[1].push(toAdd);
-			} else if (Parser.sourceJsonToFull(src).startsWith(UA_PREFIX) || Parser.sourceJsonToFull(src).startsWith(PS_PREFIX)) {
-				const cleanName = mapClassShortNameToMostRecent(nm.split("(")[0].trim().split(/v\d+/)[0].trim());
-				toCheck.push({"name": cleanName, "ele": toAdd});
-			} else {
-				out[0].push(toAdd);
-				curNames.add(nm);
-			}
-		});
-	toCheck.forEach(n => {
-		if (curNames.has(n.name)) {
-			out[1].push(n.ele);
-		} else {
-			out[0].push(n.ele);
-		}
-	});
-	return [out[0].join(", "), out[1].join(", ")];
+CleanUtil = {
+	getCleanJson (data, minify = false) {
+		let str = minify ? JSON.stringify(data) : `${JSON.stringify(data, null, "\t")}\n`;
+		return CleanUtil.getCleanString(str);
+	},
 
 	/**
-	 * Get the most recent iteration of a subclass name
+	 * @param str
+	 * @param isJsonDump If the string is intended to be re-parsed by `JSON.parse`
 	 */
-	function mapClassShortNameToMostRecent (shortName) {
-		switch (shortName) {
-			case "Favored Soul":
-				return "Divine Soul";
-			case "Undying Light":
-				return "Celestial";
-			case "Deep Stalker":
-				return "Gloom Stalker";
+	getCleanString (str, isJsonDump = true) {
+		str = str
+			.replace(CleanUtil.SHARED_REPLACEMENTS_REGEX, (match) => CleanUtil.SHARED_REPLACEMENTS[match])
+			.replace(/\u00AD/g, "") // soft hyphens
+			.replace(/\s*(\.\s*\.\s*\.)/g, "$1");
+
+		if (isJsonDump) {
+			return str
+				.replace(CleanUtil.STR_REPLACEMENTS_REGEX, (match) => CleanUtil.STR_REPLACEMENTS[match])
+				.replace(/\s*(\\u2014|\\u2013)\s*/g, "$1");
+		} else {
+			return str
+				.replace(CleanUtil.JSON_REPLACEMENTS_REGEX, (match) => CleanUtil.JSON_REPLACEMENTS[match])
+				.replace(/[ ]*([\u2014\u2013])[ ]*/g, "$1");
 		}
-		return shortName;
 	}
 };
-
-Parser.attackTypeToFull = function (attackType) {
-	return Parser._parse_aToB(Parser.ATK_TYPE_TO_FULL, attackType);
+CleanUtil.SHARED_REPLACEMENTS = {
+	"’": "'",
+	"…": "...",
+	" ": " ", // non-breaking space
+	"ﬀ": "ff",
+	"ﬃ": "ffi",
+	"ﬄ": "ffl",
+	"ﬁ": "fi",
+	"ﬂ": "fl",
+	"Ĳ": "IJ",
+	"ĳ": "ij",
+	"Ǉ": "LJ",
+	"ǈ": "Lj",
+	"ǉ": "lj",
+	"Ǌ": "NJ",
+	"ǋ": "Nj",
+	"ǌ": "nj",
+	"ﬅ": "ft"
 };
-
-Parser.trapTypeToFull = function (type) {
-	return Parser._parse_aToB(Parser.TRAP_TYPE_TO_FULL, type);
+CleanUtil.STR_REPLACEMENTS = {
+	"—": "\\u2014",
+	"–": "\\u2013",
+	"−": "\\u2212",
+	"“": `\\"`,
+	"”": `\\"`
 };
-
-Parser.TRAP_TYPE_TO_FULL = {};
-Parser.TRAP_TYPE_TO_FULL["MECH"] = "Mechanical trap";
-Parser.TRAP_TYPE_TO_FULL["MAG"] = "Magical trap";
-Parser.TRAP_TYPE_TO_FULL["HAZ"] = "Hazard";
-
-Parser.ATK_TYPE_TO_FULL = {};
-Parser.ATK_TYPE_TO_FULL["MW"] = "Melee Weapon Attack";
-Parser.ATK_TYPE_TO_FULL["RW"] = "Ranged Weapon Attack";
-
-SKL_ABV_ABJ = "A";
-SKL_ABV_EVO = "V";
-SKL_ABV_ENC = "E";
-SKL_ABV_ILL = "I";
-SKL_ABV_DIV = "D";
-SKL_ABV_NEC = "N";
-SKL_ABV_TRA = "T";
-SKL_ABV_CON = "C";
-
-SKL_ABJ = "Abjuration";
-SKL_EVO = "Evocation";
-SKL_ENC = "Enchantment";
-SKL_ILL = "Illusion";
-SKL_DIV = "Divination";
-SKL_NEC = "Necromancy";
-SKL_TRA = "Transmutation";
-SKL_CON = "Conjuration";
-
-Parser.SP_SCHOOL_ABV_TO_FULL = {};
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_ABJ] = SKL_ABJ;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_EVO] = SKL_EVO;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_ENC] = SKL_ENC;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_ILL] = SKL_ILL;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_DIV] = SKL_DIV;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_NEC] = SKL_NEC;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_TRA] = SKL_TRA;
-Parser.SP_SCHOOL_ABV_TO_FULL[SKL_ABV_CON] = SKL_CON;
-
-Parser.SP_SCHOOL_ABV_TO_SHORT = {};
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_ABJ] = "Abj.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_EVO] = "Evoc.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_ENC] = "Ench.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_ILL] = "Illu.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_DIV] = "Divin.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_NEC] = "Necro.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_TRA] = "Trans.";
-Parser.SP_SCHOOL_ABV_TO_SHORT[SKL_ABV_CON] = "Conj.";
-
-Parser.ATB_ABV_TO_FULL = {
-	"str": "Strength",
-	"dex": "Dexterity",
-	"con": "Constitution",
-	"int": "Intelligence",
-	"wis": "Wisdom",
-	"cha": "Charisma"
+CleanUtil.JSON_REPLACEMENTS = {
+	"“": `"`,
+	"”": `"`
 };
-
-TP_ABERRATION = "aberration";
-TP_BEAST = "beast";
-TP_CELESTIAL = "celestial";
-TP_CONSTRUCT = "construct";
-TP_DRAGON = "dragon";
-TP_ELEMENTAL = "elemental";
-TP_FEY = "fey";
-TP_FIEND = "fiend";
-TP_GIANT = "giant";
-TP_HUMANOID = "humanoid";
-TP_MONSTROSITY = "monstrosity";
-TP_OOZE = "ooze";
-TP_PLANT = "plant";
-TP_UNDEAD = "undead";
-Parser.MON_TYPE_TO_PLURAL = {};
-Parser.MON_TYPE_TO_PLURAL[TP_ABERRATION] = "aberrations";
-Parser.MON_TYPE_TO_PLURAL[TP_BEAST] = "beasts";
-Parser.MON_TYPE_TO_PLURAL[TP_CELESTIAL] = "celestials";
-Parser.MON_TYPE_TO_PLURAL[TP_CONSTRUCT] = "constructs";
-Parser.MON_TYPE_TO_PLURAL[TP_DRAGON] = "dragons";
-Parser.MON_TYPE_TO_PLURAL[TP_ELEMENTAL] = "elementals";
-Parser.MON_TYPE_TO_PLURAL[TP_FEY] = "fey";
-Parser.MON_TYPE_TO_PLURAL[TP_FIEND] = "fiends";
-Parser.MON_TYPE_TO_PLURAL[TP_GIANT] = "giants";
-Parser.MON_TYPE_TO_PLURAL[TP_HUMANOID] = "humanoids";
-Parser.MON_TYPE_TO_PLURAL[TP_MONSTROSITY] = "monstrosities";
-Parser.MON_TYPE_TO_PLURAL[TP_OOZE] = "oozes";
-Parser.MON_TYPE_TO_PLURAL[TP_PLANT] = "plants";
-Parser.MON_TYPE_TO_PLURAL[TP_UNDEAD] = "undead";
-
-SZ_FINE = "F";
-SZ_DIMINUTIVE = "D";
-SZ_TINY = "T";
-SZ_SMALL = "S";
-SZ_MEDIUM = "M";
-SZ_LARGE = "L";
-SZ_HUGE = "H";
-SZ_GARGANTUAN = "G";
-SZ_COLOSSAL = "C";
-SZ_VARIES = "V";
-Parser.SIZE_ABV_TO_FULL = {};
-Parser.SIZE_ABV_TO_FULL[SZ_FINE] = "Fine";
-Parser.SIZE_ABV_TO_FULL[SZ_DIMINUTIVE] = "Diminutive";
-Parser.SIZE_ABV_TO_FULL[SZ_TINY] = "Tiny";
-Parser.SIZE_ABV_TO_FULL[SZ_SMALL] = "Small";
-Parser.SIZE_ABV_TO_FULL[SZ_MEDIUM] = "Medium";
-Parser.SIZE_ABV_TO_FULL[SZ_LARGE] = "Large";
-Parser.SIZE_ABV_TO_FULL[SZ_HUGE] = "Huge";
-Parser.SIZE_ABV_TO_FULL[SZ_GARGANTUAN] = "Gargantuan";
-Parser.SIZE_ABV_TO_FULL[SZ_COLOSSAL] = "Colossal";
-Parser.SIZE_ABV_TO_FULL[SZ_VARIES] = "Varies";
-
-Parser.XP_CHART = [200, 450, 700, 1100, 1800, 2300, 2900, 3900, 5000, 5900, 7200, 8400, 10000, 11500, 13000, 15000, 18000, 20000, 22000, 25000, 30000, 41000, 50000, 62000, 75000, 90000, 105000, 102000, 135000, 155000];
-
-Parser.ARMOR_ABV_TO_FULL = {
-	"l.": "light",
-	"m.": "medium",
-	"h.": "heavy"
-};
-
-SRC_CoS = "CoS";
-SRC_DMG = "DMG";
-SRC_EEPC = "EEPC";
-SRC_EET = "EET";
-SRC_HotDQ = "HotDQ";
-SRC_LMoP = "LMoP";
-SRC_Mag = "Mag";
-SRC_MM = "MM";
-SRC_OotA = "OotA";
-SRC_PHB = "PHB";
-SRC_PotA = "PotA";
-SRC_RoT = "RoT";
-SRC_RoTOS = "RoTOS";
-SRC_SCAG = "SCAG";
-SRC_SKT = "SKT";
-SRC_ToA = "ToA";
-SRC_ToD = "ToD";
-SRC_TTP = "TTP";
-SRC_TYP = "TftYP";
-SRC_TYP_AtG = "TftYP-AtG";
-SRC_TYP_DiT = "TftYP-DiT";
-SRC_TYP_TFoF = "TftYP-TFoF";
-SRC_TYP_THSoT = "TftYP-THSoT";
-SRC_TYP_TSC = "TftYP-TSC";
-SRC_TYP_ToH = "TftYP-ToH";
-SRC_TYP_WPM = "TftYP-WPM";
-SRC_VGM = "VGM";
-SRC_XGE = "XGE";
-SRC_OGA = "OGA";
-
-SRC_ALCoS = "ALCurseOfStrahd";
-SRC_ALEE = "ALElementalEvil";
-SRC_ALRoD = "ALRageOfDemons";
-
-SRC_PS_PREFIX = "PS";
-
-SRC_PSA = SRC_PS_PREFIX + "A";
-SRC_PSI = SRC_PS_PREFIX + "I";
-SRC_PSK = SRC_PS_PREFIX + "K";
-SRC_PSZ = SRC_PS_PREFIX + "Z";
-SRC_PSX = SRC_PS_PREFIX + "X";
-
-SRC_UA_PREFIX = "UA";
-
-SRC_UAA = SRC_UA_PREFIX + "Artificer";
-SRC_UAEAG = SRC_UA_PREFIX + "EladrinAndGith";
-SRC_UAEBB = SRC_UA_PREFIX + "Eberron";
-SRC_UAFFR = SRC_UA_PREFIX + "FeatsForRaces";
-SRC_UAFFS = SRC_UA_PREFIX + "FeatsForSkills";
-SRC_UAFO = SRC_UA_PREFIX + "FiendishOptions";
-SRC_UAFT = SRC_UA_PREFIX + "Feats";
-SRC_UAGH = SRC_UA_PREFIX + "GothicHeroes";
-SRC_UAMDM = SRC_UA_PREFIX + "ModernMagic";
-SRC_UASSP = SRC_UA_PREFIX + "StarterSpells";
-SRC_UATMC = SRC_UA_PREFIX + "TheMysticClass";
-SRC_UATOBM = SRC_UA_PREFIX + "ThatOldBlackMagic";
-SRC_UATRR = SRC_UA_PREFIX + "TheRangerRevised";
-SRC_UAWA = SRC_UA_PREFIX + "WaterborneAdventures";
-SRC_UAVR = SRC_UA_PREFIX + "VariantRules";
-SRC_UALDR = SRC_UA_PREFIX + "LightDarkUnderdark";
-SRC_UARAR = SRC_UA_PREFIX + "RangerAndRogue";
-SRC_UAATOSC = SRC_UA_PREFIX + "ATrioOfSubclasses";
-SRC_UABPP = SRC_UA_PREFIX + "BarbarianPrimalPaths";
-SRC_UARSC = SRC_UA_PREFIX + "RevisedSubclasses";
-SRC_UAKOO = SRC_UA_PREFIX + "KitsOfOld";
-SRC_UABBC = SRC_UA_PREFIX + "BardBardColleges";
-SRC_UACDD = SRC_UA_PREFIX + "ClericDivineDomains";
-SRC_UAD = SRC_UA_PREFIX + "Druid";
-SRC_UARCO = SRC_UA_PREFIX + "RevisedClassOptions";
-SRC_UAF = SRC_UA_PREFIX + "Fighter";
-SRC_UAM = SRC_UA_PREFIX + "Monk";
-SRC_UAP = SRC_UA_PREFIX + "Paladin";
-SRC_UAMC = SRC_UA_PREFIX + "ModifyingClasses";
-SRC_UAS = SRC_UA_PREFIX + "Sorcerer";
-SRC_UAWAW = SRC_UA_PREFIX + "WarlockAndWizard";
-SRC_UATF = SRC_UA_PREFIX + "TheFaithful";
-SRC_UAWR = SRC_UA_PREFIX + "WizardRevisited";
-SRC_UAESR = SRC_UA_PREFIX + "ElfSubraces";
-SRC_UAMAC = SRC_UA_PREFIX + "MassCombat";
-SRC_UA3PE = SRC_UA_PREFIX + "ThreePillarExperience";
-SRC_UAGHI = SRC_UA_PREFIX + "GreyhawkInitiative";
-SRC_UATSC = SRC_UA_PREFIX + "ThreeSubclasses";
-
-SRC_3PP_SUFFIX = " 3pp";
-SRC_BOLS_3PP = "BoLS" + SRC_3PP_SUFFIX;
-SRC_CC_3PP = "CC" + SRC_3PP_SUFFIX;
-SRC_FEF_3PP = "FEF" + SRC_3PP_SUFFIX;
-SRC_GDoF_3PP = "GDoF" + SRC_3PP_SUFFIX;
-SRC_ToB_3PP = "ToB" + SRC_3PP_SUFFIX;
-
-SRC_HOMEBREW = "Homebrew";
-
-AL_PREFIX = "Adventurers League: ";
-AL_PREFIX_SHORT = "AL: ";
-PS_PREFIX = "Plane Shift: ";
-PS_PREFIX_SHORT = "PS: ";
-UA_PREFIX = "Unearthed Arcana: ";
-UA_PREFIX_SHORT = "UA: ";
-PP3_SUFFIX = " (3pp)";
-TftYP_NAME = "Tales from the Yawning Portal";
-
-Parser.SOURCE_JSON_TO_FULL = {};
-Parser.SOURCE_JSON_TO_FULL[SRC_CoS] = "Curse of Strahd";
-Parser.SOURCE_JSON_TO_FULL[SRC_DMG] = "Dungeon Master's Guide";
-Parser.SOURCE_JSON_TO_FULL[SRC_EEPC] = "Elemental Evil Player's Companion";
-Parser.SOURCE_JSON_TO_FULL[SRC_EET] = "Elemental Evil: Trinkets";
-Parser.SOURCE_JSON_TO_FULL[SRC_HotDQ] = "Hoard of the Dragon Queen";
-Parser.SOURCE_JSON_TO_FULL[SRC_LMoP] = "Lost Mine of Phandelver";
-Parser.SOURCE_JSON_TO_FULL[SRC_Mag] = "Dragon Magazine";
-Parser.SOURCE_JSON_TO_FULL[SRC_MM] = "Monster Manual";
-Parser.SOURCE_JSON_TO_FULL[SRC_OotA] = "Out of the Abyss";
-Parser.SOURCE_JSON_TO_FULL[SRC_PHB] = "Player's Handbook";
-Parser.SOURCE_JSON_TO_FULL[SRC_PotA] = "Princes of the Apocalypse";
-Parser.SOURCE_JSON_TO_FULL[SRC_RoT] = "The Rise of Tiamat";
-Parser.SOURCE_JSON_TO_FULL[SRC_RoTOS] = "The Rise of Tiamat Online Supplement";
-Parser.SOURCE_JSON_TO_FULL[SRC_SCAG] = "Sword Coast Adventurer's Guide";
-Parser.SOURCE_JSON_TO_FULL[SRC_SKT] = "Storm King's Thunder";
-Parser.SOURCE_JSON_TO_FULL[SRC_ToA] = "Tomb of Annihilation";
-Parser.SOURCE_JSON_TO_FULL[SRC_ToD] = "Tyranny of Dragons";
-Parser.SOURCE_JSON_TO_FULL[SRC_TTP] = "The Tortle Package";
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_AtG] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_DiT] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_TFoF] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_THSoT] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_TSC] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_ToH] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_TYP_WPM] = TftYP_NAME;
-Parser.SOURCE_JSON_TO_FULL[SRC_VGM] = "Volo's Guide to Monsters";
-Parser.SOURCE_JSON_TO_FULL[SRC_XGE] = "Xanathar's Guide to Everything";
-Parser.SOURCE_JSON_TO_FULL[SRC_OGA] = "One Grung Above";
-Parser.SOURCE_JSON_TO_FULL[SRC_ALCoS] = AL_PREFIX + "Curse of Strahd";
-Parser.SOURCE_JSON_TO_FULL[SRC_ALEE] = AL_PREFIX + "Elemental Evil";
-Parser.SOURCE_JSON_TO_FULL[SRC_ALRoD] = AL_PREFIX + "Rage of Demons";
-Parser.SOURCE_JSON_TO_FULL[SRC_PSA] = PS_PREFIX + "Amonkhet";
-Parser.SOURCE_JSON_TO_FULL[SRC_PSI] = PS_PREFIX + "Innistrad";
-Parser.SOURCE_JSON_TO_FULL[SRC_PSK] = PS_PREFIX + "Kaladesh";
-Parser.SOURCE_JSON_TO_FULL[SRC_PSZ] = PS_PREFIX + "Zendikar";
-Parser.SOURCE_JSON_TO_FULL[SRC_PSX] = PS_PREFIX + "Ixalan";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAA] = UA_PREFIX + "Artificer";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAEAG] = UA_PREFIX + "Eladrin and Gith";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAEBB] = UA_PREFIX + "Eberron";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAFFR] = UA_PREFIX + "Feats for Races";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAFFS] = UA_PREFIX + "Feats for Skills";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAFO] = UA_PREFIX + "Fiendish Options";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAFT] = UA_PREFIX + "Feats";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAGH] = UA_PREFIX + "Gothic Heroes";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAMDM] = UA_PREFIX + "Modern Magic";
-Parser.SOURCE_JSON_TO_FULL[SRC_UASSP] = UA_PREFIX + "Starter Spells";
-Parser.SOURCE_JSON_TO_FULL[SRC_UATMC] = UA_PREFIX + "The Mystic Class";
-Parser.SOURCE_JSON_TO_FULL[SRC_UATOBM] = UA_PREFIX + "That Old Black Magic";
-Parser.SOURCE_JSON_TO_FULL[SRC_UATRR] = UA_PREFIX + "The Ranger, Revised";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAWA] = UA_PREFIX + "Waterborne Adventures";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAVR] = UA_PREFIX + "Variant Rules";
-Parser.SOURCE_JSON_TO_FULL[SRC_UALDR] = UA_PREFIX + "Light, Dark, Underdark!";
-Parser.SOURCE_JSON_TO_FULL[SRC_UARAR] = UA_PREFIX + "Ranger and Rogue";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAATOSC] = UA_PREFIX + "A Trio of Subclasses";
-Parser.SOURCE_JSON_TO_FULL[SRC_UABPP] = UA_PREFIX + "Barbarian Primal Paths";
-Parser.SOURCE_JSON_TO_FULL[SRC_UARSC] = UA_PREFIX + "Revised Subclasses";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAKOO] = UA_PREFIX + "Kits of Old";
-Parser.SOURCE_JSON_TO_FULL[SRC_UABBC] = UA_PREFIX + "Bard: Bard Colleges";
-Parser.SOURCE_JSON_TO_FULL[SRC_UACDD] = UA_PREFIX + "Cleric: Divine Domains";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAD] = UA_PREFIX + "Druid";
-Parser.SOURCE_JSON_TO_FULL[SRC_UARCO] = UA_PREFIX + "Revised Class Options";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAF] = UA_PREFIX + "Fighter";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAM] = UA_PREFIX + "Monk";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAP] = UA_PREFIX + "Paladin";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAMC] = UA_PREFIX + "Modifying Classes";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAS] = UA_PREFIX + "Sorcerer";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAWAW] = UA_PREFIX + "Warlock and Wizard";
-Parser.SOURCE_JSON_TO_FULL[SRC_UATF] = UA_PREFIX + "The Faithful";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAWR] = UA_PREFIX + "Wizard Revisited";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAESR] = UA_PREFIX + "Elf Subraces";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAMAC] = UA_PREFIX + "Mass Combat";
-Parser.SOURCE_JSON_TO_FULL[SRC_UA3PE] = UA_PREFIX + "Three-Pillar Experience";
-Parser.SOURCE_JSON_TO_FULL[SRC_UAGHI] = UA_PREFIX + "Greyhawk Initiative";
-Parser.SOURCE_JSON_TO_FULL[SRC_UATSC] = UA_PREFIX + "Three Subclasses";
-Parser.SOURCE_JSON_TO_FULL[SRC_BOLS_3PP] = "Book of Lost Spells" + PP3_SUFFIX;
-Parser.SOURCE_JSON_TO_FULL[SRC_CC_3PP] = "Critter Compendium" + PP3_SUFFIX;
-Parser.SOURCE_JSON_TO_FULL[SRC_FEF_3PP] = "Fifth Edition Foes" + PP3_SUFFIX;
-Parser.SOURCE_JSON_TO_FULL[SRC_GDoF_3PP] = "Gem Dragons of Faerûn" + PP3_SUFFIX;
-Parser.SOURCE_JSON_TO_FULL[SRC_ToB_3PP] = "Tome of Beasts" + PP3_SUFFIX;
-Parser.SOURCE_JSON_TO_FULL[SRC_HOMEBREW] = "Homebrew";
-
-Parser.SOURCE_JSON_TO_ABV = {};
-Parser.SOURCE_JSON_TO_ABV[SRC_CoS] = "CoS";
-Parser.SOURCE_JSON_TO_ABV[SRC_DMG] = "DMG";
-Parser.SOURCE_JSON_TO_ABV[SRC_EEPC] = "EEPC";
-Parser.SOURCE_JSON_TO_ABV[SRC_EET] = "EET";
-Parser.SOURCE_JSON_TO_ABV[SRC_HotDQ] = "HotDQ";
-Parser.SOURCE_JSON_TO_ABV[SRC_LMoP] = "LMoP";
-Parser.SOURCE_JSON_TO_ABV[SRC_Mag] = "Mag";
-Parser.SOURCE_JSON_TO_ABV[SRC_MM] = "MM";
-Parser.SOURCE_JSON_TO_ABV[SRC_OotA] = "OotA";
-Parser.SOURCE_JSON_TO_ABV[SRC_PHB] = "PHB";
-Parser.SOURCE_JSON_TO_ABV[SRC_PotA] = "PotA";
-Parser.SOURCE_JSON_TO_ABV[SRC_RoT] = "RoT";
-Parser.SOURCE_JSON_TO_ABV[SRC_RoTOS] = "RoTOS";
-Parser.SOURCE_JSON_TO_ABV[SRC_SCAG] = "SCAG";
-Parser.SOURCE_JSON_TO_ABV[SRC_SKT] = "SKT";
-Parser.SOURCE_JSON_TO_ABV[SRC_ToA] = "ToA";
-Parser.SOURCE_JSON_TO_ABV[SRC_ToD] = "ToD";
-Parser.SOURCE_JSON_TO_ABV[SRC_TTP] = "TTP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_AtG] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_DiT] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_TFoF] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_THSoT] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_TSC] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_ToH] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_TYP_WPM] = "TftYP";
-Parser.SOURCE_JSON_TO_ABV[SRC_VGM] = "VGM";
-Parser.SOURCE_JSON_TO_ABV[SRC_XGE] = "XGE";
-Parser.SOURCE_JSON_TO_ABV[SRC_OGA] = "OGA";
-Parser.SOURCE_JSON_TO_ABV[SRC_ALCoS] = "ALCoS";
-Parser.SOURCE_JSON_TO_ABV[SRC_ALEE] = "ALEE";
-Parser.SOURCE_JSON_TO_ABV[SRC_ALRoD] = "ALRoD";
-Parser.SOURCE_JSON_TO_ABV[SRC_PSA] = "PSA";
-Parser.SOURCE_JSON_TO_ABV[SRC_PSI] = "PSI";
-Parser.SOURCE_JSON_TO_ABV[SRC_PSK] = "PSK";
-Parser.SOURCE_JSON_TO_ABV[SRC_PSZ] = "PSZ";
-Parser.SOURCE_JSON_TO_ABV[SRC_PSX] = "PSX";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAA] = "UAA";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAEAG] = "UAEaG";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAEBB] = "UAEB";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAFFR] = "UAFFR";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAFFS] = "UAFFS";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAFO] = "UAFO";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAFT] = "UAFT";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAGH] = "UAGH";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAMDM] = "UAMM";
-Parser.SOURCE_JSON_TO_ABV[SRC_UASSP] = "UASS";
-Parser.SOURCE_JSON_TO_ABV[SRC_UATMC] = "UAM";
-Parser.SOURCE_JSON_TO_ABV[SRC_UATOBM] = "UAOBM";
-Parser.SOURCE_JSON_TO_ABV[SRC_UATRR] = "UATRR";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAWA] = "UAWA";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAVR] = "UAVR";
-Parser.SOURCE_JSON_TO_ABV[SRC_UALDR] = "UALDU";
-Parser.SOURCE_JSON_TO_ABV[SRC_UARAR] = "UARAR";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAATOSC] = "UAATOSC";
-Parser.SOURCE_JSON_TO_ABV[SRC_UABPP] = "UABPP";
-Parser.SOURCE_JSON_TO_ABV[SRC_UARSC] = "UARSC";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAKOO] = "UAKOO";
-Parser.SOURCE_JSON_TO_ABV[SRC_UABBC] = "UABBC";
-Parser.SOURCE_JSON_TO_ABV[SRC_UACDD] = "UACDD";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAD] = "UAD";
-Parser.SOURCE_JSON_TO_ABV[SRC_UARCO] = "UARCO";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAF] = "UAF";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAM] = "UAM";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAP] = "UAP";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAMC] = "UAMC";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAS] = "UAS";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAWAW] = "UAWAW";
-Parser.SOURCE_JSON_TO_ABV[SRC_UATF] = "UATF";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAWR] = "UAWR";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAESR] = "UAESR";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAMAC] = "UAMAC";
-Parser.SOURCE_JSON_TO_ABV[SRC_UA3PE] = "UA3PE";
-Parser.SOURCE_JSON_TO_ABV[SRC_UAGHI] = "UAGHI";
-Parser.SOURCE_JSON_TO_ABV[SRC_UATSC] = "UATSC";
-Parser.SOURCE_JSON_TO_ABV[SRC_BOLS_3PP] = "BoLS (3pp)";
-Parser.SOURCE_JSON_TO_ABV[SRC_CC_3PP] = "CC (3pp)";
-Parser.SOURCE_JSON_TO_ABV[SRC_FEF_3PP] = "FEF (3pp)";
-Parser.SOURCE_JSON_TO_ABV[SRC_GDoF_3PP] = "GDoF (3pp)";
-Parser.SOURCE_JSON_TO_ABV[SRC_ToB_3PP] = "ToB (3pp)";
-Parser.SOURCE_JSON_TO_ABV[SRC_HOMEBREW] = "Brew";
-
-Parser.ITEM_TYPE_JSON_TO_ABV = {
-	"A": "Ammunition",
-	"AF": "Ammunition",
-	"AT": "Artisan Tool",
-	"EXP": "Explosive",
-	"G": "Adventuring Gear",
-	"GS": "Gaming Set",
-	"HA": "Heavy Armor",
-	"INS": "Instrument",
-	"LA": "Light Armor",
-	"M": "Melee Weapon",
-	"MA": "Medium Armor",
-	"MNT": "Mount",
-	"GV": "Generic Variant",
-	"P": "Potion",
-	"R": "Ranged Weapon",
-	"RD": "Rod",
-	"RG": "Ring",
-	"S": "Shield",
-	"SC": "Scroll",
-	"SCF": "Spellcasting Focus",
-	"T": "Tool",
-	"TAH": "Tack and Harness",
-	"TG": "Trade Good",
-	"VEH": "Vehicle",
-	"SHP": "Vehicle",
-	"WD": "Wand"
-};
-
-Parser.DMGTYPE_JSON_TO_FULL = {
-	"B": "bludgeoning",
-	"N": "necrotic",
-	"P": "piercing",
-	"R": "radiant",
-	"S": "slashing"
-};
-
-Parser.SKILL_JSON_TO_FULL = {
-	"Acrobatics": "Your Dexterity (Acrobatics) check covers your attempt to stay on your feet in a tricky situation, such as when you're trying to run across a sheet of ice, balance on a tightrope, or stay upright on a rocking ship's deck.",
-	"Animal Handling": "When there is any question whether you can calm down a domesticated animal, keep a mount from getting spooked, or intuit an animal's intentions, the GM might call for a Wisdom (Animal Handling) check.",
-	"Arcana": "Your Intelligence (Arcana) check measures your ability to recall lore about spells, magic items, eldritch symbols, magical traditions, the planes of existence, and the inhabitants of those planes.",
-	"Athletics": "Your Strength (Athletics) check covers difficult situations you encounter while climbing, jumping, or swimming.",
-	"Deception": "Your Charisma (Deception) check determines whether you can convincingly hide the truth, either verbally or through your actions.",
-	"History": "Your Intelligence (History) check measures your ability to recall lore about historical events, legendary people, ancient kingdoms, past disputes, recent wars, and lost civilizations.",
-	"Insight": "Your Wisdom (Insight) check decides whether you can determine the true intentions of a creature, such as when searching out a lie or predicting someone's next move.",
-	"Intimidation": "When you attempt to influence someone through overt threats, hostile actions, and physical violence, the GM might ask you to make a Charisma (Intimidation) check.",
-	"Investigation": "When you look around for clues and make deductions based on those clues, you make an Intelligence (Investigation) check.",
-	"Medicine": "A Wisdom (Medicine) check lets you try to stabilize a dying companion or diagnose an illness.",
-	"Nature": "Your Intelligence (Nature) check measures your ability to recall lore about terrain, plants and animals, the weather, and natural cycles.",
-	"Perception": "Your Wisdom (Perception) check lets you spot, hear, or otherwise detect the presence of something. It measures your general awareness of your surroundings and the keenness of your senses.",
-	"Performance": "Your Charisma (Performance) check determines how well you can delight an audience with music, dance, acting, storytelling, or some other form of entertainment.",
-	"Persuasion": "When you attempt to influence someone or a group of people with tact, social graces, or good nature, the GM might ask you to make a Charisma (Persuasion) check.",
-	"Religion": "Your Intelligence (Religion) check measures your ability to recall lore about deities, rites and prayers, religious hierarchies, holy symbols, and the practices of secret cults.",
-	"Sleight of Hand": "Whenever you attempt an act of legerdemain or manual trickery, such as planting something on someone else or concealing an object on your person, make a Dexterity (Sleight of Hand) check.",
-	"Stealth": "Make a Dexterity (Stealth) check when you attempt to conceal yourself from enemies, slink past guards, slip away without being noticed, or sneak up on someone without being seen or heard.",
-	"Survival": "The GM might ask you to make a Wisdom (Survival) check to follow tracks, hunt wild game, guide your group through frozen wastelands, identify signs that owlbears live nearby, predict the weather, or avoid quicksand and other natural hazards."
-};
-
-Parser.ACTION_JSON_TO_FULL = {
-	"Dash": "When you take the Dash action, you gain extra movement for the current turn. The increase equals your speed, after applying any modifiers. With a speed of 30 feet, for example, you can move up to 60 feet on your turn if you dash.",
-	"Disengage": "If you take the Disengage action, your movement doesn't provoke opportunity attacks for the rest of the turn.",
-	"Dodge": "When you take the Dodge action, you focus entirely on avoiding attacks. Until the start of your next turn, any attack roll made against you has disadvantage if you can see the attacker, and you make Dexterity saving throws with advantage.",
-	"Help": "You can lend your aid to another creature in the completion of a task. The creature you aid gains advantage on the next ability check it makes to perform the task you are helping with, provided that it makes the check before the start of your next turn.",
-	"Hide": "When you take the Hide action, you make a Dexterity (Stealth) check in an attempt to hide, following the rules for hiding.",
-	"Ready": "Sometimes you want to get the jump on a foe or wait for a particular circumstance before you act. To do so, you can take the Ready action on your turn, which lets you act using your reaction before the start of your next turn."
-};
-
-Parser.NUMBERS_ONES = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-Parser.NUMBERS_TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-Parser.NUMBERS_TEENS = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+CleanUtil.SHARED_REPLACEMENTS_REGEX = new RegExp(Object.keys(CleanUtil.SHARED_REPLACEMENTS).join("|"), "g");
+CleanUtil.STR_REPLACEMENTS_REGEX = new RegExp(Object.keys(CleanUtil.STR_REPLACEMENTS).join("|"), "g");
+CleanUtil.JSON_REPLACEMENTS_REGEX = new RegExp(Object.keys(CleanUtil.JSON_REPLACEMENTS).join("|"), "g");
 
 // SOURCES =============================================================================================================
-function hasBeenReprinted (shortName, source) {
-	/* can accept sources of the form:
-	{
-		"source": "UAExample",
-		"forceStandard": true
+SourceUtil = {
+	_subclassReprintLookup: {},
+	async pInitSubclassReprintLookup () {
+		SourceUtil._subclassReprintLookup = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/generated/gendata-subclass-lookup.json`);
+	},
+
+	isSubclassReprinted (className, classSource, subclassShortName, subclassSource) {
+		const fromLookup = MiscUtil.get(SourceUtil._subclassReprintLookup, classSource, className, subclassSource, subclassShortName);
+		return fromLookup ? fromLookup.isReprinted : false;
+	},
+
+	isAdventure (source) {
+		if (source instanceof FilterItem) source = source.item;
+		return Parser.SOURCES_ADVENTURES.has(source);
+	},
+
+	isCoreOrSupplement (source) {
+		if (source instanceof FilterItem) source = source.item;
+		return Parser.SOURCES_CORE_SUPPLEMENTS.has(source);
+	},
+
+	isNonstandardSource (source) {
+		return source != null && !BrewUtil.hasSourceJson(source) && SourceUtil._isNonstandardSourceWiz(source);
+	},
+
+	_isNonstandardSourceWiz (source) {
+		return source.startsWith(SRC_UA_PREFIX) || source.startsWith(SRC_PS_PREFIX) || source.startsWith(SRC_AL_PREFIX) || Parser.SOURCES_NON_STANDARD_WOTC.has(source);
+	},
+
+	getFilterGroup (source) {
+		if (source instanceof FilterItem) source = source.item;
+		if (BrewUtil.hasSourceJson(source)) return 2;
+		return Number(SourceUtil.isNonstandardSource(source));
+	},
+
+	getAdventureBookSourceHref (source, page) {
+		if (!source) return null;
+		source = source.toLowerCase();
+
+		let docPage;
+		if (Parser.SOURCES_AVAILABLE_DOCS_BOOK[source]) docPage = UrlUtil.PG_BOOK;
+		else if (Parser.SOURCES_AVAILABLE_DOCS_ADVENTURE[source]) docPage = UrlUtil.PG_ADVENTURE;
+		if (!docPage) return null;
+
+		return `${docPage}#${[source, page ? `page:${page}` : null].filter(Boolean).join(HASH_PART_SEP)}`;
 	}
+};
+
+// CURRENCY ============================================================================================================
+CurrencyUtil = {
+	/**
+	 * Convert 10 gold -> 1 platinum, etc.
+	 * @param obj Object of the form {cp: 123, sp: 456, ...} (values optional)
+	 * @param [opts]
+	 * @param [opts.currencyConversionId] Currency conversion table ID.
 	 */
-	if (source && source.source) source = source.source;
-	return (shortName !== undefined && shortName !== null && source !== undefined && source !== null) &&
-		(
-			(shortName === "Sun Soul" && source === SRC_SCAG) ||
-			(shortName === "Mastermind" && source === SRC_SCAG) ||
-			(shortName === "Swashbuckler" && source === SRC_SCAG) ||
-			(shortName === "Storm" && source === SRC_SCAG) ||
-			(shortName === "Deep Stalker Conclave" && source === SRC_UATRR)
-		);
-}
+	doSimplifyCoins (obj, opts) {
+		opts = opts || {};
 
-function isNonstandardSource (source) {
-	/* can accept sources of the form:
-	{
-		"source": "UAExample",
-		"forceStandard": true
+		const conversionTable = Parser.getCurrencyConversionTable(opts.currencyConversionId);
+		const normalized = conversionTable
+			.map(it => {
+				return {
+					...it,
+					normalizedMult: 1 / it.mult
+				}
+			})
+			.sort((a, b) => SortUtil.ascSort(a.normalizedMult, b.normalizedMult));
+
+		// Simplify currencies
+		for (let i = 0; i < normalized.length - 1; ++i) {
+			const coinCur = normalized[i].coin;
+			const coinNxt = normalized[i + 1].coin;
+			const coinRatio = normalized[i + 1].normalizedMult / normalized[i].normalizedMult;
+
+			if (obj[coinCur] && Math.abs(obj[coinCur]) >= coinRatio) {
+				const nxtVal = obj[coinCur] >= 0 ? Math.floor(obj[coinCur] / coinRatio) : Math.ceil(obj[coinCur] / coinRatio);
+				obj[coinCur] = obj[coinCur] % coinRatio;
+				obj[coinNxt] = (obj[coinNxt] || 0) + nxtVal;
+			}
+		}
+
+		normalized.filter(coinMeta => obj[coinMeta.coin] === 0).forEach(coinMeta => delete obj[coinMeta.coin]);
+
+		return obj;
 	}
-	 */
-	if (source && source.forceStandard !== undefined) {
-		return !source.forceStandard;
-	}
-	if (source && source.source) source = source.source;
-	return (source !== undefined && source !== null) && (_isNonStandardSourceWiz(source) || _isNonStandardSource3pp(source));
-}
-
-function _isNonStandardSourceWiz (source) {
-	return source.startsWith(SRC_UA_PREFIX) || source.startsWith(SRC_PS_PREFIX) || source === SRC_OGA || source === SRC_Mag;
-}
-
-function _isNonStandardSource3pp (source) {
-	return source.endsWith(SRC_3PP_SUFFIX);
-}
+};
 
 // CONVENIENCE/ELEMENTS ================================================================================================
+Math.sum = Math.sum || function (...values) {
+	return values.reduce((a, b) => a + b, 0);
+};
+
+Math.mean = Math.mean || function (...values) {
+	return Math.sum(...values) / values.length;
+};
+
+Math.meanAbsoluteDeviation = Math.meanAbsoluteDeviation || function (...values) {
+	const mean = Math.mean(...values);
+	return Math.mean(...(values.map(num => Math.abs(num - mean))));
+};
+
+Math.seed = Math.seed || function (s) {
+	return function () {
+		s = Math.sin(s) * 10000;
+		return s - Math.floor(s);
+	};
+};
+
 function xor (a, b) {
 	return !a !== !b;
 }
 
 /**
- * > implying
+ * >implying
  */
 function implies (a, b) {
 	return (!a) || b;
@@ -1505,215 +429,1064 @@ function noModifierKeys (e) {
 	return !e.ctrlKey && !e.altKey && !e.metaKey;
 }
 
-if (typeof window !== "undefined") {
-	window.addEventListener("load", () => {
-		// Add a selector to match exact text (case insensitive) to jQuery's arsenal
-		$.expr[':'].textEquals = (el, i, m) => {
-			const searchText = m[3];
-			const match = $(el).text().toLowerCase().trim().match(`^${RegExp.escape(searchText.toLowerCase())}$`);
-			return match && match.length > 0;
-		};
-
-		// Add a selector to match contained text (case insensitive)
-		$.expr[':'].containsInsensitive = (el, i, m) => {
-			const searchText = m[3];
-			const textNode = $(el).contents().filter((i, e) => {
-				return e.nodeType === 3;
-			})[0];
-			if (!textNode) return false;
-			const match = textNode.nodeValue.toLowerCase().trim().match(`${RegExp.escape(searchText.toLowerCase())}`);
-			return match && match.length > 0;
-		};
-	});
+function isObject (obj) {
+	const type = typeof obj;
+	return (type === "function" || type === "object") && !!obj;
 }
 
-// LIST AND SEARCH =====================================================================================================
-ListUtil = {
-	_first: true,
+function isString (str) {
+	return typeof str === "string";
+}
 
-	search: (options) => {
-		const list = new List("listcontainer", options);
-		list.sort("name");
-		$("#reset").click(function () {
-			$("#filtertools").find("select").val("All");
-			$("#search").val("");
-			list.search();
-			list.sort("name");
-			list.filter();
+function isNumber (obj) {
+	return toString.call(obj) === "[object Number]";
+}
+
+function isEmpty (obj) {
+	if (obj == null) {
+		return true;
+	}
+	if (Array.isArray(obj) || isString(obj)) {
+		return obj.length === 0;
+	}
+	return Object.keys(obj).length === 0;
+}
+
+JqueryUtil = {
+	_isEnhancementsInit: false,
+	initEnhancements () {
+		if (JqueryUtil._isEnhancementsInit) return;
+		JqueryUtil._isEnhancementsInit = true;
+
+		JqueryUtil.addSelectors();
+
+		/**
+		 * Template strings which can contain jQuery objects.
+		 * Usage: $$`<div>Press this button: ${$btn}</div>`
+		 * @return jQuery
+		 */
+		window.$$ = function (parts, ...args) {
+			if (parts instanceof jQuery) {
+				return (...passed) => {
+					const parts2 = [...passed[0]];
+					const args2 = passed.slice(1);
+					parts2[0] = `<div>${parts2[0]}`;
+					parts2.last(`${parts2.last()}</div>`);
+
+					const $temp = $$(parts2, ...args2);
+					$temp.children().each((i, e) => $(e).appendTo(parts));
+					return parts;
+				};
+			} else {
+				const $eles = [];
+				let ixArg = 0;
+
+				const handleArg = (arg) => {
+					if (arg instanceof $) {
+						$eles.push(arg);
+						return `<${arg.tag()} data-r="true"></${arg.tag()}>`;
+					} else if (arg instanceof HTMLElement) {
+						return handleArg($(arg));
+					} else return arg
+				};
+
+				const raw = parts.reduce((html, p) => {
+					const myIxArg = ixArg++;
+					if (args[myIxArg] == null) return `${html}${p}`;
+					if (args[myIxArg] instanceof Array) return `${html}${args[myIxArg].map(arg => handleArg(arg)).join("")}${p}`;
+					else return `${html}${handleArg(args[myIxArg])}${p}`;
+				});
+				const $res = $(raw);
+
+				if ($res.length === 1) {
+					if ($res.attr("data-r") === "true") return $eles[0];
+					else $res.find(`[data-r=true]`).replaceWith(i => $eles[i]);
+				} else {
+					// Handle case where user has passed in a bunch of elements with no outer wrapper
+					const $tmp = $(`<div></div>`);
+					$tmp.append($res);
+					$tmp.find(`[data-r=true]`).replaceWith(i => $eles[i]);
+					return $tmp.children();
+				}
+
+				return $res;
+			}
+		};
+
+		$.fn.extend({
+			// avoid setting input type to "search" as it visually offsets the contents of the input
+			disableSpellcheck: function () { return this.attr("autocomplete", "new-password").attr("autocapitalize", "off").attr("spellcheck", "false"); },
+			tag: function () { return this.prop("tagName").toLowerCase(); },
+			title: function (...args) { return this.attr("title", ...args); },
+
+			/**
+			 * Quickly set the innerHTML of the innermost element, without parsing the whole thing with jQuery.
+			 * Useful for populating e.g. a table row.
+			 */
+			fastSetHtml: function (html) {
+				if (!this.length) return this;
+				let tgt = this[0];
+				while (tgt.children.length) {
+					tgt = tgt.children[0];
+				}
+				tgt.innerHTML = html;
+				return this;
+			},
+
+			blurOnEsc: function () {
+				return this.keydown(evt => {
+					if (evt.which === 27) this.blur(); // escape
+				});
+			},
+
+			hideVe: function () { return this.addClass("ve-hidden"); },
+			showVe: function () { return this.removeClass("ve-hidden"); },
+			toggleVe: function (val) {
+				if (val === undefined) return this.toggleClass("ve-hidden", !this.hasClass("ve-hidden"));
+				else return this.toggleClass("ve-hidden", !val);
+			}
 		});
-		const listWrapper = $("#listcontainer");
-		if (listWrapper.data("lists")) {
-			listWrapper.data("lists").push(list);
-		} else {
-			listWrapper.data("lists", [list]);
+
+		$.event.special.destroyed = {
+			remove: function (o) {
+				if (o.handler) o.handler();
+			}
 		}
-		if (ListUtil._first) {
-			ListUtil._first = false;
-			const $headDesc = $(`header div p`);
-			$headDesc.html(`${$headDesc.html()} Press J/K to navigate rows.`);
+	},
 
-			$(window).on("keypress", (e) => {
-				// K up; J down
-				if (noModifierKeys(e)) {
-					if (e.key === "k" || e.key === "j") {
-						const it = getSelectedListElementWithIndex();
+	addSelectors () {
+		// Add a selector to match exact text (case insensitive) to jQuery's arsenal
+		//   Note that the search text should be `trim().toLowerCase()`'d before being passed in
+		$.expr[":"].textEquals = (el, i, m) => $(el).text().toLowerCase().trim() === m[3].unescapeQuotes();
 
-						if (it) {
-							if (e.key === "k") {
-								const prevLink = it.$el.parent().prev().find("a").attr("href");
-								if (prevLink !== undefined) {
-									window.location.hash = prevLink;
-								} else {
-									const lists = listWrapper.data("lists");
-									let x = it.x;
-									while (--x >= 0) {
-										const l = lists[x];
-										if (l.visibleItems.length) {
-											const goTo = $(l.visibleItems[l.visibleItems.length - 1].elm).find("a").attr("href");
-											if (goTo) window.location.hash = goTo;
-											return;
-										}
-									}
-								}
-								const fromPrevSibling = it.$el.closest(`ul`).parent().prev(`li`).find(`ul li`).last().find("a").attr("href");
-								if (fromPrevSibling) {
-									window.location.hash = fromPrevSibling;
-								}
-							} else if (e.key === "j") {
-								const nextLink = it.$el.parent().next().find("a").attr("href");
-								if (nextLink !== undefined) {
-									window.location.hash = nextLink;
-								} else {
-									const lists = listWrapper.data("lists");
-									let x = it.x;
-									while (++x < lists.length) {
-										const l = lists[x];
-										if (l.visibleItems.length) {
-											const goTo = $(l.visibleItems[0].elm).find("a").attr("href");
-											if (goTo) window.location.hash = goTo;
-											return;
-										}
-									}
-								}
-								const fromNxtSibling = it.$el.closest(`ul`).parent().next(`li`).find(`ul li`).first().find("a").attr("href");
-								if (fromNxtSibling) {
-									window.location.hash = fromNxtSibling;
-								}
+		// Add a selector to match contained text (case insensitive)
+		$.expr[":"].containsInsensitive = (el, i, m) => {
+			const searchText = m[3];
+			const textNode = $(el).contents().filter((i, e) => e.nodeType === 3)[0];
+			if (!textNode) return false;
+			const match = textNode.nodeValue.toLowerCase().trim().match(`${searchText.toLowerCase().trim().escapeRegexp()}`);
+			return match && match.length > 0;
+		};
+	},
+
+	showCopiedEffect ($ele, text = "Copied!", bubble) {
+		const $temp = $(`<div class="copied-tip"><span>${text}</span></div>`).appendTo($(`body`));
+		const offset = $temp.width() / 2;
+		const top = $(window).scrollTop();
+		const pos = $ele.offset();
+
+		const animationOptions = {
+			top: "-=8",
+			opacity: 0
+		};
+		if (bubble) {
+			animationOptions.left = `${Math.random() > 0.5 ? "-" : "+"}=${~~(Math.random() * 17)}`;
+		}
+		const seed = Math.random();
+		const duration = bubble ? 250 + seed * 200 : 250;
+
+		$temp.css({
+			top: bubble ? (pos.top - 5) - top : (pos.top - 17) - top,
+			left: pos.left - offset + ($ele.width() / 2)
+		}).animate(
+			animationOptions,
+			{
+				easing: "linear",
+				duration,
+				complete: () => $temp.remove(),
+				progress: (_, progress) => { // progress is 0..1
+					if (bubble) {
+						const diffProgress = 0.5 - progress;
+						animationOptions.top = `${diffProgress > 0 ? "-" : "+"}=40`;
+						$temp.css("transform", `rotate(${seed > 0.5 ? "-" : ""}${seed * 500 * progress}deg)`);
+					}
+				}
+			}
+		);
+	},
+
+	_dropdownInit: false,
+	bindDropdownButton ($ele) {
+		if (!JqueryUtil._dropdownInit) {
+			JqueryUtil._dropdownInit = true;
+			document.addEventListener("click", () => [...document.querySelectorAll(`.open`)].filter(ele => !(ele.className || "").split(" ").includes(`dropdown--navbar`)).forEach(ele => ele.classList.remove("open")));
+		}
+		$ele.click(() => setTimeout(() => $ele.parent().addClass("open"), 1)); // defer to allow the above to complete
+	},
+
+	_ACTIVE_TOAST: [],
+	/**
+	 * @param {Object|string} options
+	 * @param {(jQuery|string)} options.content Toast contents. Supports jQuery objects.
+	 * @param {string} options.type Toast type. Can be any Bootstrap alert type ("success", "info", "warning", or "danger").
+	 */
+	doToast (options) {
+		if (typeof options === "string") {
+			options = {
+				content: options,
+				type: "info"
+			};
+		}
+		options.type = options.type || "info";
+
+		const doCleanup = ($toast) => {
+			$toast.removeClass("toast--animate");
+			setTimeout(() => $toast.remove(), 85);
+			JqueryUtil._ACTIVE_TOAST.splice(JqueryUtil._ACTIVE_TOAST.indexOf($toast), 1);
+		};
+
+		const $btnToastDismiss = $(`<button class="btn toast__btn-close"><span class="glyphicon glyphicon-remove"></span></button>`)
+			.click(() => doCleanup($toast));
+
+		const $toast = $$`
+		<div class="toast toast--type-${options.type}">
+			<div class="toast__wrp-content">${options.content}</div>
+			<div class="toast__wrp-control">${$btnToastDismiss}</div>
+		</div>`.prependTo($(`body`)).data("pos", 0);
+
+		setTimeout(() => $toast.addClass(`toast--animate`), 5);
+		setTimeout(() => doCleanup($toast), 5000);
+
+		if (JqueryUtil._ACTIVE_TOAST.length) {
+			JqueryUtil._ACTIVE_TOAST.forEach($oldToast => {
+				const pos = $oldToast.data("pos");
+				$oldToast.data("pos", pos + 1);
+				if (pos === 2) doCleanup($oldToast);
+			});
+		}
+
+		JqueryUtil._ACTIVE_TOAST.push($toast);
+	}
+};
+
+if (typeof window !== "undefined") window.addEventListener("load", JqueryUtil.initEnhancements);
+
+ObjUtil = {
+	mergeWith (source, target, fnMerge, options = {depth: 1}) {
+		if (!source || !target || typeof fnMerge !== "function") throw new Error("Must include a source, target and a fnMerge to handle merging");
+
+		const recursive = function (deepSource, deepTarget, depth = 1) {
+			if (depth > options.depth || !deepSource || !deepTarget) return;
+			for (let prop of Object.keys(deepSource)) {
+				deepTarget[prop] = fnMerge(deepSource[prop], deepTarget[prop], source, target);
+				recursive(source[prop], deepTarget[prop], depth + 1);
+			}
+		};
+		recursive(source, target, 1);
+	},
+
+	async pForEachDeep (source, pCallback, options = {depth: Infinity, callEachLevel: false}) {
+		const path = [];
+		const pDiveDeep = async function (val, path, depth = 0) {
+			if (options.callEachLevel || typeof val !== "object" || options.depth === depth) {
+				await pCallback(val, path, depth);
+			}
+			if (options.depth !== depth && typeof val === "object") {
+				for (const key of Object.keys(val)) {
+					path.push(key);
+					await pDiveDeep(val[key], path, depth + 1);
+				}
+			}
+			path.pop();
+		};
+		await pDiveDeep(source, path);
+	}
+};
+
+// TODO refactor other misc utils into this
+MiscUtil = {
+	COLOR_HEALTHY: "#00bb20",
+	COLOR_HURT: "#c5ca00",
+	COLOR_BLOODIED: "#f7a100",
+	COLOR_DEFEATED: "#cc0000",
+
+	copy (obj) {
+		return JSON.parse(JSON.stringify(obj));
+	},
+
+	async pCopyTextToClipboard (text) {
+		function doCompatabilityCopy () {
+			const $temp = $(`<textarea id="copy-temp" style="position: fixed; top: -1000px; left: -1000px; width: 1px; height: 1px;">${text}</textarea>`);
+			$(`body`).append($temp);
+			$temp.select();
+			document.execCommand("Copy");
+			$temp.remove();
+		}
+
+		if (navigator && navigator.permissions) {
+			try {
+				const access = await navigator.permissions.query({name: "clipboard-write"});
+				if (access.state === "granted" || access.state === "prompt") {
+					await navigator.clipboard.writeText(text);
+				} else doCompatabilityCopy();
+			} catch (e) { doCompatabilityCopy(); }
+		} else doCompatabilityCopy();
+	},
+
+	checkProperty (object, ...path) {
+		for (let i = 0; i < path.length; ++i) {
+			object = object[path[i]];
+			if (object == null) return false;
+		}
+		return true;
+	},
+
+	get (object, ...path) {
+		if (object == null) return null;
+		for (let i = 0; i < path.length; ++i) {
+			object = object[path[i]];
+			if (object == null) return object;
+		}
+		return object;
+	},
+
+	mix: (superclass) => new MiscUtil._MixinBuilder(superclass),
+	_MixinBuilder: function (superclass) {
+		this.superclass = superclass;
+
+		this.with = function (...mixins) {
+			return mixins.reduce((c, mixin) => mixin(c), this.superclass);
+		};
+	},
+
+	clearSelection () {
+		if (document.getSelection) {
+			document.getSelection().removeAllRanges();
+			document.getSelection().addRange(document.createRange());
+		} else if (window.getSelection) {
+			if (window.getSelection().removeAllRanges) {
+				window.getSelection().removeAllRanges();
+				window.getSelection().addRange(document.createRange());
+			} else if (window.getSelection().empty) {
+				window.getSelection().empty();
+			}
+		} else if (document.selection) {
+			document.selection.empty();
+		}
+	},
+
+	randomColor () {
+		let r; let g; let b;
+		const h = RollerUtil.randomise(30, 0) / 30;
+		const i = ~~(h * 6);
+		const f = h * 6 - i;
+		const q = 1 - f;
+		switch (i % 6) {
+			case 0: r = 1; g = f; b = 0; break;
+			case 1: r = q; g = 1; b = 0; break;
+			case 2: r = 0; g = 1; b = f; break;
+			case 3: r = 0; g = q; b = 1; break;
+			case 4: r = f; g = 0; b = 1; break;
+			case 5: r = 1; g = 0; b = q; break;
+		}
+		return `#${`00${(~~(r * 255)).toString(16)}`.slice(-2)}${`00${(~~(g * 255)).toString(16)}`.slice(-2)}${`00${(~~(b * 255)).toString(16)}`.slice(-2)}`;
+	},
+
+	/**
+	 * @param hex Original hex color.
+	 * @param [opts] Options object.
+	 * @param [opts.bw] True if the color should be returnes as black/white depending on contrast ratio.
+	 * @param [opts.dark] Color to return if a "dark" color would contrast best.
+	 * @param [opts.light] Color to return if a "light" color would contrast best.
+	 */
+	invertColor (hex, opts) {
+		opts = opts || {};
+
+		hex = hex.slice(1); // remove #
+
+		let r = parseInt(hex.slice(0, 2), 16);
+		let g = parseInt(hex.slice(2, 4), 16);
+		let b = parseInt(hex.slice(4, 6), 16);
+
+		// http://stackoverflow.com/a/3943023/112731
+		const isDark = (r * 0.299 + g * 0.587 + b * 0.114) > 186;
+		if (opts.dark && opts.light) return isDark ? opts.dark : opts.light;
+		else if (opts.bw) return isDark ? "#000000" : "#FFFFFF";
+
+		r = (255 - r).toString(16); g = (255 - g).toString(16); b = (255 - b).toString(16);
+		return `#${[r, g, b].map(it => it.padStart(2, "0")).join("")}`;
+	},
+
+	scrollPageTop () {
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
+	},
+
+	isInInput (event) {
+		return event.target.nodeName === "INPUT" || event.target.nodeName === "TEXTAREA"
+			|| event.target.getAttribute("contenteditable") === "true";
+	},
+
+	expEval (str) {
+		// eslint-disable-next-line no-new-func
+		return new Function(`return ${str.replace(/[^-()\d/*+.]/g, "")}`)();
+	},
+
+	parseNumberRange (input, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) {
+		function errInvalid (input) {
+			throw new Error(`Could not parse range input "${input}"`);
+		}
+
+		function errOutOfRange () {
+			throw new Error(`Number was out of range! Range was ${min}-${max} (inclusive).`);
+		}
+
+		function isOutOfRange (num) {
+			return num < min || num > max;
+		}
+
+		function addToRangeVal (range, num) {
+			range.add(num);
+		}
+
+		function addToRangeLoHi (range, lo, hi) {
+			for (let i = lo; i <= hi; ++i) range.add(i);
+		}
+
+		while (true) {
+			if (input && input.trim()) {
+				const clean = input.replace(/\s*/g, "");
+				if (/^((\d+-\d+|\d+),)*(\d+-\d+|\d+)$/.exec(clean)) {
+					const parts = clean.split(",");
+					const out = new Set();
+
+					for (const part of parts) {
+						if (part.includes("-")) {
+							const spl = part.split("-");
+							const numLo = Number(spl[0]);
+							const numHi = Number(spl[1]);
+
+							if (isNaN(numLo) || isNaN(numHi) || numLo === 0 || numHi === 0 || numLo > numHi) errInvalid();
+
+							if (isOutOfRange(numLo) || isOutOfRange(numHi)) errOutOfRange();
+
+							if (numLo === numHi) addToRangeVal(out, numLo);
+							else addToRangeLoHi(out, numLo, numHi);
+						} else {
+							const num = Number(part);
+							if (isNaN(num) || num === 0) errInvalid();
+							else {
+								if (isOutOfRange(num)) errOutOfRange();
+								addToRangeVal(out, num);
 							}
 						}
 					}
-				}
-			});
+
+					return out;
+				} else errInvalid();
+			} else return null;
 		}
-		return list
+	},
+
+	MONTH_NAMES: [
+		"January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	],
+	dateToStr (date, short) {
+		const month = MiscUtil.MONTH_NAMES[date.getMonth()];
+		return `${short ? month.substring(0, 3) : month} ${date.getDate()}, ${date.getFullYear()}`;
+	},
+
+	findCommonPrefix (strArr) {
+		let prefix = null;
+		strArr.forEach(s => {
+			if (prefix == null) {
+				prefix = s;
+			} else {
+				const minLen = Math.min(s.length, prefix.length);
+				for (let i = 0; i < minLen; ++i) {
+					const cp = prefix[i];
+					const cs = s[i];
+					if (cp !== cs) {
+						prefix = prefix.substring(0, i);
+						break;
+					}
+				}
+			}
+		});
+		return prefix;
+	},
+
+	/**
+	 * @param fgHexTarget Target/resultant color for the foreground item
+	 * @param fgOpacity Desired foreground transparency (0-1 inclusive)
+	 * @param bgHex Background color
+	 */
+	calculateBlendedColor (fgHexTarget, fgOpacity, bgHex) {
+		const fgDcTarget = CryptUtil.hex2Dec(fgHexTarget);
+		const bgDc = CryptUtil.hex2Dec(bgHex);
+		return ((fgDcTarget - ((1 - fgOpacity) * bgDc)) / fgOpacity).toString(16);
+	},
+
+	/**
+	 * Borrowed from lodash.
+	 *
+	 * @param func The function to debounce.
+	 * @param wait Minimum duration between calls.
+	 * @param options Options object.
+	 * @return {Function} The debounced function.
+	 */
+	debounce (func, wait, options) {
+		let lastArgs; let lastThis; let maxWait; let result; let timerId; let lastCallTime; let lastInvokeTime = 0; let leading = false; let maxing = false; let trailing = true;
+
+		wait = Number(wait) || 0;
+		if (typeof options === "object") {
+			leading = !!options.leading;
+			maxing = "maxWait" in options;
+			maxWait = maxing ? Math.max(Number(options.maxWait) || 0, wait) : maxWait;
+			trailing = "trailing" in options ? !!options.trailing : trailing;
+		}
+
+		function invokeFunc (time) {
+			let args = lastArgs; let thisArg = lastThis;
+
+			lastArgs = lastThis = undefined;
+			lastInvokeTime = time;
+			result = func.apply(thisArg, args);
+			return result;
+		}
+
+		function leadingEdge (time) {
+			lastInvokeTime = time;
+			timerId = setTimeout(timerExpired, wait);
+			return leading ? invokeFunc(time) : result;
+		}
+
+		function remainingWait (time) {
+			let timeSinceLastCall = time - lastCallTime; let timeSinceLastInvoke = time - lastInvokeTime; let result = wait - timeSinceLastCall;
+			return maxing ? Math.min(result, maxWait - timeSinceLastInvoke) : result;
+		}
+
+		function shouldInvoke (time) {
+			let timeSinceLastCall = time - lastCallTime; let timeSinceLastInvoke = time - lastInvokeTime;
+
+			return (lastCallTime === undefined || (timeSinceLastCall >= wait) || (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+		}
+
+		function timerExpired () {
+			const time = Date.now();
+			if (shouldInvoke(time)) {
+				return trailingEdge(time);
+			}
+			// Restart the timer.
+			timerId = setTimeout(timerExpired, remainingWait(time));
+		}
+
+		function trailingEdge (time) {
+			timerId = undefined;
+
+			if (trailing && lastArgs) return invokeFunc(time);
+			lastArgs = lastThis = undefined;
+			return result;
+		}
+
+		function cancel () {
+			if (timerId !== undefined) clearTimeout(timerId);
+			lastInvokeTime = 0;
+			lastArgs = lastCallTime = lastThis = timerId = undefined;
+		}
+
+		function flush () {
+			return timerId === undefined ? result : trailingEdge(Date.now());
+		}
+
+		function debounced () {
+			let time = Date.now(); let isInvoking = shouldInvoke(time);
+			lastArgs = arguments;
+			lastThis = this;
+			lastCallTime = time;
+
+			if (isInvoking) {
+				if (timerId === undefined) return leadingEdge(lastCallTime);
+				if (maxing) {
+					// Handle invocations in a tight loop.
+					timerId = setTimeout(timerExpired, wait);
+					return invokeFunc(lastCallTime);
+				}
+			}
+			if (timerId === undefined) timerId = setTimeout(timerExpired, wait);
+			return result;
+		}
+
+		debounced.cancel = cancel;
+		debounced.flush = flush;
+		return debounced;
+	},
+
+	// from lodash
+	throttle (func, wait, options) {
+		let leading = true; let trailing = true;
+
+		if (typeof options === "object") {
+			leading = "leading" in options ? !!options.leading : leading;
+			trailing = "trailing" in options ? !!options.trailing : trailing;
+		}
+
+		return this.debounce(func, wait, {leading, maxWait: wait, trailing});
+	},
+
+	pDelay (msecs, resolveAs) {
+		return new Promise(resolve => setTimeout(() => resolve(resolveAs), msecs));
+	},
+
+	GENERIC_WALKER_ENTRIES_KEY_BLACKLIST: new Set(["caption", "type", "colLabels", "name", "colStyles", "style"]),
+
+	/**
+	 * @param [opts]
+	 * @param [opts.keyBlacklist]
+	 * @param [opts.isAllowDeleteObjects] If returning `undefined` from an object handler should be treated as a delete.
+	 * @param [opts.isAllowDeleteArrays] (Unimplemented) // TODO
+	 * @param [opts.isAllowDeleteBooleans] (Unimplemented) // TODO
+	 * @param [opts.isAllowDeleteNumbers] (Unimplemented) // TODO
+	 * @param [opts.isAllowDeleteStrings] (Unimplemented) // TODO
+	 * @param [opts.isDepthFirst] If array/object recurion should occur before array/object primitive handling.
+	 */
+	getWalker (opts) {
+		opts = opts || {};
+		const keyBlacklist = opts.keyBlacklist || new Set();
+
+		function applyHandlers (handlers, ident, obj, lastKey, stack) {
+			if (!(handlers instanceof Array)) handlers = [handlers];
+			handlers.forEach(h => obj = h(ident, obj, lastKey, stack));
+			return obj;
+		}
+
+		const fn = (ident, obj, primitiveHandlers, lastKey, stack) => {
+			if (obj == null) {
+				if (primitiveHandlers.null) return applyHandlers(primitiveHandlers.null, ident, obj, lastKey, stack);
+				return obj;
+			}
+
+			const doObjectRecurse = () => {
+				Object.keys(obj).forEach(k => {
+					const v = obj[k];
+					if (!keyBlacklist.has(k)) obj[k] = fn(ident, v, primitiveHandlers, k, stack);
+				});
+			};
+
+			const to = typeof obj;
+			switch (to) {
+				case undefined:
+					if (primitiveHandlers.preUndefined) primitiveHandlers.preUndefined(ident, obj);
+					if (primitiveHandlers.undefined) obj = applyHandlers(primitiveHandlers.undefined, ident, obj, lastKey, stack);
+					if (primitiveHandlers.postUndefined) primitiveHandlers.postUndefined(ident, obj);
+					return obj;
+				case "boolean":
+					if (primitiveHandlers.preBoolean) primitiveHandlers.preBoolean(ident, obj);
+					if (primitiveHandlers.boolean) obj = applyHandlers(primitiveHandlers.boolean, ident, obj, lastKey, stack);
+					if (primitiveHandlers.postBoolean) primitiveHandlers.postBoolean(ident, obj);
+					return obj;
+				case "number":
+					if (primitiveHandlers.preNumber) primitiveHandlers.preNumber(ident, obj);
+					if (primitiveHandlers.number) obj = applyHandlers(primitiveHandlers.number, ident, obj, lastKey, stack);
+					if (primitiveHandlers.postNumber) primitiveHandlers.postNumber(ident, obj);
+					return obj;
+				case "string":
+					if (primitiveHandlers.preString) primitiveHandlers.preString(ident, obj);
+					if (primitiveHandlers.string) obj = applyHandlers(primitiveHandlers.string, ident, obj, lastKey, stack);
+					if (primitiveHandlers.postString) primitiveHandlers.postString(ident, obj);
+					return obj;
+				case "object": {
+					if (obj instanceof Array) {
+						if (primitiveHandlers.preArray) primitiveHandlers.preArray(ident, obj);
+						if (opts.isDepthFirst) {
+							if (stack) stack.push(obj);
+							obj = obj.map(it => fn(ident, it, primitiveHandlers, lastKey, stack));
+							if (stack) stack.pop();
+
+							if (primitiveHandlers.array) obj = applyHandlers(primitiveHandlers.array, ident, obj, lastKey, stack);
+						} else {
+							if (primitiveHandlers.array) obj = applyHandlers(primitiveHandlers.array, ident, obj, lastKey, stack);
+							obj = obj.map(it => fn(ident, it, primitiveHandlers, lastKey, stack));
+						}
+						if (primitiveHandlers.postArray) primitiveHandlers.postArray(ident, obj);
+						return obj;
+					} else {
+						if (primitiveHandlers.preObject) primitiveHandlers.preObject(ident, obj);
+						if (opts.isDepthFirst) {
+							if (stack) stack.push(obj);
+							doObjectRecurse();
+							if (stack) stack.pop();
+
+							if (primitiveHandlers.object) obj = applyHandlers(primitiveHandlers.object, ident, obj, lastKey, stack);
+							if (obj == null) {
+								if (!opts.isAllowDeleteObjects) throw new Error(`Object handler(s) returned null!`);
+							}
+						} else {
+							if (primitiveHandlers.object) obj = applyHandlers(primitiveHandlers.object, ident, obj, lastKey, stack);
+							if (obj == null) {
+								if (!opts.isAllowDeleteObjects) throw new Error(`Object handler(s) returned null!`);
+							} else {
+								doObjectRecurse();
+							}
+						}
+						if (primitiveHandlers.postObject) primitiveHandlers.postObject(ident, obj);
+						return obj;
+					}
+				}
+				default: throw new Error(`Unhandled type "${to}"`);
+			}
+		};
+
+		return {walk: fn};
+	},
+
+	pDefer (fn) {
+		return (async () => fn())();
 	}
 };
 
-/**
- * Generic source filter
- * deselected. If there are more items to be deselected than selected, it is advisable to set this to "true"
- * @param options overrides for the default filter options
- * @returns {*} a `Filter`
- */
-function getSourceFilter (options) {
-	const baseOptions = {
-		header: FilterBox.SOURCE_HEADER,
-		displayFn: Parser.sourceJsonToFullCompactPrefix,
-		selFn: defaultSourceSelFn
-	};
-	return getFilterWithMergedOptions(baseOptions, options);
-}
+// EVENT HANDLERS ======================================================================================================
+EventUtil = {
+	_mouseX: 0,
+	_mouseY: 0,
 
-function defaultSourceDeselFn (val) {
-	return isNonstandardSource(val);
-}
+	init () {
+		document.addEventListener("mousemove", evt => {
+			EventUtil._mouseX = evt.clientX;
+			EventUtil._mouseY = evt.clientY;
+		});
+	},
 
-function defaultSourceSelFn (val) {
-	return !defaultSourceDeselFn(val);
-}
+	getClientX (evt) { return evt.touches && evt.touches.length ? evt.touches[0].clientX : evt.clientX; },
+	getClientY (evt) { return evt.touches && evt.touches.length ? evt.touches[0].clientY : evt.clientY; }
+};
 
-function getAsiFilter (options) {
-	const baseOptions = {
-		header: "Ability Bonus",
-		items: [
-			"str",
-			"dex",
-			"con",
-			"int",
-			"wis",
-			"cha"
-		],
-		displayFn: Parser.attAbvToFull
-	};
-	return getFilterWithMergedOptions(baseOptions, options);
-}
+if (typeof window !== "undefined") window.addEventListener("load", EventUtil.init);
 
-function getFilterWithMergedOptions (baseOptions, addOptions) {
-	if (addOptions) Object.assign(baseOptions, addOptions); // merge in anything we get passed
-	return new Filter(baseOptions);
-}
+// CONTEXT MENUS =======================================================================================================
+ContextUtil = {
+	_ctxInit: {},
+	_ctxClick: {},
+	_ctxOpenRefsNextId: 1,
+	_ctxOpenRefs: {},
+	_handlePreInitContextMenu: (menuId) => {
+		if (ContextUtil._ctxInit[menuId]) return;
+		ContextUtil._ctxInit[menuId] = true;
+		const clickId = `click.${menuId}`;
+		$("body").off(clickId).on(clickId, (evt) => {
+			if ($(evt.target).data("ctx-id") != null) return; // ignore clicks on context menus
 
-function initFilterBox (...filterList) {
-	return new FilterBox(document.getElementById(ID_SEARCH_BAR), document.getElementById(ID_RESET_BUTTON), filterList);
-}
+			Object.entries(ContextUtil._ctxOpenRefs[menuId] || {}).forEach(([k, v]) => {
+				v(false);
+				delete ContextUtil._ctxOpenRefs[menuId][k];
+			});
+			$(`#${menuId}`).hide();
+		});
+	},
+
+	_getMenuPosition: (menuId, mouse, direction, scrollDir) => {
+		const win = $(window)[direction]();
+		const scroll = $(window)[scrollDir]();
+		const menu = $(`#${menuId}`)[direction]();
+		let position = mouse + scroll;
+		// opening menu would pass the side of the page
+		if (mouse + menu > win && menu < mouse) position -= menu;
+		return position;
+	},
+
+	_lastMenuId: 1,
+	getNextGenericMenuId () { return `contextMenu_${ContextUtil._lastMenuId++}`; },
+
+	doInitContextMenu: (menuId, clickFn, labels) => {
+		ContextUtil._ctxClick[menuId] = clickFn;
+		ContextUtil._handlePreInitContextMenu(menuId);
+		let tempString = `<ul id="${menuId}" class="dropdown-menu ui-ctx" role="menu">`;
+		let i = 0;
+		labels.forEach(it => {
+			if (it === null) tempString += `<li class="divider"></li>`;
+			else if (typeof it === "object") {
+				tempString += `<li class="${it.isDisabled ? `disabled` : ``} ${it.style || ""}"><span ${!it.isDisabled ? `data-ctx-id="${i}"` : ""} ${it.title ? `title="${it.title.escapeQuotes()}"` : ""}>${it.text}</span></li>`;
+				if (!it.isDisabled) i++;
+			} else {
+				tempString += `<li><span data-ctx-id="${i}">${it}</span></li>`;
+				i++;
+			}
+		});
+		tempString += `</ul>`;
+		$(`#${menuId}`).remove();
+		$("body").append(tempString);
+	},
+
+	doInitActionContextMenu (contextId, actionOptions) {
+		ContextUtil.doInitContextMenu(contextId, (evt, ele, $invokedOn, $selectedMenu) => {
+			const val = Number($selectedMenu.data("ctx-id"));
+			actionOptions.filter(Boolean)[val].action(evt, $invokedOn);
+		}, actionOptions);
+	},
+
+	doTeardownContextMenu (menuId) {
+		delete ContextUtil._ctxInit[menuId];
+		delete ContextUtil._ctxClick[menuId];
+		delete ContextUtil._ctxOpenRefs[menuId];
+		$(`#${menuId}`).remove();
+	},
+
+	handleOpenContextMenu: (evt, ele, menuId, closeHandler, data) => {
+		// anything specified in "data" is passed through to the final handler(s)
+		evt.preventDefault();
+		evt.stopPropagation();
+		const thisId = ContextUtil._ctxOpenRefsNextId++;
+		(ContextUtil._ctxOpenRefs[menuId] = ContextUtil._ctxOpenRefs[menuId] || {})[thisId] = closeHandler || (() => {});
+		const $menu = $(`#${menuId}`)
+			.show()
+			.css({
+				position: "absolute",
+				left: ContextUtil._getMenuPosition(menuId, evt.clientX, "width", "scrollLeft"),
+				top: ContextUtil._getMenuPosition(menuId, evt.clientY, "height", "scrollTop")
+			})
+			.off("click")
+			.on("click", "span", function (e) {
+				$menu.hide();
+				if (ContextUtil._ctxOpenRefs[menuId][thisId]) ContextUtil._ctxOpenRefs[menuId][thisId](true);
+				delete ContextUtil._ctxOpenRefs[menuId][thisId];
+				const $invokedOn = $(evt.target).closest(`li.row`);
+				const $selectedMenu = $(e.target);
+				const invokedOnId = Number($selectedMenu.data("ctx-id"));
+				ContextUtil._ctxClick[menuId](e, ele, $invokedOn, $selectedMenu, isNaN(invokedOnId) ? null : invokedOnId, data);
+			});
+	},
+
+	/**
+	 * @param text
+	 * @param fnAction
+	 * @param [opts] Options object.
+	 * @param [opts.isDisabled] If this action is disabled.
+	 * @param [opts.helpText] Help (title) text.
+	 * @param [opts.style] Additional CSS classes to add (e.g. `ctx-danger`).
+	 */
+	Action: function (text, fnAction, opts) {
+		opts = opts || {};
+
+		this.text = text;
+		this.action = fnAction;
+
+		this.isDisabled = opts.isDisabled;
+		this.helpText = opts.helpText;
+		this.style = opts.style;
+	}
+};
+
+// LIST AND SEARCH =====================================================================================================
+SearchUtil = {
+	removeStemmer (elasticSearch) {
+		const stemmer = elasticlunr.Pipeline.getRegisteredFunction("stemmer");
+		elasticSearch.pipeline.remove(stemmer);
+	}
+};
 
 // ENCODING/DECODING ===================================================================================================
-UrlUtil = {};
-UrlUtil.encodeForHash = function (toEncode) {
-	if (toEncode instanceof Array) {
-		return toEncode.map(i => encodeForHashHelper(i)).join(HASH_LIST_SEP);
-	} else {
-		return encodeForHashHelper(toEncode);
-	}
+UrlUtil = {
+	encodeForHash (toEncode) {
+		if (toEncode instanceof Array) return toEncode.map(it => `${it}`.toUrlified()).join(HASH_LIST_SEP);
+		else return `${toEncode}`.toUrlified();
+	},
 
-	function encodeForHashHelper (part) {
-		return encodeURIComponent(part).toLowerCase();
-	}
-};
+	autoEncodeHash (obj) {
+		const curPage = UrlUtil.getCurrentPage();
+		const encoder = UrlUtil.URL_TO_HASH_BUILDER[curPage];
+		if (!encoder) throw new Error(`No encoder found for page ${curPage}`);
+		return encoder(obj);
+	},
 
-UrlUtil.autoEncodeHash = function (obj) {
-	const curPage = UrlUtil.getCurrentPage();
-	const encoder = UrlUtil.URL_TO_HASH_BUILDER[curPage];
-	if (!encoder) throw new Error(`No encoder found for page ${curPage}`);
-	return encoder(obj);
-};
-
-UrlUtil.getCurrentPage = function () {
-	const pSplit = window.location.pathname.split("/");
-	let out = pSplit[pSplit.length - 1];
-	if (!out.toLowerCase().endsWith(".html")) out += ".html";
-	return out;
-};
-
-/**
- * All internal URL construction should pass through here, to ensure `static.5etools.com` is used when required.
- *
- * @param href the link
- */
-UrlUtil.link = function (href) {
-	if (!IS_ROLL20 && IS_DEPLOYED) return `${DEPLOYED_STATIC_ROOT}${href}?ver=${VERSION_NUMBER}`;
-	else if (IS_DEPLOYED) return `${href}?ver=${VERSION_NUMBER}`;
-	return href;
-};
-
-UrlUtil.unpackSubHash = function (subHash, unencode) {
-	// format is "key:value~list~sep~with~tilde"
-	if (subHash.includes(HASH_SUB_KV_SEP)) {
-		const keyValArr = subHash.split(HASH_SUB_KV_SEP).map(s => s.trim());
-		const out = {};
-		let k = keyValArr[0].toLowerCase();
-		if (unencode) k = decodeURIComponent(k);
-		let v = keyValArr[1].toLowerCase();
-		if (unencode) v = decodeURIComponent(v);
-		out[k] = v.split(HASH_SUB_LIST_SEP).map(s => s.trim());
+	getCurrentPage () {
+		const pSplit = window.location.pathname.split("/");
+		let out = pSplit[pSplit.length - 1];
+		if (!out.toLowerCase().endsWith(".html")) out += ".html";
 		return out;
-	} else {
-		throw new Error(`Baldy formatted subhash ${subHash}`)
-	}
-};
+	},
 
-UrlUtil.categoryToPage = function (category) {
-	return UrlUtil.CAT_TO_PAGE[category];
+	/**
+	 * All internal URL construction should pass through here, to ensure `static.5etools.com` is used when required.
+	 *
+	 * @param href the link
+	 */
+	link (href) {
+		function addGetParam (curr) {
+			if (href.includes("?")) return `${curr}&v=${VERSION_NUMBER}`;
+			else return `${curr}?v=${VERSION_NUMBER}`;
+		}
+
+		if (!IS_VTT && IS_DEPLOYED) return addGetParam(`${DEPLOYED_STATIC_ROOT}${href}`);
+		else if (IS_DEPLOYED) return addGetParam(href);
+		return href;
+	},
+
+	unpackSubHash (subHash, unencode) {
+		// format is "key:value~list~sep~with~tilde"
+		if (subHash.includes(HASH_SUB_KV_SEP)) {
+			const keyValArr = subHash.split(HASH_SUB_KV_SEP).map(s => s.trim());
+			const out = {};
+			let k = keyValArr[0].toLowerCase();
+			if (unencode) k = decodeURIComponent(k);
+			let v = keyValArr[1].toLowerCase();
+			if (unencode) v = decodeURIComponent(v);
+			out[k] = v.split(HASH_SUB_LIST_SEP).map(s => s.trim());
+			if (out[k].length === 1 && out[k] === HASH_SUB_NONE) out[k] = [];
+			return out;
+		} else {
+			throw new Error(`Badly formatted subhash ${subHash}`)
+		}
+	},
+
+	/**
+	 * @param key The subhash key.
+	 * @param values The subhash values.
+	 * @param [opts] Options object.
+	 * @param [opts.isEncodeBoth] If both the key and values should be URl encoded.
+	 * @param [opts.isEncodeKey] If the key should be URL encoded.
+	 * @param [opts.isEncodeValues] If the values should be URL encoded.
+	 * @returns {string}
+	 */
+	packSubHash (key, values, opts) {
+		opts = opts || {};
+		if (opts.isEncodeBoth || opts.isEncodeKey) key = key.toUrlified();
+		if (opts.isEncodeBoth || opts.isEncodeValues) values = values.map(it => it.toUrlified());
+		return `${key}${HASH_SUB_KV_SEP}${values.join(HASH_SUB_LIST_SEP)}`;
+	},
+
+	categoryToPage (category) { return UrlUtil.CAT_TO_PAGE[category]; },
+
+	bindLinkExportButton (filterBox, $btn) {
+		$btn = $btn || ListUtil.getOrTabRightButton(`btn-link-export`, `magnet`);
+		$btn.addClass("btn-copy-effect")
+			.off("click")
+			.on("click", async evt => {
+				let url = window.location.href;
+
+				const parts = filterBox.getSubHashes({isAddSearchTerm: true});
+				parts.unshift(url);
+
+				if (evt.shiftKey && ListUtil.sublist) {
+					const toEncode = JSON.stringify(ListUtil.getExportableSublist());
+					const part2 = UrlUtil.packSubHash(ListUtil.SUB_HASH_PREFIX, [toEncode], {isEncodeBoth: true});
+					parts.push(part2);
+				}
+
+				await MiscUtil.pCopyTextToClipboard(parts.join(HASH_PART_SEP));
+				JqueryUtil.showCopiedEffect($btn);
+			})
+			.title("Get Link to Filters (SHIFT adds List)")
+	},
+
+	mini: {
+		compress (primitive) {
+			const type = typeof primitive;
+			if (primitive == null) return `x`;
+			switch (type) {
+				case "boolean": return `b${Number(primitive)}`;
+				case "number": return `n${primitive}`;
+				case "string": return `s${primitive.toUrlified()}`;
+				default: throw new Error(`Unhandled type "${type}"`);
+			}
+		},
+
+		decompress (raw) {
+			const [type, data] = [raw.slice(0, 1), raw.slice(1)];
+			switch (type) {
+				case "x": return null;
+				case "b": return !!Number(data);
+				case "n": return Number(data);
+				case "s": return String(data);
+				default: throw new Error(`Unhandled type "${type}"`);
+			}
+		}
+	},
+
+	class: {
+		getIndexedEntries (cls) {
+			const out = [];
+			let scFeatureI = 0;
+			(cls.classFeatures || []).forEach((lvlFeatureList, ixLvl) => {
+				// class features
+				lvlFeatureList
+					// don't add "you gain a subclass feature" or ASI's
+					.filter(feature => !feature.gainSubclassFeature
+						&& feature.name !== "Ability Score Improvement"
+						&& feature.name !== "Proficiency Versatility")
+					.forEach((feature, ixFeature) => {
+						const name = Renderer.findName(feature);
+						if (!name) { // tolerate missing names in homebrew
+							if (BrewUtil.hasSourceJson(cls.source)) return;
+							else throw new Error("Class feature had no name!");
+						}
+						out.push({
+							_type: "classFeature",
+							source: cls.source.source || cls.source,
+							name,
+							hash: `${UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CLASSES](cls)}${HASH_PART_SEP}${UrlUtil.getClassesPageStatePart({feature: {ixLevel: ixLvl, ixFeature: ixFeature}})}`,
+							entry: feature,
+							level: ixLvl + 1
+						})
+					});
+
+				// subclass features
+				const ixGainSubclassFeatures = lvlFeatureList.findIndex(feature => feature.gainSubclassFeature);
+				if (~ixGainSubclassFeatures) {
+					cls.subclasses.forEach(sc => {
+						const features = ((sc.subclassFeatures || [])[scFeatureI] || []);
+						sc.source = sc.source || cls.source; // default to class source if required
+						const tempStack = [];
+						features.forEach(feature => {
+							const subclassFeatureHash = `${UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CLASSES](cls)}${HASH_PART_SEP}${UrlUtil.getClassesPageStatePart({subclass: sc, feature: {ixLevel: ixLvl, ixFeature: ixGainSubclassFeatures}})}`;
+							const name = Renderer.findName(feature);
+							if (!name) { // tolerate missing names in homebrew
+								if (BrewUtil.hasSourceJson(sc.source)) return;
+								else throw new Error("Subclass feature had no name!");
+							}
+							tempStack.push({
+								_type: "subclassFeature",
+								name,
+								subclassName: sc.name,
+								subclassShortName: sc.shortName,
+								source: sc.source.source || sc.source,
+								hash: subclassFeatureHash,
+								entry: feature,
+								level: ixLvl + 1
+							});
+
+							if (feature.entries) {
+								const namedFeatureParts = feature.entries.filter(it => it.name);
+								namedFeatureParts.forEach(it => {
+									const lvl = ixLvl + 1;
+									if (tempStack.find(existing => it.name === existing.name && lvl === existing.level)) return;
+									tempStack.push({
+										_type: "subclassFeaturePart",
+										name: it.name,
+										subclassName: sc.name,
+										subclassShortName: sc.shortName,
+										source: sc.source.source || sc.source,
+										hash: subclassFeatureHash,
+										entry: feature,
+										level: lvl
+									});
+								});
+							}
+						});
+						out.push(...tempStack);
+					});
+					scFeatureI++;
+				} else if (ixGainSubclassFeatures.length > 1) {
+					setTimeout(() => { throw new Error(`Multiple subclass features gained at level ${ixLvl + 1} for class "${cls.name}" from source "${cls.source}"!`) });
+				}
+			});
+			return out;
+		}
+	},
+
+	getStateKeySubclass (sc) { return Parser.stringToSlug(`sub ${sc.shortName || sc.name} ${Parser.sourceJsonToAbv(sc.source)}`); },
+
+	/**
+	 * @param opts Options object.
+	 * @param [opts.subclass] Subclass (or object of the form `{shortName: "str", source: "str"}`)
+	 * @param [opts.feature] Object of the form `{ixLevel: 0, ixFeature: 0}`
+	 */
+	getClassesPageStatePart (opts) {
+		const stateParts = [
+			opts.subclass ? `${UrlUtil.getStateKeySubclass(opts.subclass)}=${UrlUtil.mini.compress(true)}` : null,
+			opts.feature ? `feature=${UrlUtil.mini.compress(`${opts.feature.ixLevel}-${opts.feature.ixFeature}`)}` : ""
+		].filter(Boolean);
+		return stateParts.length ? UrlUtil.packSubHash("state", stateParts) : "";
+	}
 };
 
 UrlUtil.PG_BESTIARY = "bestiary.html";
@@ -1721,38 +1494,55 @@ UrlUtil.PG_SPELLS = "spells.html";
 UrlUtil.PG_BACKGROUNDS = "backgrounds.html";
 UrlUtil.PG_ITEMS = "items.html";
 UrlUtil.PG_CLASSES = "classes.html";
-UrlUtil.PG_CONDITIONS = "conditions.html";
+UrlUtil.PG_CONDITIONS_DISEASES = "conditionsdiseases.html";
 UrlUtil.PG_FEATS = "feats.html";
-UrlUtil.PG_INVOCATIONS = "invocations.html";
+UrlUtil.PG_OPT_FEATURES = "optionalfeatures.html";
 UrlUtil.PG_PSIONICS = "psionics.html";
 UrlUtil.PG_RACES = "races.html";
 UrlUtil.PG_REWARDS = "rewards.html";
 UrlUtil.PG_VARIATNRULES = "variantrules.html";
 UrlUtil.PG_ADVENTURE = "adventure.html";
+UrlUtil.PG_ADVENTURES = "adventures.html";
+UrlUtil.PG_BOOK = "book.html";
+UrlUtil.PG_BOOKS = "books.html";
 UrlUtil.PG_DEITIES = "deities.html";
-UrlUtil.PG_CULTS = "cults.html";
+UrlUtil.PG_CULTS_BOONS = "cultsboons.html";
 UrlUtil.PG_OBJECTS = "objects.html";
 UrlUtil.PG_TRAPS_HAZARDS = "trapshazards.html";
 UrlUtil.PG_QUICKREF = "quickreference.html";
+UrlUtil.PG_MAKE_SHAPED = "makeshaped.html";
+UrlUtil.PG_MANAGE_BREW = "managebrew.html";
+UrlUtil.PG_MAKE_BREW = "makebrew.html";
+UrlUtil.PG_DEMO_RENDER = "renderdemo.html";
+UrlUtil.PG_TABLES = "tables.html";
+UrlUtil.PG_VEHICLES = "vehicles.html";
+UrlUtil.PG_CHARACTERS = "characters.html";
+UrlUtil.PG_ACTIONS = "actions.html";
+UrlUtil.PG_LANGUAGES = "languages.html";
 
 UrlUtil.URL_TO_HASH_BUILDER = {};
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BESTIARY] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_SPELLS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
-UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BACKGROUNDS] = (it) => UrlUtil.encodeForHash([it.name, Parser.sourceJsonToAbv(it.source)]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BACKGROUNDS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_ITEMS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CLASSES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
-UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CONDITIONS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CONDITIONS_DISEASES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_FEATS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
-UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_INVOCATIONS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_OPT_FEATURES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_PSIONICS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_RACES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
-UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_REWARDS] = (it) => UrlUtil.encodeForHash(it.name);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_REWARDS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_VARIATNRULES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_ADVENTURE] = (it) => UrlUtil.encodeForHash(it.id);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_BOOK] = (it) => UrlUtil.encodeForHash(it.id);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_DEITIES] = (it) => UrlUtil.encodeForHash([it.name, it.pantheon, it.source]);
-UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CULTS] = (it) => UrlUtil.encodeForHash(it.name);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_CULTS_BOONS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_OBJECTS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_TRAPS_HAZARDS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_TABLES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_VEHICLES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_ACTIONS] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
+UrlUtil.URL_TO_HASH_BUILDER[UrlUtil.PG_LANGUAGES] = (it) => UrlUtil.encodeForHash([it.name, it.source]);
 
 UrlUtil.CAT_TO_PAGE = {};
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CREATURE] = UrlUtil.PG_BESTIARY;
@@ -1760,9 +1550,18 @@ UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_SPELL] = UrlUtil.PG_SPELLS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_BACKGROUND] = UrlUtil.PG_BACKGROUNDS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ITEM] = UrlUtil.PG_ITEMS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CLASS] = UrlUtil.PG_CLASSES;
-UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CONDITION] = UrlUtil.PG_CONDITIONS;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CLASS_FEATURE] = UrlUtil.PG_CLASSES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_SUBCLASS] = UrlUtil.PG_CLASSES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_SUBCLASS_FEATURE] = UrlUtil.PG_CLASSES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CONDITION] = UrlUtil.PG_CONDITIONS_DISEASES;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_FEAT] = UrlUtil.PG_FEATS;
-UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ELDRITCH_INVOCATION] = UrlUtil.PG_INVOCATIONS;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ELDRITCH_INVOCATION] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_METAMAGIC] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_MANEUVER_BATTLEMASTER] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_MANEUVER_CAVALIER] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ARCANE_SHOT] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_OPTIONAL_FEATURE_OTHER] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_FIGHTING_STYLE] = UrlUtil.PG_OPT_FEATURES;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_PSIONIC] = UrlUtil.PG_PSIONICS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_RACE] = UrlUtil.PG_RACES;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_OTHER_REWARD] = UrlUtil.PG_REWARDS;
@@ -1773,14 +1572,32 @@ UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_OBJECT] = UrlUtil.PG_OBJECTS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_TRAP] = UrlUtil.PG_TRAPS_HAZARDS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_HAZARD] = UrlUtil.PG_TRAPS_HAZARDS;
 UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_QUICKREF] = UrlUtil.PG_QUICKREF;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_CULT] = UrlUtil.PG_CULTS_BOONS;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_BOON] = UrlUtil.PG_CULTS_BOONS;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_DISEASE] = UrlUtil.PG_CONDITIONS_DISEASES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_TABLE] = UrlUtil.PG_TABLES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_TABLE_GROUP] = UrlUtil.PG_TABLES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_VEHICLE] = UrlUtil.PG_VEHICLES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_PACT_BOON] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ELEMENTAL_DISCIPLINE] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ARTIFICER_INFUSION] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_SHIP_UPGRADE] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_INFERNAL_WAR_MACHINE_UPGRADE] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ONOMANCY_RESONANT] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_RUNE_KNIGHT_RUNE] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ALCHEMICAL_FORMULA] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_MANEUVER] = UrlUtil.PG_OPT_FEATURES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_ACTION] = UrlUtil.PG_ACTIONS;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_LANGUAGE] = UrlUtil.PG_LANGUAGES;
+UrlUtil.CAT_TO_PAGE[Parser.CAT_ID_BOOK] = UrlUtil.PG_BOOK;
 
-if (!IS_DEPLOYED && !IS_ROLL20 && typeof window !== "undefined") {
+if (!IS_DEPLOYED && !IS_VTT && typeof window !== "undefined") {
 	// for local testing, hotkey to get a link to the current page on the main site
 	window.addEventListener("keypress", (e) => {
-		if (noModifierKeys(e)) {
+		if (noModifierKeys(e) && typeof d20 === "undefined") {
 			if (e.key === "#") {
 				const spl = window.location.href.split("/");
-				window.prompt("Copy to clipboard: Ctrl+C, Enter", `https://5e.tools/${spl[spl.length - 1]}`);
+				window.prompt("Copy to clipboard: Ctrl+C, Enter", `https://noads.5e.tools/${spl[spl.length - 1]}`);
 			}
 		}
 	});
@@ -1789,11 +1606,47 @@ if (!IS_DEPLOYED && !IS_ROLL20 && typeof window !== "undefined") {
 // SORTING =============================================================================================================
 SortUtil = {
 	ascSort: (a, b) => {
-		// to handle `FilterItem`s
-		if (a.hasOwnProperty("item") && b.hasOwnProperty("item")) {
-			return SortUtil._ascSort(a.item, b.item);
+		if (typeof FilterItem !== "undefined") {
+			if (a instanceof FilterItem) a = a.item;
+			if (b instanceof FilterItem) b = b.item;
 		}
+
 		return SortUtil._ascSort(a, b);
+	},
+
+	ascSortProp: (prop, a, b) => { return SortUtil.ascSort(a[prop], b[prop]); },
+
+	ascSortLower: (a, b) => {
+		if (typeof FilterItem !== "undefined") {
+			if (a instanceof FilterItem) a = a.item;
+			if (b instanceof FilterItem) b = b.item;
+		}
+
+		a = a ? a.toLowerCase() : a;
+		b = b ? b.toLowerCase() : b;
+
+		return SortUtil._ascSort(a, b);
+	},
+
+	ascSortLowerProp: (prop, a, b) => { return SortUtil.ascSortLower(a[prop], b[prop]); },
+
+	// warning: slow
+	ascSortNumericalSuffix (a, b) {
+		if (typeof FilterItem !== "undefined") {
+			if (a instanceof FilterItem) a = a.item;
+			if (b instanceof FilterItem) b = b.item;
+		}
+
+		function popEndNumber (str) {
+			const spl = str.split(" ");
+			return spl.last().isNumeric() ? [spl.slice(0, -1).join(" "), Number(spl.last().replace(Parser._numberCleanRegexp, ""))] : [spl.join(" "), 0];
+		}
+
+		const [aStr, aNum] = popEndNumber(a.item || a);
+		const [bStr, bNum] = popEndNumber(b.item || b);
+		const initialSort = SortUtil.ascSort(aStr, bStr);
+		if (initialSort) return initialSort;
+		return SortUtil.ascSort(aNum, bNum);
 	},
 
 	_ascSort: (a, b) => {
@@ -1801,413 +1654,2693 @@ SortUtil = {
 		return b < a ? 1 : -1;
 	},
 
-	compareNames: (a, b) => {
-		if (b._values.name.toLowerCase() === a._values.name.toLowerCase()) return 0;
-		else if (b._values.name.toLowerCase() > a._values.name.toLowerCase()) return 1;
-		else if (b._values.name.toLowerCase() < a._values.name.toLowerCase()) return -1;
+	ascSortDate (a, b) {
+		return b.getTime() - a.getTime();
 	},
 
-	listSort: (itemA, itemB, options) => {
-		if (options.valueName === "name") return compareBy("name");
-		else return compareByOrDefault(options.valueName, "name");
+	ascSortDateString (a, b) {
+		return SortUtil.ascSortDate(new Date(a || "1970-01-0"), new Date(b || "1970-01-0"));
+	},
 
-		function compareBy (valueName) {
-			const aValue = itemA.values()[valueName].toLowerCase();
-			const bValue = itemB.values()[valueName].toLowerCase();
-			if (aValue === bValue) return 0;
-			return (aValue > bValue) ? 1 : -1;
-		}
+	compareListNames (a, b) { return SortUtil._ascSort(a.name.toLowerCase(), b.name.toLowerCase()); },
 
-		function compareByOrDefault (valueName, defaultValueName) {
-			const initialCompare = compareBy(valueName);
-			return initialCompare === 0 ? compareBy(defaultValueName) : initialCompare;
-		}
+	listSort (a, b, opts) {
+		opts = opts || {sortBy: "name"};
+		if (opts.sortBy === "name") return SortUtil.compareListNames(a, b);
+		else return SortUtil._compareByOrDefault_compareByOrDefault(a, b, opts.sortBy);
+	},
+
+	_listSort_compareBy (a, b, sortBy) {
+		const aValue = typeof a.values[sortBy] === "string" ? a.values[sortBy].toLowerCase() : a.values[sortBy];
+		const bValue = typeof b.values[sortBy] === "string" ? b.values[sortBy].toLowerCase() : b.values[sortBy];
+
+		return SortUtil._ascSort(aValue, bValue);
+	},
+
+	_compareByOrDefault_compareByOrDefault (a, b, sortBy) {
+		return SortUtil._listSort_compareBy(a, b, sortBy) || SortUtil.compareListNames(a, b);
 	},
 
 	/**
 	 * "Special Equipment" first, then alphabetical
 	 */
+	_MON_TRAIT_ORDER: [
+		"special equipment",
+		"shapechanger"
+	],
 	monTraitSort: (a, b) => {
-		if (!a && !b) return 0;
-		if (!a) return -1;
-		if (!b) return 1;
-		if (a.toLowerCase().trim() === "special equipment") return -1;
-		if (b.toLowerCase().trim() === "special equipment") return 1;
-		return SortUtil.ascSort(a, b)
+		if (a.sort != null && b.sort != null) return a.sort - b.sort;
+		if (a.sort != null && b.sort == null) return -1;
+		if (a.sort == null && b.sort != null) return 1;
+
+		if (!a.name && !b.name) return 0;
+		const aClean = a.name.toLowerCase().trim();
+		const bClean = b.name.toLowerCase().trim();
+
+		const isOnlyA = a.name.endsWith(" Only)");
+		const isOnlyB = b.name.endsWith(" Only)");
+		if (!isOnlyA && isOnlyB) return -1;
+		if (isOnlyA && !isOnlyB) return 1;
+
+		const ixA = SortUtil._MON_TRAIT_ORDER.indexOf(aClean);
+		const ixB = SortUtil._MON_TRAIT_ORDER.indexOf(bClean);
+		if (~ixA && ~ixB) return ixA - ixB;
+		else if (~ixA) return -1;
+		else if (~ixB) return 1;
+		else return SortUtil.ascSort(aClean, bClean);
+	},
+
+	_alignFirst: ["L", "C"],
+	_alignSecond: ["G", "E"],
+	alignmentSort: (a, b) => {
+		if (a === b) return 0;
+		if (SortUtil._alignFirst.includes(a)) return -1;
+		if (SortUtil._alignSecond.includes(a)) return 1;
+		if (SortUtil._alignFirst.includes(b)) return 1;
+		if (SortUtil._alignSecond.includes(b)) return -1;
+		return 0;
+	},
+
+	ascSortCr (a, b) {
+		if (typeof FilterItem !== "undefined") {
+			if (a instanceof FilterItem) a = a.item;
+			if (b instanceof FilterItem) b = b.item;
+		}
+		// always put unknown values last
+		if (a === "Unknown") a = "998";
+		if (b === "Unknown") b = "998";
+		if (a === "\u2014" || a == null) a = "999";
+		if (b === "\u2014" || b == null) b = "999";
+		return SortUtil.ascSort(Parser.crToNumber(a), Parser.crToNumber(b));
+	},
+
+	ascSortAtts (a, b) {
+		const aSpecial = a === "special";
+		const bSpecial = b === "special";
+		return aSpecial && bSpecial ? 0 : aSpecial ? 1 : bSpecial ? -1 : Parser.ABIL_ABVS.indexOf(a) - Parser.ABIL_ABVS.indexOf(b);
+	},
+
+	initBtnSortHandlers ($wrpBtnsSort, list) {
+		function addCaret ($btnSort, direction) {
+			$wrpBtnsSort.find(".caret").removeClass("caret");
+			$btnSort.find(".caret_wrp").addClass("caret").toggleClass("caret--reverse", direction === "asc");
+		}
+
+		const $btnSort = $wrpBtnsSort.find(`.sort[data-sort="${list.sortBy}"]`);
+		addCaret($btnSort, list.sortDir);
+
+		$wrpBtnsSort.find(".sort").each((i, e) => {
+			const $btnSort = $(e);
+			$btnSort.click(evt => {
+				evt.stopPropagation();
+				const direction = list.sortDir === "asc" ? "desc" : "asc";
+				addCaret($btnSort, direction);
+				list.sort($btnSort.data("sort"), direction);
+			});
+		});
 	}
 };
 
 // JSON LOADING ========================================================================================================
 DataUtil = {
+	_loading: {},
 	_loaded: {},
+	_merging: {},
+	_merged: {},
 
-	loadJSON: function (url, onLoadFunction, ...otherData) {
-		function handleAlreadyLoaded (url) {
-			onLoadFunction(DataUtil._loaded[url], otherData);
+	async _pLoad (url) {
+		if (DataUtil._loading[url]) {
+			await DataUtil._loading[url];
+			return DataUtil._loaded[url];
 		}
 
-		if (this._loaded[url]) {
-			handleAlreadyLoaded(url);
-			return;
-		}
-
-		const procUrl = UrlUtil.link(url);
-		if (this._loaded[procUrl]) {
-			handleAlreadyLoaded(procUrl);
-			return;
-		}
-
-		const request = getRequest(procUrl);
-		if (procUrl !== url) {
-			request.onerror = function () {
-				const fallbackRequest = getRequest(url);
-				fallbackRequest.send();
-			};
-		}
-		request.send();
-
-		function getRequest (toUrl) {
+		DataUtil._loading[url] = new Promise((resolve, reject) => {
 			const request = new XMLHttpRequest();
-			request.open("GET", toUrl, true);
+			request.open("GET", url, true);
 			request.overrideMimeType("application/json");
 			request.onload = function () {
-				const data = JSON.parse(this.response);
-				DataUtil._loaded[toUrl] = data;
-				onLoadFunction(data, otherData);
-			};
-			return request;
-		}
-	},
-
-	multiLoadJSON: function (toLoads, onEachLoadFunction, onFinalLoadFunction) {
-		if (!toLoads.length) onFinalLoadFunction([]);
-		const dataStack = [];
-
-		let loadedCount = 0;
-		toLoads.forEach(tl => {
-			this.loadJSON(
-				tl.url,
-				function (data) {
-					onEachLoadFunction(tl, data);
-					dataStack.push(data);
-
-					loadedCount++;
-					if (loadedCount >= toLoads.length) {
-						onFinalLoadFunction(dataStack);
-					}
+				try {
+					DataUtil._loaded[url] = JSON.parse(this.response);
+					resolve();
+				} catch (e) {
+					reject(new Error(`Could not parse JSON from ${url}: ${e.message}`));
 				}
-			)
+			};
+			request.onerror = (e) => reject(new Error(`Error during JSON request: ${e.target.status}`));
+			request.send();
 		});
+
+		await DataUtil._loading[url];
+		return DataUtil._loaded[url];
 	},
 
-	userDownload: function (filename, data) {
-		const $a = $(`<a href="data:text/json;charset=utf-8,${encodeURIComponent(data)}" download="${filename}.json" style="display: none;" target="_blank">DL</a>`);
+	async loadJSON (url, ...otherData) {
+		const procUrl = UrlUtil.link(url);
+
+		let ident = procUrl;
+		let data;
+		try {
+			data = await DataUtil._pLoad(procUrl);
+		} catch (e) {
+			setTimeout(() => { throw e; })
+		}
+
+		// Fallback to the un-processed URL
+		if (!data) {
+			ident = url;
+			data = await DataUtil._pLoad(url);
+		}
+
+		await DataUtil.pDoMetaMerge(ident, data);
+
+		return data;
+	},
+
+	async pDoMetaMerge (ident, data, options) {
+		DataUtil._merging[ident] = DataUtil._merging[ident] || DataUtil._pDoMetaMerge(ident, data, options);
+		await DataUtil._merging[ident];
+		return DataUtil._merged[ident];
+	},
+
+	async _pDoMetaMerge (ident, data, options) {
+		if (data._meta) {
+			if (data._meta.dependencies) {
+				await Promise.all(Object.entries(data._meta.dependencies).map(async ([prop, sources]) => {
+					if (!data[prop]) return; // if e.g. monster dependencies are declared, but there are no monsters to merge with, bail out
+
+					const toLoads = await Promise.all(sources.map(async source => DataUtil.pGetLoadableByMeta(prop, source)));
+					const dependencyData = await Promise.all(toLoads.map(toLoad => DataUtil.loadJSON(toLoad)));
+					const flatDependencyData = dependencyData.map(dd => dd[prop]).flat();
+					await Promise.all(data[prop].map(async entry => {
+						if (entry._copy) {
+							switch (prop) {
+								case "monster": return DataUtil.monster.pMergeCopy(flatDependencyData, entry, options);
+								case "monsterFluff": return DataUtil.monsterFluff.pMergeCopy(flatDependencyData, entry, options);
+								case "spell": return DataUtil.spell.pMergeCopy(flatDependencyData, entry, options);
+								default: throw new Error(`No dependency _copy merge strategy specified for property "${prop}"`);
+							}
+						}
+					}));
+				}));
+				delete data._meta.dependencies;
+			}
+
+			if (data._meta.internalCopies) {
+				Promise.all(data._meta.internalCopies.map(async prop => {
+					if (!data[prop]) return;
+
+					await Promise.all(data[prop].map(async entry => {
+						if (entry._copy) {
+							switch (prop) {
+								case "monster": return DataUtil.monster.pMergeCopy(data[prop], entry, options);
+								case "monsterFluff": return DataUtil.monsterFluff.pMergeCopy(data[prop], entry, options);
+								case "spell": return DataUtil.spell.pMergeCopy(data[prop], entry, options);
+								case "spellFluff": return DataUtil.spellFluff.pMergeCopy(data[prop], entry, options);
+								case "item": return DataUtil.item.pMergeCopy(data[prop], entry, options);
+								case "itemFluff": return DataUtil.itemFluff.pMergeCopy(data[prop], entry, options);
+								case "background": return DataUtil.background.pMergeCopy(data[prop], entry, options);
+								case "race": return DataUtil.race.pMergeCopy(data[prop], entry, options);
+								case "raceFluff": return DataUtil.raceFluff.pMergeCopy(data[prop], entry, options);
+								case "deity": return DataUtil.deity.pMergeCopy(data[prop], entry, options);
+								default: throw new Error(`No internal _copy merge strategy specified for property "${prop}"`);
+							}
+						}
+					}));
+				}));
+				delete data._meta.internalCopies;
+			}
+		}
+
+		if (data._meta && data._meta.otherSources) {
+			await Promise.all(Object.entries(data._meta.otherSources).map(async ([prop, sources]) => {
+				const toLoads = await Promise.all(Object.entries(sources).map(async ([source, findWith]) => ({
+					findWith,
+					url: await DataUtil.pGetLoadableByMeta(prop, source)
+				})));
+
+				const additionalData = await Promise.all(toLoads.map(async ({findWith, url}) => ({findWith, sourceData: await DataUtil.loadJSON(url)})));
+
+				additionalData.forEach(dataAndSource => {
+					const findWith = dataAndSource.findWith;
+					const ad = dataAndSource.sourceData;
+					const toAppend = ad[prop].filter(it => it.otherSources && it.otherSources.find(os => os.source === findWith));
+					if (toAppend.length) data[prop] = (data[prop] || []).concat(toAppend);
+				});
+			}));
+			delete data._meta.otherSources;
+		}
+		DataUtil._merged[ident] = data;
+	},
+
+	userDownload (filename, data) {
+		if (typeof data !== "string") data = JSON.stringify(data, null, "\t");
+		const a = document.createElement("a");
+		const t = new Blob([data], {type: "text/json"});
+		a.href = URL.createObjectURL(t);
+		a.download = `${filename}.json`;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	},
+
+	getCleanFilename (filename) {
+		return filename.replace(/[^-_a-zA-Z0-9]/g, "_");
+	},
+
+	getCsv (headers, rows) {
+		function escapeCsv (str) {
+			return `"${str.replace(/"/g, `""`).replace(/ +/g, " ").replace(/\n\n+/gi, "\n\n")}"`;
+		}
+
+		function toCsv (row) {
+			return row.map(str => escapeCsv(str)).join(",");
+		}
+
+		return `${toCsv(headers)}\n${rows.map(r => toCsv(r)).join("\n")}`;
+	},
+
+	userDownloadText (filename, string) {
+		const $a = $(`<a href="data:text/plain;charset=utf-8,${encodeURIComponent(string)}" download="${filename}" style="display: none;">DL</a>`);
 		$(`body`).append($a);
 		$a[0].click();
 		$a.remove();
+	},
+
+	pUserUpload () {
+		return new Promise(resolve => {
+			const $iptAdd = $(`<input type="file" accept=".json" style="position: fixed; top: -100px; left: -100px; display: none;">`).on("change", (evt) => {
+				const input = evt.target;
+
+				const reader = new FileReader();
+				reader.onload = () => {
+					const text = reader.result;
+					const json = JSON.parse(text);
+					resolve(json);
+				};
+
+				reader.readAsText(input.files[0]);
+			}).appendTo($(`body`));
+			$iptAdd.click();
+		});
+	},
+
+	cleanJson (cpy) {
+		cpy.name = cpy._displayName || cpy.name;
+		delete cpy.uniqueId;
+		DataUtil.__cleanJsonObject(cpy);
+		return cpy;
+	},
+
+	__cleanJsonObject (obj) {
+		if (obj == null) return obj;
+		if (typeof obj === "object") {
+			if (obj instanceof Array) {
+				obj.forEach(it => DataUtil.__cleanJsonObject(it));
+			} else {
+				Object.entries(obj).forEach(([k, v]) => {
+					if (k.startsWith("_") || k === "customHashId") delete obj[k];
+					else DataUtil.__cleanJsonObject(v);
+				});
+			}
+		}
+	},
+
+	async pGetLoadableByMeta (key, value) {
+		// TODO in future, allow value to be e.g. a string (assumed to be an official data's source); an object e.g. `{type: external, url: <>}`,...
+		switch (key) {
+			case "monster": {
+				const index = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/bestiary/index.json`);
+				if (!index[value]) throw new Error(`Bestiary index did not contain source "${value}"`);
+				return `${Renderer.get().baseUrl}data/bestiary/${index[value]}`;
+			}
+			case "spell": {
+				const index = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/spells/index.json`);
+				if (!index[value]) throw new Error(`Spell index did not contain source "${value}"`);
+				return `${Renderer.get().baseUrl}data/spells/${index[value]}`;
+			}
+			case "monsterFluff": {
+				const index = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/bestiary/fluff-index.json`);
+				if (!index[value]) throw new Error(`Bestiary fluff index did not contain source "${value}"`);
+				return `${Renderer.get().baseUrl}data/bestiary/${index[value]}`;
+			}
+			default: throw new Error(`Could not get loadable URL for \`${JSON.stringify({key, value})}\``);
+		}
+	},
+
+	generic: {
+		async _pMergeCopy (impl, page, entryList, entry, options) {
+			if (entry._copy) {
+				const hash = UrlUtil.URL_TO_HASH_BUILDER[page](entry._copy);
+				const it = impl._mergeCache[hash] || DataUtil.generic._pMergeCopy_search(impl, page, entryList, entry, options);
+				if (!it) return;
+				// Handle recursive copy
+				if (it._copy) await DataUtil.generic._pMergeCopy(impl, page, entryList, it, options);
+				return DataUtil.generic._pApplyCopy(impl, MiscUtil.copy(it), entry, options);
+			}
+		},
+
+		_pMergeCopy_search (impl, page, entryList, entry, options) {
+			const entryHash = UrlUtil.URL_TO_HASH_BUILDER[page](entry._copy);
+			return entryList.find(it => {
+				const hash = UrlUtil.URL_TO_HASH_BUILDER[page](it);
+				impl._mergeCache[hash] = it;
+				return hash === entryHash;
+			});
+		},
+
+		async _pApplyCopy (impl, copyFrom, copyTo, options = {}) {
+			if (options.doKeepCopy) copyTo.__copy = MiscUtil.copy(copyFrom);
+
+			// convert everything to arrays
+			function normaliseMods (obj) {
+				Object.entries(obj._mod).forEach(([k, v]) => {
+					if (!(v instanceof Array)) obj._mod[k] = [v];
+				});
+			}
+
+			const copyMeta = copyTo._copy || {};
+
+			if (copyMeta._mod) normaliseMods(copyMeta);
+
+			// fetch and apply any external traits -- append them to existing copy mods where available
+			let racials = null;
+			if (copyMeta._trait) {
+				const traitData = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/bestiary/traits.json`);
+				racials = traitData.trait.find(t => t.name.toLowerCase() === copyMeta._trait.name.toLowerCase() && t.source.toLowerCase() === copyMeta._trait.source.toLowerCase());
+				if (!racials) throw new Error(`Could not find traits to apply with name "${copyMeta._trait.name}" and source "${copyMeta._trait.source}"`);
+				racials = MiscUtil.copy(racials);
+
+				if (racials.apply._mod) {
+					normaliseMods(racials.apply);
+
+					if (copyMeta._mod) {
+						Object.entries(racials.apply._mod).forEach(([k, v]) => {
+							if (copyMeta._mod[k]) copyMeta._mod[k] = copyMeta._mod[k].concat(v);
+							else copyMeta._mod[k] = v;
+						});
+					} else copyMeta._mod = racials.apply._mod;
+				}
+
+				delete copyMeta._trait;
+			}
+
+			const copyToRootProps = new Set(Object.keys(copyTo));
+
+			// copy over required values
+			Object.keys(copyFrom).forEach(k => {
+				if (copyTo[k] === null) return delete copyTo[k];
+				if (copyTo[k] == null) {
+					if (impl._MERGE_REQUIRES_PRESERVE[k]) {
+						if (copyTo._copy._preserve && copyTo._copy._preserve[k]) copyTo[k] = copyFrom[k];
+					} else copyTo[k] = copyFrom[k];
+				}
+			});
+
+			// apply any root racial properties after doing base copy
+			if (racials && racials.apply._root) {
+				Object.entries(racials.apply._root)
+					.filter(([k, v]) => !copyToRootProps.has(k)) // avoid overwriting any real root properties
+					.forEach(([k, v]) => copyTo[k] = v);
+			}
+
+			// mod helpers /////////////////
+			function doEnsureArray (obj, prop) {
+				if (!(obj[prop] instanceof Array)) obj[prop] = [obj[prop]];
+			}
+
+			function doMod_appendStr (modInfo, prop) {
+				if (copyTo[prop]) copyTo[prop] = `${copyTo[prop]}${modInfo.joiner || ""}${modInfo.str}`;
+				else copyTo[prop] = modInfo.str;
+			}
+
+			function doMod_replaceTxt (modInfo, prop) {
+				const re = new RegExp(modInfo.replace, `g${modInfo.flags || ""}`);
+				if (copyTo[prop]) {
+					copyTo[prop].forEach(it => {
+						if (it.entries) it.entries = JSON.parse(JSON.stringify(it.entries).replace(re, modInfo.with));
+						if (it.headerEntries) it.headerEntries = JSON.parse(JSON.stringify(it.headerEntries).replace(re, modInfo.with));
+						if (it.footerEntries) it.footerEntries = JSON.parse(JSON.stringify(it.footerEntries).replace(re, modInfo.with));
+					});
+				}
+			}
+
+			function doMod_prependArr (modInfo, prop) {
+				doEnsureArray(modInfo, "items");
+				copyTo[prop] = copyTo[prop] ? modInfo.items.concat(copyTo[prop]) : modInfo.items
+			}
+
+			function doMod_appendArr (modInfo, prop) {
+				doEnsureArray(modInfo, "items");
+				copyTo[prop] = copyTo[prop] ? copyTo[prop].concat(modInfo.items) : modInfo.items
+			}
+
+			function doMod_appendIfNotExistsArr (modInfo, prop) {
+				doEnsureArray(modInfo, "items");
+				if (!copyTo[prop]) return copyTo[prop] = modInfo.items;
+				copyTo[prop] = copyTo[prop].concat(modInfo.items.filter(it => !copyTo[prop].some(x => CollectionUtil.deepEquals(it, x))));
+			}
+
+			function doMod_replaceArr (modInfo, prop, isThrow = true) {
+				doEnsureArray(modInfo, "items");
+
+				if (!copyTo[prop]) {
+					if (isThrow) throw new Error(`Could not find "${prop}" array`);
+					return false;
+				}
+
+				let ixOld;
+				if (modInfo.replace.regex) {
+					const re = new RegExp(modInfo.replace.regex, modInfo.replace.flags || "");
+					ixOld = copyTo[prop].findIndex(it => it.name ? re.test(it.name) : typeof it === "string" ? re.test(it) : false);
+				} else if (modInfo.replace.index != null) {
+					ixOld = modInfo.replace.index;
+				} else {
+					ixOld = copyTo[prop].findIndex(it => it.name ? it.name === modInfo.replace : it === modInfo.replace);
+				}
+
+				if (~ixOld) {
+					copyTo[prop].splice(ixOld, 1, ...modInfo.items);
+					return true;
+				} else if (isThrow) throw new Error(`Could not find "${prop}" item with name "${modInfo.replace}" to replace`);
+				return false;
+			}
+
+			function doMod_replaceOrAppendArr (modInfo, prop) {
+				const didReplace = doMod_replaceArr(modInfo, prop, false);
+				if (!didReplace) doMod_appendArr(modInfo, prop);
+			}
+
+			function doMod_insertArr (modInfo, prop) {
+				doEnsureArray(modInfo, "items");
+				if (!copyTo[prop]) throw new Error(`Could not find "${prop}" array`);
+				copyTo[prop].splice(modInfo.index, 0, ...modInfo.items);
+			}
+
+			function doMod_removeArr (modInfo, prop) {
+				if (modInfo.names) {
+					doEnsureArray(modInfo, "names");
+					modInfo.names.forEach(nameToRemove => {
+						const ixOld = copyTo[prop].findIndex(it => it.name === nameToRemove);
+						if (~ixOld) copyTo[prop].splice(ixOld, 1);
+						else {
+							if (!modInfo.force) throw new Error(`Could not find "${prop}" item with name "${nameToRemove}" to remove`);
+						}
+					});
+				} else if (modInfo.items) {
+					doEnsureArray(modInfo, "items");
+					modInfo.items.forEach(itemToRemove => {
+						const ixOld = copyTo[prop].findIndex(it => it === itemToRemove);
+						if (~ixOld) copyTo[prop].splice(ixOld, 1);
+						else throw new Error(`Could not find "${prop}" item "${itemToRemove}" to remove`);
+					});
+				} else throw new Error(`One of "names" or "items" must be provided!`)
+			}
+
+			function doMod_calculateProp (modInfo, prop) {
+				copyTo[prop] = copyTo[prop] || {};
+				const toExec = modInfo.formula.replace(/<\$([^$]+)\$>/g, (...m) => {
+					switch (m[1]) {
+						case "prof_bonus": return Parser.crToPb(copyTo.cr);
+						case "dex_mod": return Parser.getAbilityModNumber(copyTo.dex);
+						default: throw new Error(`Unknown variable "${m[1]}"`);
+					}
+				});
+				// eslint-disable-next-line no-eval
+				copyTo[prop][modInfo.prop] = eval(toExec);
+			}
+
+			function doMod_scalarAddProp (modInfo, prop) {
+				function applyTo (k) {
+					const out = Number(copyTo[prop][k]) + modInfo.scalar;
+					const isString = typeof copyTo[prop][k] === "string";
+					copyTo[prop][k] = isString ? `${out >= 0 ? "+" : ""}${out}` : out;
+				}
+
+				if (!copyTo[prop]) return;
+				if (modInfo.prop === "*") Object.keys(copyTo[prop]).forEach(k => applyTo(k));
+				else applyTo(modInfo.prop);
+			}
+
+			function doMod_scalarMultProp (modInfo, prop) {
+				function applyTo (k) {
+					let out = Number(copyTo[prop][k]) * modInfo.scalar;
+					if (modInfo.floor) out = Math.floor(out);
+					const isString = typeof copyTo[prop][k] === "string";
+					copyTo[prop][k] = isString ? `${out >= 0 ? "+" : ""}${out}` : out;
+				}
+
+				if (!copyTo[prop]) return;
+				if (modInfo.prop === "*") Object.keys(copyTo[prop]).forEach(k => applyTo(k));
+				else applyTo(modInfo.prop);
+			}
+
+			function doMod_addSenses (modInfo) {
+				doEnsureArray(modInfo, "senses");
+				copyTo.senses = copyTo.senses || [];
+				modInfo.senses.forEach(sense => {
+					let found = false;
+					for (let i = 0; i < copyTo.senses.length; ++i) {
+						const m = new RegExp(`${sense.type} (\\d+)`, "i").exec(copyTo.senses[i]);
+						if (m) {
+							found = true;
+							// if the creature already has a greater sense of this type, do nothing
+							if (Number(m[1]) < sense.type) {
+								copyTo.senses[i] = `${sense.type} ${sense.range} ft.`;
+							}
+							break;
+						}
+					}
+
+					if (!found) copyTo.senses.push(`${sense.type} ${sense.range} ft.`);
+				});
+			}
+
+			function doMod_addSkills (modInfo) {
+				copyTo.skill = copyTo.skill || [];
+				Object.entries(modInfo.skills).forEach(([skill, mode]) => {
+					// mode: 1 = proficient; 2 = expert
+					const total = mode * Parser.crToPb(copyTo.cr) + Parser.getAbilityModNumber(copyTo[Parser.skillToAbilityAbv(skill)]);
+					const asText = total >= 0 ? `+${total}` : `-${total}`;
+					if (copyTo.skill && copyTo.skill[skill]) {
+						// update only if ours is larger (prevent reduction in skill score)
+						if (Number(copyTo.skill[skill]) < total) copyTo.skill[skill] = asText;
+					} else copyTo.skill[skill] = asText;
+				});
+			}
+
+			function doMod_addSpells (modInfo) {
+				if (!copyTo.spellcasting) throw new Error(`Creature did not have a spellcasting property!`);
+
+				// TODO could accept a "position" or "name" parameter should spells need to be added to other spellcasting traits
+				const spellcasting = copyTo.spellcasting[0];
+
+				if (modInfo.spells) {
+					const spells = spellcasting.spells;
+
+					Object.keys(modInfo.spells).forEach(k => {
+						if (!spells[k]) spells[k] = modInfo.spells[k];
+						else {
+							// merge the objects
+							const spellCategoryNu = modInfo.spells[k];
+							const spellCategoryOld = spells[k];
+							Object.keys(spellCategoryNu).forEach(kk => {
+								if (!spellCategoryOld[kk]) spellCategoryOld[kk] = spellCategoryNu[kk];
+								else {
+									if (typeof spellCategoryOld[kk] === "object") {
+										if (spellCategoryOld[kk] instanceof Array) spellCategoryOld[kk] = spellCategoryOld[kk].concat(spellCategoryNu[kk]).sort(SortUtil.ascSortLower);
+										else throw new Error(`Object at key ${kk} not an array!`);
+									} else spellCategoryOld[kk] = spellCategoryNu[kk];
+								}
+							});
+						}
+					});
+				}
+
+				if (modInfo.will) {
+					modInfo.will.forEach(sp => (modInfo.will = modInfo.will || []).push(sp));
+				}
+
+				if (modInfo.daily) {
+					for (let i = 1; i <= 9; ++i) {
+						const e = `${i}e`;
+
+						spellcasting.daily = spellcasting.daily || {};
+
+						if (modInfo.daily[i]) {
+							modInfo.daily[i].forEach(sp => (spellcasting.daily[i] = spellcasting.daily[i] || []).push(sp));
+						}
+
+						if (modInfo.daily[e]) {
+							modInfo.daily[e].forEach(sp => (spellcasting.daily[e] = spellcasting.daily[e] || []).push(sp));
+						}
+					}
+				}
+			}
+
+			function doMod_replaceSpells (modInfo) {
+				if (!copyTo.spellcasting) throw new Error(`Creature did not have a spellcasting property!`);
+
+				// TODO could accept a "position" or "name" parameter should spells need to be added to other spellcasting traits
+				const spellcasting = copyTo.spellcasting[0];
+
+				const handleReplace = (curSpells, replaceMeta, k) => {
+					doEnsureArray(replaceMeta, "with");
+
+					const ix = curSpells[k].indexOf(replaceMeta.replace);
+					if (~ix) {
+						curSpells[k].splice(ix, 1, ...replaceMeta.with);
+						curSpells[k].sort(SortUtil.ascSortLower);
+					} else throw new Error(`Could not find spell "${replaceMeta.replace}" to replace`);
+				};
+
+				if (modInfo.spells) {
+					const trait0 = spellcasting.spells;
+					Object.keys(modInfo.spells).forEach(k => { // k is e.g. "4"
+						if (trait0[k]) {
+							const replaceMetas = modInfo.spells[k];
+							const curSpells = trait0[k];
+							replaceMetas.forEach(replaceMeta => handleReplace(curSpells, replaceMeta, "spells"));
+						}
+					});
+				}
+
+				// TODO should be extended  to handle all non-slot-based spellcasters
+				if (modInfo.daily) {
+					for (let i = 1; i <= 9; ++i) {
+						const e = `${i}e`;
+
+						if (modInfo.daily[i]) {
+							modInfo.daily[i].forEach(replaceMeta => handleReplace(spellcasting.daily, replaceMeta, i));
+						}
+
+						if (modInfo.daily[e]) {
+							modInfo.daily[e].forEach(replaceMeta => handleReplace(spellcasting.daily, replaceMeta, e));
+						}
+					}
+				}
+			}
+
+			function doMod_scalarAddHit (modInfo, prop) {
+				if (!copyTo[prop]) return;
+				copyTo[prop] = JSON.parse(JSON.stringify(copyTo[prop]).replace(/{@hit ([-+]?\d+)}/g, (m0, m1) => `{@hit ${Number(m1) + modInfo.scalar}}`))
+			}
+
+			function doMod_scalarAddDc (modInfo, prop) {
+				if (!copyTo[prop]) return;
+				copyTo[prop] = JSON.parse(JSON.stringify(copyTo[prop]).replace(/{@dc (\d+)}/g, (m0, m1) => `{@dc ${Number(m1) + modInfo.scalar}}`));
+			}
+
+			function doMod_maxSize (modInfo) {
+				const ixCur = Parser.SIZE_ABVS.indexOf(copyTo.size);
+				const ixMax = Parser.SIZE_ABVS.indexOf(modInfo.max);
+				if (ixCur < 0 || ixMax < 0) throw new Error(`Unhandled size!`);
+				copyTo.size = Parser.SIZE_ABVS[Math.min(ixCur, ixMax)]
+			}
+
+			function doMod_scalarMultXp (modInfo) {
+				function getOutput (input) {
+					let out = input * modInfo.scalar;
+					if (modInfo.floor) out = Math.floor(out);
+					return out;
+				}
+
+				if (copyTo.cr.xp) copyTo.cr.xp = getOutput(copyTo.cr.xp);
+				else {
+					const curXp = Parser.crToXpNumber(copyTo.cr);
+					if (!copyTo.cr.cr) copyTo.cr = {cr: copyTo.cr};
+					copyTo.cr.xp = getOutput(curXp);
+				}
+			}
+
+			function doMod (modInfos, ...properties) {
+				function handleProp (prop) {
+					modInfos.forEach(modInfo => {
+						if (typeof modInfo === "string") {
+							switch (modInfo) {
+								case "remove": return delete copyTo[prop];
+								default: throw new Error(`Unhandled mode: ${modInfo}`);
+							}
+						} else {
+							switch (modInfo.mode) {
+								case "appendStr": return doMod_appendStr(modInfo, prop);
+								case "replaceTxt": return doMod_replaceTxt(modInfo, prop);
+								case "prependArr": return doMod_prependArr(modInfo, prop);
+								case "appendArr": return doMod_appendArr(modInfo, prop);
+								case "replaceArr": return doMod_replaceArr(modInfo, prop);
+								case "replaceOrAppendArr": return doMod_replaceOrAppendArr(modInfo, prop);
+								case "appendIfNotExistsArr": return doMod_appendIfNotExistsArr(modInfo, prop);
+								case "insertArr": return doMod_insertArr(modInfo, prop);
+								case "removeArr": return doMod_removeArr(modInfo, prop);
+								case "calculateProp": return doMod_calculateProp(modInfo, prop);
+								case "scalarAddProp": return doMod_scalarAddProp(modInfo, prop);
+								case "scalarMultProp": return doMod_scalarMultProp(modInfo, prop);
+								// bestiary specific
+								case "addSenses": return doMod_addSenses(modInfo);
+								case "addSkills": return doMod_addSkills(modInfo);
+								case "addSpells": return doMod_addSpells(modInfo);
+								case "replaceSpells": return doMod_replaceSpells(modInfo);
+								case "scalarAddHit": return doMod_scalarAddHit(modInfo, prop);
+								case "scalarAddDc": return doMod_scalarAddDc(modInfo, prop);
+								case "maxSize": return doMod_maxSize(modInfo);
+								case "scalarMultXp": return doMod_scalarMultXp(modInfo);
+								default: throw new Error(`Unhandled mode: ${modInfo.mode}`);
+							}
+						}
+					});
+				}
+
+				properties.forEach(prop => handleProp(prop));
+				// special case for "no property" modifications, i.e. underscore-key'd
+				if (!properties.length) handleProp();
+			}
+
+			// apply mods
+			if (copyMeta._mod) {
+				// pre-convert any dynamic text
+				Object.entries(copyMeta._mod).forEach(([k, v]) => {
+					copyMeta._mod[k] = JSON.parse(
+						JSON.stringify(v)
+							.replace(/<\$([^$]+)\$>/g, (...m) => {
+								const parts = m[1].split("__");
+
+								switch (parts[0]) {
+									case "name": return copyTo.name;
+									case "short_name":
+									case "title_name": {
+										return copyTo.isNpc ? copyTo.name.split(" ")[0] : `${parts[0] === "title_name" ? "The " : "the "}${copyTo.name.toLowerCase()}`;
+									}
+									case "spell_dc": {
+										if (!Parser.ABIL_ABVS.includes(parts[1])) throw new Error(`Unknown ability score "${parts[1]}"`);
+										return 8 + Parser.getAbilityModNumber(Number(copyTo[parts[1]])) + Parser.crToPb(copyTo.cr);
+									}
+									case "to_hit": {
+										if (!Parser.ABIL_ABVS.includes(parts[1])) throw new Error(`Unknown ability score "${parts[1]}"`);
+										const total = Parser.crToPb(copyTo.cr) + Parser.getAbilityModNumber(Number(copyTo[parts[1]]));
+										return total >= 0 ? `+${total}` : total;
+									}
+									case "damage_mod": {
+										if (!Parser.ABIL_ABVS.includes(parts[1])) throw new Error(`Unknown ability score "${parts[1]}"`);
+										const total = Parser.getAbilityModNumber(Number(copyTo[parts[1]]));
+										return total === 0 ? "" : total > 0 ? ` +${total}` : ` ${total}`;
+									}
+									case "damage_avg": {
+										const replaced = parts[1].replace(/(str|dex|con|int|wis|cha)/gi, (...m2) => Parser.getAbilityModNumber(Number(copyTo[m2[0]])));
+										const clean = replaced.replace(/[^-+/*0-9.,]+/g, "");
+										// eslint-disable-next-line no-eval
+										return Math.floor(eval(clean));
+									}
+									default: return m[0];
+								}
+							})
+					);
+				});
+
+				Object.entries(copyMeta._mod).forEach(([prop, modInfos]) => {
+					if (prop === "*") doMod(modInfos, "action", "reaction", "trait", "legendary", "mythic", "variant", "spellcasting");
+					else if (prop === "_") doMod(modInfos);
+					else doMod(modInfos, prop);
+				});
+			}
+
+			// add filter tag
+			copyTo._isCopy = true;
+
+			// cleanup
+			delete copyTo._copy;
+		}
+	},
+
+	monster: {
+		_MERGE_REQUIRES_PRESERVE: {
+			legendaryGroup: true,
+			environment: true,
+			soundClip: true,
+			page: true,
+			altArt: true,
+			otherSources: true,
+			variant: true,
+			dragonCastingColor: true,
+			srd: true,
+			hasToken: true
+		},
+		_mergeCache: {},
+		async pMergeCopy (monList, mon, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.monster, UrlUtil.PG_BESTIARY, monList, mon, options);
+		},
+
+		async pPreloadMeta () {
+			if (DataUtil.monster._isMetaLoaded) return;
+
+			const legendaryGroups = await DataUtil.legendaryGroup.pLoadAll();
+			DataUtil.monster.populateMetaReference({legendaryGroup: legendaryGroups});
+			DataUtil.monster._isMetaLoaded = true;
+		},
+
+		async pLoadAll () {
+			const [index, legendaryGroups] = await Promise.all([
+				DataUtil.loadJSON(`${Renderer.get().baseUrl}data/bestiary/index.json`),
+				DataUtil.legendaryGroup.pLoadAll()
+			]);
+
+			if (!DataUtil.monster._isMetaLoaded) {
+				DataUtil.monster.populateMetaReference({legendaryGroup: legendaryGroups});
+				DataUtil.monster._isMetaLoaded = true;
+			}
+
+			const allData = await Promise.all(Object.entries(index).map(async ([source, file]) => {
+				const data = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/bestiary/${file}`);
+				return data.monster.filter(it => it.source === source);
+			}));
+			return allData.flat();
+		},
+
+		_isMetaLoaded: false,
+		metaGroupMap: {},
+		getMetaGroup (mon) {
+			if (!mon.legendaryGroup || !mon.legendaryGroup.source || !mon.legendaryGroup.name) return null;
+			return (DataUtil.monster.metaGroupMap[mon.legendaryGroup.source] || {})[mon.legendaryGroup.name];
+		},
+		populateMetaReference (data) {
+			(data.legendaryGroup || []).forEach(it => {
+				(DataUtil.monster.metaGroupMap[it.source] =
+					DataUtil.monster.metaGroupMap[it.source] || {})[it.name] =
+					DataUtil.monster.metaGroupMap[it.source][it.name] || it;
+			});
+		}
+	},
+
+	monsterFluff: {
+		_MERGE_REQUIRES_PRESERVE: {},
+		_mergeCache: {},
+		async pMergeCopy (monFlfList, monFlf, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.monsterFluff, UrlUtil.PG_BESTIARY, monFlfList, monFlf, options);
+		}
+	},
+
+	spell: {
+		_MERGE_REQUIRES_PRESERVE: {
+			page: true,
+			otherSources: true,
+			srd: true
+		},
+		_mergeCache: {},
+		async pMergeCopy (spellList, spell, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.spell, UrlUtil.PG_SPELLS, spellList, spell, options);
+		},
+
+		async pLoadAll () {
+			const index = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/spells/index.json`);
+			const allData = await Promise.all(Object.entries(index).map(async ([source, file]) => {
+				const data = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/spells/${file}`);
+				return data.spell.filter(it => it.source === source);
+			}));
+			return allData.flat();
+		}
+	},
+
+	spellFluff: {
+		_MERGE_REQUIRES_PRESERVE: {},
+		_mergeCache: {},
+		async pMergeCopy (spellFlfList, spellFlf, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.spellFluff, UrlUtil.PG_SPELLS, spellFlfList, spellFlf, options);
+		}
+	},
+
+	item: {
+		_MERGE_REQUIRES_PRESERVE: {
+			lootTables: true,
+			tier: true,
+			page: true,
+			otherSources: true,
+			srd: true
+		},
+		_mergeCache: {},
+		async pMergeCopy (itemList, item, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.item, UrlUtil.PG_ITEMS, itemList, item, options);
+		}
+	},
+
+	itemFluff: {
+		_MERGE_REQUIRES_PRESERVE: {},
+		_mergeCache: {},
+		async pMergeCopy (itemFlfList, itemFlf, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.itemFluff, UrlUtil.PG_ITEMS, itemFlfList, itemFlf, options);
+		}
+	},
+
+	background: {
+		_MERGE_REQUIRES_PRESERVE: {
+			page: true,
+			otherSources: true,
+			srd: true
+		},
+		_mergeCache: {},
+		async pMergeCopy (bgList, bg, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.background, UrlUtil.PG_BACKGROUNDS, bgList, bg, options);
+		}
+	},
+
+	race: {
+		_MERGE_REQUIRES_PRESERVE: {
+			subraces: true,
+			page: true,
+			otherSources: true,
+			srd: true
+		},
+		_mergeCache: {},
+		async pMergeCopy (raceList, race, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.race, UrlUtil.PG_RACES, raceList, race, options);
+		}
+	},
+
+	raceFluff: {
+		_MERGE_REQUIRES_PRESERVE: {},
+		_mergeCache: {},
+		async pMergeCopy (raceFlfList, raceFlf, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.raceFluff, UrlUtil.PG_RACES, raceFlfList, raceFlf, options);
+		}
+	},
+
+	class: {
+		_pLoadingJson: null,
+		_loadedJson: null,
+		loadJSON: async function () {
+			if (DataUtil.class._loadedJson) return DataUtil.class._loadedJson;
+
+			DataUtil.class._pLoadingJson = (async () => {
+				const index = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/class/index.json`);
+				const allData = await Promise.all(Object.values(index).map(it => DataUtil.loadJSON(`${Renderer.get().baseUrl}data/class/${it}`)));
+				DataUtil.class._loadedJson = allData.reduce((a, b) => ({class: a.class.concat(b.class)}), {class: []});
+			})();
+			await DataUtil.class._pLoadingJson;
+
+			return DataUtil.class._loadedJson;
+		}
+	},
+
+	deity: {
+		_MERGE_REQUIRES_PRESERVE: {
+			page: true,
+			otherSources: true,
+			srd: true
+		},
+		_mergeCache: {},
+		async pMergeCopy (deityList, deity, options) {
+			return DataUtil.generic._pMergeCopy(DataUtil.deity, UrlUtil.PG_DEITIES, deityList, deity, options);
+		},
+
+		doPostLoad: function (data) {
+			const PRINT_ORDER = [
+				SRC_PHB,
+				SRC_DMG,
+				SRC_SCAG,
+				SRC_VGM,
+				SRC_MTF,
+				SRC_ERLW
+			];
+
+			const inSource = {};
+			PRINT_ORDER.forEach(src => {
+				inSource[src] = {};
+				data.deity.filter(it => it.source === src).forEach(it => inSource[src][it.reprintAlias || it.name] = it); // TODO need to handle similar names
+			});
+
+			const laterPrinting = [PRINT_ORDER.last()];
+			[...PRINT_ORDER].reverse().slice(1).forEach(src => {
+				laterPrinting.forEach(laterSrc => {
+					Object.keys(inSource[src]).forEach(name => {
+						const newer = inSource[laterSrc][name];
+						if (newer) {
+							const old = inSource[src][name];
+							old.reprinted = true;
+							if (!newer._isEnhanced) {
+								newer.previousVersions = newer.previousVersions || [];
+								newer.previousVersions.push(old);
+							}
+						}
+					});
+				});
+
+				laterPrinting.push(src);
+			});
+			data.deity.forEach(g => g._isEnhanced = true);
+		},
+
+		loadJSON: async function () {
+			const data = await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/deities.json`);
+			DataUtil.deity.doPostLoad(data);
+			return data;
+		}
+	},
+
+	table: {
+		async pLoadAll () {
+			const datas = await Promise.all([`${Renderer.get().baseUrl}data/generated/gendata-tables.json`, `${Renderer.get().baseUrl}data/tables.json`].map(url => DataUtil.loadJSON(url)));
+			const combined = {};
+			datas.forEach(data => {
+				Object.entries(data).forEach(([k, v]) => {
+					if (combined[k] && combined[k] instanceof Array && v instanceof Array) combined[k] = combined[k].concat(v);
+					else if (combined[k] == null) combined[k] = v;
+					else throw new Error(`Could not merge keys for key "${k}"`);
+				});
+			});
+			return combined;
+		}
+	},
+
+	legendaryGroup: {
+		async pLoadAll () {
+			return (await DataUtil.loadJSON(`${Renderer.get().baseUrl}data/bestiary/legendarygroups.json`)).legendaryGroup;
+		}
+	},
+
+	brew: {
+		_getCleanUrlRoot (urlRoot) {
+			if (urlRoot && urlRoot.trim()) {
+				urlRoot = urlRoot.trim();
+				if (!urlRoot.endsWith("/")) urlRoot = `${urlRoot}/`;
+			} else urlRoot = `https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/`;
+			return urlRoot;
+		},
+
+		async pLoadTimestamps (urlRoot) {
+			urlRoot = DataUtil.brew._getCleanUrlRoot(urlRoot);
+			return DataUtil.loadJSON(`${urlRoot}_generated/index-timestamps.json`);
+		},
+
+		async pLoadCollectionIndex (urlRoot) {
+			urlRoot = DataUtil.brew._getCleanUrlRoot(urlRoot);
+			return DataUtil.loadJSON(`${urlRoot}collection/index.json`);
+		},
+
+		getDirUrl (dir, urlRoot) {
+			urlRoot = DataUtil.brew._getCleanUrlRoot(urlRoot);
+			return `${urlRoot}_generated/index-dir-${dir}.json?t=${(new Date()).getTime()}`;
+		}
 	}
 };
 
-// SHOW/HIDE SEARCH ====================================================================================================
-function addListShowHide () {
-	const toInjectShow = `
-		<div class="col-xs-12" id="showsearch">
-			<button class="btn btn-block btn-default btn-xs" type="button">Show Search</button>
-			<br>
-		</div>	
-	`;
-
-	const toInjectHide = `
-		<button class="btn btn-default" type="button" id="hidesearch">Hide</button>
-	`;
-
-	$(`#filter-search-input-group`).find(`#reset`).before(toInjectHide);
-	$(`#contentwrapper`).prepend(toInjectShow);
-
-	const listContainer = $(`#listcontainer`);
-	const showSearchWrpr = $("div#showsearch");
-	const hideSearchBtn = $("button#hidesearch");
-	// collapse/expand search button
-	hideSearchBtn.click(function () {
-		listContainer.hide();
-		showSearchWrpr.show();
-		hideSearchBtn.hide();
-	});
-	showSearchWrpr.find("button").click(function () {
-		listContainer.show();
-		showSearchWrpr.hide();
-		hideSearchBtn.show();
-	});
-}
-
 // ROLLING =============================================================================================================
 RollerUtil = {
+	isCrypto () {
+		return typeof window !== "undefined" && typeof window.crypto !== "undefined";
+	},
+
+	randomise (max, min = 1) {
+		if (min > max) return 0;
+		if (max === min) return max;
+		if (RollerUtil.isCrypto()) {
+			return RollerUtil._randomise(min, max + 1);
+		} else {
+			return RollerUtil.roll(max) + min;
+		}
+	},
+
+	rollOnArray (array) {
+		return array[RollerUtil.randomise(array.length) - 1]
+	},
+
+	/**
+	 * Cryptographically secure RNG
+	 */
+	_randomise: (min, max) => {
+		const range = max - min;
+		const bytesNeeded = Math.ceil(Math.log2(range) / 8);
+		const randomBytes = new Uint8Array(bytesNeeded);
+		const maximumRange = Math.pow(Math.pow(2, 8), bytesNeeded);
+		const extendedRange = Math.floor(maximumRange / range) * range;
+		let i;
+		let randomInteger;
+		while (true) {
+			window.crypto.getRandomValues(randomBytes);
+			randomInteger = 0;
+			for (i = 0; i < bytesNeeded; i++) {
+				randomInteger <<= 8;
+				randomInteger += randomBytes[i];
+			}
+			if (randomInteger < extendedRange) {
+				randomInteger %= range;
+				return min + randomInteger;
+			}
+		}
+	},
+
 	/**
 	 * Result in range: 0 to (max-1); inclusive
 	 * e.g. roll(20) gives results ranging from 0 to 19
 	 * @param max range max (exclusive)
+	 * @param fn funciton to call to generate random numbers
 	 * @returns {number} rolled
 	 */
-	roll: (max) => {
-		return Math.floor(Math.random() * max);
+	roll (max, fn = Math.random) {
+		return Math.floor(fn() * max);
 	},
 
-	addListRollButton: () => {
-		const listWrapper = $("#listcontainer");
-
-		const $btnRoll = $(`<button class="btn btn-default" id="feelinglucky" title="Feeling Lucky?"><span class="glyphicon glyphicon-random"></span></button>`);
+	addListRollButton (isCompact) {
+		const $btnRoll = $(`<button class="btn btn-default ${isCompact ? "px-2" : ""}" id="feelinglucky" title="Feeling Lucky?"><span class="glyphicon glyphicon-random"></span></button>`);
 		$btnRoll.on("click", () => {
-			if (listWrapper.data("lists")) {
-				const allLists = listWrapper.data("lists").filter(l => l.visibleItems.length);
+			const primaryLists = ListUtil.getPrimaryLists();
+			if (primaryLists && primaryLists.length) {
+				const allLists = primaryLists.filter(l => l.visibleItems.length);
 				if (allLists.length) {
 					const rollX = RollerUtil.roll(allLists.length);
 					const list = allLists[rollX];
 					const rollY = RollerUtil.roll(list.visibleItems.length);
-					window.location.hash = $(list.visibleItems[rollY].elm).find(`a`).prop("hash");
+					window.location.hash = $(list.visibleItems[rollY].ele).find(`a`).prop("hash");
 				}
 			}
 		});
 
 		$(`#filter-search-input-group`).find(`#reset`).before($btnRoll);
+	},
+
+	isRollCol (colLabel) {
+		if (typeof colLabel !== "string") return false;
+		if (/^{@dice [^}]+}$/.test(colLabel.trim())) return true;
+		colLabel = Renderer.stripTags(colLabel);
+		return !!Renderer.dice.lang.getTree3(colLabel);
+	},
+
+	_DICE_REGEX_STR: "((([1-9]\\d*)?d([1-9]\\d*)(\\s*?[-+×x*÷/]\\s*?(\\d,\\d|\\d)+(\\.\\d+)?)?))+?"
+};
+RollerUtil.DICE_REGEX = new RegExp(RollerUtil._DICE_REGEX_STR, "g");
+RollerUtil.REGEX_DAMAGE_DICE = /(\d+)( \((?:{@dice |{@damage ))([-+0-9d ]*)(}\) [a-z]+( \([-a-zA-Z0-9 ]+\))?( or [a-z]+( \([-a-zA-Z0-9 ]+\))?)? damage)/gi;
+RollerUtil.REGEX_DAMAGE_FLAT = /(Hit: |{@h})([0-9]+)( [a-z]+( \([-a-zA-Z0-9 ]+\))?( or [a-z]+( \([-a-zA-Z0-9 ]+\))?)? damage)/gi;
+
+// STORAGE =============================================================================================================
+// Dependency: localforage
+StorageUtil = {
+	_init: false,
+	_initAsync: false,
+	_fakeStorage: {},
+	_fakeStorageAsync: {},
+
+	getSyncStorage: () => {
+		if (StorageUtil._init) {
+			if (StorageUtil.__fakeStorage) return StorageUtil._fakeStorage;
+			else return window.localStorage;
+		}
+
+		StorageUtil._init = true;
+
+		try {
+			return window.localStorage;
+		} catch (e) {
+			// if the user has disabled cookies, build a fake version
+			StorageUtil.__fakeStorage = true;
+			StorageUtil._fakeStorage = {
+				isSyncFake: true,
+				getItem: (k) => {
+					return StorageUtil.__fakeStorage[k];
+				},
+				removeItem: (k) => {
+					delete StorageUtil.__fakeStorage[k];
+				},
+				setItem: (k, v) => {
+					StorageUtil.__fakeStorage[k] = v;
+				}
+			};
+			return StorageUtil._fakeStorage;
+		}
+	},
+
+	async getAsyncStorage () {
+		if (StorageUtil._initAsync) {
+			if (StorageUtil.__fakeStorageAsync) return StorageUtil._fakeStorageAsync;
+			else return localforage;
+		}
+
+		StorageUtil._initAsync = true;
+
+		const getInitFakeStorage = () => {
+			StorageUtil.__fakeStorageAsync = {};
+			StorageUtil._fakeStorageAsync = {
+				pIsAsyncFake: true,
+				async setItem (k, v) {
+					StorageUtil.__fakeStorageAsync[k] = v;
+				},
+				async getItem (k) {
+					return StorageUtil.__fakeStorageAsync[k];
+				},
+				async removeItem (k) {
+					delete StorageUtil.__fakeStorageAsync[k];
+				}
+			};
+			return StorageUtil._fakeStorageAsync;
+		};
+
+		if (typeof window !== "undefined") {
+			try {
+				// check if IndexedDB is available (i.e. not in Firefox private browsing)
+				await new Promise((resolve, reject) => {
+					const request = window.indexedDB.open("_test_db", 1);
+					request.onerror = reject;
+					request.onsuccess = resolve;
+				});
+				await localforage.setItem("_storage_check", true);
+				return localforage;
+			} catch (e) {
+				return getInitFakeStorage();
+			}
+		} else return getInitFakeStorage();
+	},
+
+	// SYNC METHODS ////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Synchronous localStorage access, which should only be used for small amounts of data (metadata, config, etc)
+	syncGet (key) {
+		const rawOut = StorageUtil.getSyncStorage().getItem(key);
+		if (rawOut && rawOut !== "undefined" && rawOut !== "null") return JSON.parse(rawOut);
+		return null;
+	},
+
+	syncSet (key, value) {
+		StorageUtil.getSyncStorage().setItem(key, JSON.stringify(value));
+		StorageUtil._syncTrackKey(key)
+	},
+
+	syncRemove (key) {
+		StorageUtil.getSyncStorage().removeItem(key);
+		StorageUtil._syncTrackKey(key, true);
+	},
+
+	syncGetForPage (key) { return StorageUtil.syncGet(`${key}_${UrlUtil.getCurrentPage()}`); },
+	syncSetForPage (key, value) { StorageUtil.syncSet(`${key}_${UrlUtil.getCurrentPage()}`, value); },
+
+	isSyncFake () {
+		return !!StorageUtil.getSyncStorage().isSyncFake
+	},
+
+	_syncTrackKey (key, isRemove) {
+		const meta = StorageUtil.syncGet(StorageUtil._META_KEY) || {};
+		if (isRemove) delete meta[key];
+		else meta[key] = 1;
+		StorageUtil.getSyncStorage().setItem(StorageUtil._META_KEY, JSON.stringify(meta));
+	},
+
+	syncGetDump () {
+		const out = {};
+		const meta = StorageUtil.syncGet(StorageUtil._META_KEY) || {};
+		Object.entries(meta).filter(([key, isPresent]) => isPresent).forEach(([key]) => out[key] = StorageUtil.syncGet(key));
+		return out;
+	},
+
+	syncSetFromDump (dump) {
+		Object.entries(dump).forEach(([k, v]) => StorageUtil.syncSet(k, v));
+	},
+	// END SYNC METHODS ////////////////////////////////////////////////////////////////////////////////////////////////
+
+	async pIsAsyncFake () {
+		const storage = await StorageUtil.getAsyncStorage();
+		return !!storage.pIsAsyncFake;
+	},
+
+	async pSet (key, value) {
+		StorageUtil._pTrackKey(key);
+		const storage = await StorageUtil.getAsyncStorage();
+		return storage.setItem(key, value);
+	},
+
+	async pGet (key) {
+		const storage = await StorageUtil.getAsyncStorage();
+		return storage.getItem(key);
+	},
+
+	async pRemove (key) {
+		StorageUtil._pTrackKey(key, true);
+		const storage = await StorageUtil.getAsyncStorage();
+		return storage.removeItem(key);
+	},
+
+	getPageKey (key, page) { return `${key}_${page || UrlUtil.getCurrentPage()}`; },
+	async pGetForPage (key) { return StorageUtil.pGet(StorageUtil.getPageKey(key)); },
+	async pSetForPage (key, value) { return StorageUtil.pSet(StorageUtil.getPageKey(key), value); },
+	async pRemoveForPage (key) { return StorageUtil.pRemove(StorageUtil.getPageKey(key)); },
+
+	async _pTrackKey (key, isRemove) {
+		const storage = await StorageUtil.getAsyncStorage();
+		const meta = (await StorageUtil.pGet(StorageUtil._META_KEY)) || {};
+		if (isRemove) delete meta[key];
+		else meta[key] = 1;
+		storage.setItem(StorageUtil._META_KEY, meta);
+	},
+
+	async pGetDump () {
+		const out = {};
+		const meta = (await StorageUtil.pGet(StorageUtil._META_KEY)) || {};
+		await Promise.all(Object.entries(meta).filter(([key, isPresent]) => isPresent).map(async ([key]) => out[key] = await StorageUtil.pGet(key)));
+		return out;
+	},
+
+	async pSetFromDump (dump) {
+		return Promise.all(Object.entries(dump).map(([k, v]) => StorageUtil.pSet(k, v)));
+	}
+};
+StorageUtil._META_KEY = "_STORAGE_META_STORAGE";
+
+// TODO transition cookie-like storage items over to this
+SessionStorageUtil = {
+	_fakeStorage: {},
+	__storage: null,
+	getStorage: () => {
+		try {
+			return window.sessionStorage;
+		} catch (e) {
+			// if the user has disabled cookies, build a fake version
+			if (SessionStorageUtil.__storage) return SessionStorageUtil.__storage;
+			else {
+				return SessionStorageUtil.__storage = {
+					isFake: true,
+					getItem: (k) => {
+						return SessionStorageUtil._fakeStorage[k];
+					},
+					removeItem: (k) => {
+						delete SessionStorageUtil._fakeStorage[k];
+					},
+					setItem: (k, v) => {
+						SessionStorageUtil._fakeStorage[k] = v;
+					}
+				};
+			}
+		}
+	},
+
+	isFake () {
+		return SessionStorageUtil.getStorage().isSyncFake
+	},
+
+	setForPage: (key, value) => {
+		SessionStorageUtil.set(`${key}_${UrlUtil.getCurrentPage()}`, value);
+	},
+
+	set (key, value) {
+		SessionStorageUtil.getStorage().setItem(key, JSON.stringify(value));
+	},
+
+	getForPage: (key) => {
+		return SessionStorageUtil.get(`${key}_${UrlUtil.getCurrentPage()}`);
+	},
+
+	get (key) {
+		const rawOut = SessionStorageUtil.getStorage().getItem(key);
+		if (rawOut && rawOut !== "undefined" && rawOut !== "null") return JSON.parse(rawOut);
+		return null;
+	},
+
+	removeForPage: (key) => {
+		SessionStorageUtil.remove(`${key}_${UrlUtil.getCurrentPage()}`)
+	},
+
+	remove (key) {
+		SessionStorageUtil.getStorage().removeItem(key);
 	}
 };
 
 // HOMEBREW ============================================================================================================
 BrewUtil = {
 	homebrew: null,
-	_list: null,
+	homebrewMeta: null,
+	_lists: null,
+	_sourceCache: null,
+	_filterBox: null,
+	_sourceFilter: null,
+	_pHandleBrew: null,
+	_lockHandleBrewJson: null,
 
-	// provide ref to List.js instance
-	setList: (list) => {
-		BrewUtil._list = list;
+	/**
+	 * @param options Options object.
+	 * @param [options.list] List.
+	 * @param [options.lists] Lists.
+	 * @param [options.filterBox] Filter box.
+	 * @param [options.sourceFilter] Source filter.
+	 * @param [options.pHandleBrew] Brew handling function.
+	 */
+	bind (options) {
+		// provide ref to List.js instance
+		if (options.list) BrewUtil._lists = [options.list];
+		else if (options.lists) BrewUtil._lists = options.lists;
+		// provide ref to FilterBox and Filter instance
+		if (options.filterBox) BrewUtil._filterBox = options.filterBox;
+		if (options.sourceFilter) BrewUtil._sourceFilter = options.sourceFilter;
+		// allow external source for handleBrew
+		if (options.pHandleBrew !== undefined) this._pHandleBrew = options.pHandleBrew;
 	},
 
-	tryGetStorage: () => {
-		try {
-			return window.localStorage;
-		} catch (e) {
-			// if the user has disabled cookies, build a fake version
-			return {
-				getItem: () => {
-					return null;
-				},
-				removeItem: () => {},
-				setItem: () => {}
-			}
-		}
-	},
-
-	addBrewData: (brewHandler, brewLocation) => {
-		const rawBrew = BrewUtil.storage.getItem(brewLocation);
-		if (rawBrew) {
+	async pAddBrewData () {
+		if (BrewUtil.homebrew) {
+			return BrewUtil.homebrew;
+		} else {
 			try {
-				BrewUtil.homebrew = JSON.parse(rawBrew);
-				brewHandler(BrewUtil.homebrew);
+				const homebrew = await StorageUtil.pGet(VeCt.STORAGE_HOMEBREW) || {};
+				BrewUtil.homebrewMeta = StorageUtil.syncGet(VeCt.STORAGE_HOMEBREW_META) || {sources: []};
+				BrewUtil.homebrewMeta.sources = BrewUtil.homebrewMeta.sources || [];
+
+				BrewUtil.homebrew = homebrew;
+
+				BrewUtil._resetSourceCache();
+
+				return BrewUtil.homebrew;
 			} catch (e) {
-				// on error, purge all brew and reset hash
-				purgeBrew();
+				BrewUtil.pPurgeBrew(e);
+			}
+		}
+	},
+
+	async pPurgeBrew (error) {
+		JqueryUtil.doToast({
+			content: "Error when loading homebrew! Purged homebrew data. (See the log for more information.)",
+			type: "danger"
+		});
+		await StorageUtil.pRemove(VeCt.STORAGE_HOMEBREW);
+		StorageUtil.syncRemove(VeCt.STORAGE_HOMEBREW_META);
+		BrewUtil.homebrew = null;
+		window.location.hash = "";
+		BrewUtil.homebrew = {};
+		BrewUtil.homebrewMeta = {sources: []};
+		if (error) setTimeout(() => { throw error; });
+	},
+
+	async pAddLocalBrewData (callbackFn = async (d, page) => BrewUtil.pDoHandleBrewJson(d, page, null)) {
+		if (!IS_VTT && !IS_DEPLOYED) {
+			const data = await DataUtil.loadJSON(`${Renderer.get().baseUrl}${VeCt.JSON_HOMEBREW_INDEX}`);
+			// auto-load from `homebrew/`, for custom versions of the site
+			if (data.toImport.length) {
+				const page = UrlUtil.getCurrentPage();
+				const allData = await Promise.all(data.toImport.map(it => DataUtil.loadJSON(`homebrew/${it}`)));
+				await Promise.all(allData.map(d => callbackFn(d, page)));
+			}
+		}
+	},
+
+	async _pRenderBrewScreen ($appendTo, isModal, cbGetBrewOnClose) {
+		const page = UrlUtil.getCurrentPage();
+
+		const $brewList = $(`<div class="manbrew__current_brew flex-col h-100"></div>`);
+
+		await BrewUtil._pRenderBrewScreen_pRefreshBrewList($brewList);
+
+		const $iptAdd = $(`<input multiple type="file" accept=".json" style="display: none;">`)
+			.change(evt => {
+				const input = evt.target;
+
+				let readIndex = 0;
+				const reader = new FileReader();
+				reader.onload = async () => {
+					const json = JSON.parse(reader.result);
+
+					await DataUtil.pDoMetaMerge(CryptUtil.uid(), json);
+
+					await BrewUtil.pDoHandleBrewJson(json, page, BrewUtil._pRenderBrewScreen_pRefreshBrewList.bind(this, $brewList));
+
+					if (input.files[readIndex]) reader.readAsText(input.files[readIndex++]);
+					else $(evt.target).val(""); // reset the input
+				};
+				reader.readAsText(input.files[readIndex++]);
+			});
+
+		const $btnLoadFromUrl = $(`<button class="btn btn-default btn-sm mr-2">Load from URL</button>`)
+			.click(async () => {
+				const enteredUrl = await InputUiUtil.pGetUserString({title: "Homebrew URL"});
+				if (!enteredUrl || !enteredUrl.trim()) return;
+
+				let parsedUrl;
+				try {
+					parsedUrl = new URL(enteredUrl);
+				} catch (e) {
+					JqueryUtil.doToast({
+						content: `The provided URL does not appear to be valid.`,
+						type: "danger"
+					});
+					return;
+				}
+				BrewUtil.addBrewRemote(null, parsedUrl.href).catch(err => {
+					JqueryUtil.doToast({
+						content: "Could not load homebrew from the provided URL.",
+						type: "danger"
+					});
+					setTimeout(() => { throw err; });
+				});
+			});
+
+		const $btnGet = $(`<button class="btn btn-info btn-sm">Get Homebrew</button>`)
+			.click(async () => {
+				const $btnAll = $(`<button class="btn btn-default btn-xs manbrew__load_all" disabled title="(Excluding samples)">Add All</button>`);
+
+				const $ulRows = $$`<ul class="list"><li><div class="lst__wrp-cells"><span style="font-style: italic;">Loading...</span></div></li></ul>`;
+
+				const $iptSearch = $(`<input type="search" class="search manbrew__search form-control w-100" placeholder="Find homebrew...">`)
+					.keydown(evt => {
+						switch (evt.which) {
+							case 13: { // enter
+								return $ulRows.find(`li`).first().find(`.manbrew__load_from_url`).click()
+							}
+							case 40: { // down
+								const firstItem = list.visibleItems[0];
+								if (firstItem) firstItem.ele.focus();
+							}
+						}
+					});
+
+				const {$modalInner} = UiUtil.getShowModal({
+					isHeight100: true,
+					title: `Get Homebrew`,
+					cbClose: () => {
+						if (cbGetBrewOnClose) cbGetBrewOnClose();
+					},
+					isUncappedHeight: true,
+					isWidth100: true,
+					overlayColor: "transparent"
+				});
+
+				$$($modalInner)`
+					<p><i>A list of homebrew available in the public repository. Click a name to load the homebrew, or view the source directly.<br>
+					Contributions are welcome; see the <a href="https://github.com/TheGiddyLimit/homebrew/blob/master/README.md" target="_blank" rel="noopener noreferrer">README</a>, or stop by our <a href="https://discord.gg/nGvRCDs" target="_blank" rel="noopener noreferrer">Discord</a>.</i></p>
+					<hr class="manbrew__hr">
+					<div class="manbrew__load_all_wrp">${$btnAll}</div>
+					${$iptSearch}
+					<div class="filtertools manbrew__filtertools sortlabel btn-group lst__form-bottom">
+						<button class="col-4 sort btn btn-default btn-xs" data-sort="name">Name</button>
+						<button class="col-3 sort btn btn-default btn-xs" data-sort="author">Author</button>
+						<button class="col-1-2 sort btn btn-default btn-xs" data-sort="category">Category</button>
+						<button class="col-1-4 sort btn btn-default btn-xs" data-sort="modified">Modified</button>
+						<button class="col-1-4 sort btn btn-default btn-xs" data-sort="added">Added</button>
+						<button class="sort btn btn-default btn-xs" disabled>Source</button>
+					</div>
+					${$ulRows}`;
+
+				// populate list
+				function getBrewDirs () {
+					switch (page) {
+						case UrlUtil.PG_SPELLS: return ["spell"];
+						case UrlUtil.PG_CLASSES: return ["class", "subclass"];
+						case UrlUtil.PG_BESTIARY: return ["creature"];
+						case UrlUtil.PG_BACKGROUNDS: return ["background"];
+						case UrlUtil.PG_FEATS: return ["feat"];
+						case UrlUtil.PG_OPT_FEATURES: return ["optionalfeature"];
+						case UrlUtil.PG_RACES: return ["race", "subrace"];
+						case UrlUtil.PG_OBJECTS: return ["object"];
+						case UrlUtil.PG_TRAPS_HAZARDS: return ["trap", "hazard"];
+						case UrlUtil.PG_DEITIES: return ["deity"];
+						case UrlUtil.PG_ITEMS: return ["item", "magicvariant"];
+						case UrlUtil.PG_REWARDS: return ["reward"];
+						case UrlUtil.PG_PSIONICS: return ["psionic"];
+						case UrlUtil.PG_VARIATNRULES: return ["variantrule"];
+						case UrlUtil.PG_CONDITIONS_DISEASES: return ["condition", "disease"];
+						case UrlUtil.PG_ADVENTURES: return ["adventure"];
+						case UrlUtil.PG_BOOKS: return ["book"];
+						case UrlUtil.PG_TABLES: return ["table"];
+						case UrlUtil.PG_MAKE_SHAPED: return ["spell", "creature"];
+						case UrlUtil.PG_MAKE_BREW: return ["spell", "creature", "makebrew"];
+						case UrlUtil.PG_MANAGE_BREW:
+						case UrlUtil.PG_DEMO_RENDER: return BrewUtil._DIRS;
+						case UrlUtil.PG_VEHICLES: return ["vehicle"];
+						case UrlUtil.PG_ACTIONS: return ["action"];
+						case UrlUtil.PG_CULTS_BOONS: return ["cult", "boon"];
+						case UrlUtil.PG_LANGUAGES: return ["language"];
+						default: throw new Error(`No homebrew directories defined for category ${page}`);
+					}
+				}
+
+				let dataList;
+				function fnSort (a, b, o) {
+					a = dataList[a.ix];
+					b = dataList[b.ix];
+
+					if (o.sortBy === "name") return byName();
+					if (o.sortBy === "author") return orFallback(SortUtil.ascSortLower, "_brewAuthor");
+					if (o.sortBy === "category") return orFallback(SortUtil.ascSortLower, "_brewCat");
+					if (o.sortBy === "added") return orFallback(SortUtil.ascSort, "_brewAdded");
+					if (o.sortBy === "modified") return orFallback(SortUtil.ascSort, "_brewModified");
+
+					function byName () { return SortUtil.ascSortLower(a._brewName, b._brewName); }
+					function orFallback (func, prop) { return func(a[prop], b[prop]) || byName(); }
+				}
+
+				const urlRoot = await StorageUtil.pGet(`HOMEBREW_CUSTOM_REPO_URL`);
+				const timestamps = await DataUtil.brew.pLoadTimestamps(urlRoot);
+				const collectionIndex = await DataUtil.brew.pLoadCollectionIndex(urlRoot);
+				const collectionFiles = (() => {
+					const dirs = new Set(getBrewDirs().map(dir => BrewUtil._pRenderBrewScreen_dirToCat(dir)));
+					return Object.keys(collectionIndex).filter(k => collectionIndex[k].find(it => dirs.has(it)));
+				})();
+
+				const toLoads = getBrewDirs().map(it => ({url: DataUtil.brew.getDirUrl(it, urlRoot), _cat: BrewUtil._pRenderBrewScreen_dirToCat(it)}));
+				if (collectionFiles.length) toLoads.push({url: DataUtil.brew.getDirUrl("collection", urlRoot), _collection: true, _cat: "collection"});
+
+				const jsonStack = (await Promise.all(toLoads.map(async toLoad => {
+					const json = await DataUtil.loadJSON(toLoad.url);
+					if (toLoad._collection) json.filter(it => it.name === "index.json" || !collectionFiles.includes(it.name)).forEach(it => it._brewSkip = true);
+					json.forEach(it => it._cat = toLoad._cat);
+					return json;
+				}))).flat();
+
+				const all = jsonStack.flat();
+				all.forEach(it => {
+					const cleanFilename = it.name.trim().replace(/\.json$/, "");
+					const spl = cleanFilename.split(";").map(it => it.trim());
+					if (spl.length > 1) {
+						it._brewName = spl[1];
+						it._brewAuthor = spl[0];
+					} else {
+						it._brewName = cleanFilename;
+						it._brewAuthor = "";
+					}
+				});
+				all.sort((a, b) => SortUtil.ascSortLower(a._brewName, b._brewName));
+
+				const list = new List({
+					$iptSearch,
+					$wrpList: $ulRows,
+					fnSort,
+					isUseJquery: true
+				});
+				SortUtil.initBtnSortHandlers($modalInner.find(".manbrew__filtertools"), list);
+
+				dataList = all.filter(it => !it._brewSkip);
+				dataList.forEach((it, i) => {
+					it._brewAdded = (timestamps[it.path] || {}).a || 0;
+					it._brewModified = (timestamps[it.path] || {}).m || 0;
+					it._brewCat = BrewUtil._pRenderBrewScreen_getDisplayCat(BrewUtil._pRenderBrewScreen_dirToCat(it._cat));
+
+					const timestampAdded = it._brewAdded ? MiscUtil.dateToStr(new Date(it._brewAdded * 1000), true) : "";
+					const timestampModified = it._brewModified ? MiscUtil.dateToStr(new Date(it._brewModified * 1000), true) : "";
+
+					const $btnAdd = $(`<span class="col-4 bold manbrew__load_from_url pl-0 clickable"></span>`)
+						.text(it._brewName)
+						.click(() => BrewUtil.addBrewRemote($btnAdd, it.download_url || "", true));
+
+					const $li = $$`<li class="not-clickable lst--border lst__row--focusable" tabindex="1">
+						<div class="lst__wrp-cells">
+							${$btnAdd}
+							<span class="col-3">${it._brewAuthor}</span>
+							<span class="col-1-2 text-center">${it._brewCat}</span>
+							<span class="col-1-4 text-center">${timestampModified}</span>
+							<span class="col-1-4 text-center">${timestampAdded}</span>
+							<span class="col-1 manbrew__source text-center pr-0"><a href="${it.download_url}" target="_blank" rel="noopener noreferrer">View Raw</a></span>
+						</div>
+					</li>`;
+
+					$li.keydown(evt => {
+						switch (evt.which) {
+							case 13: { // enter
+								return $btnAdd.click()
+							}
+							case 38: { // up
+								const ixCur = list.visibleItems.indexOf(listItem);
+								if (~ixCur) {
+									const prevItem = list.visibleItems[ixCur - 1];
+									if (prevItem) prevItem.ele.focus();
+								} else {
+									const firstItem = list.visibleItems[0];
+									if (firstItem) firstItem.ele.focus();
+								}
+								return;
+							}
+							case 40: { // down
+								const ixCur = list.visibleItems.indexOf(listItem);
+								if (~ixCur) {
+									const nxtItem = list.visibleItems[ixCur + 1];
+									if (nxtItem) nxtItem.ele.focus();
+								} else {
+									const lastItem = list.visibleItems.last();
+									if (lastItem) lastItem.ele.focus();
+								}
+							}
+						}
+					});
+
+					const listItem = new ListItem(
+						i,
+						$li,
+						it._brewName,
+						{
+							author: it._brewAuthor,
+							category: it._brewCat,
+							added: timestampAdded,
+							modified: timestampAdded
+						},
+						{
+							$btnAdd,
+							isSample: it._brewAuthor.toLowerCase().startsWith("sample -")
+						}
+					);
+					list.addItem(listItem);
+				});
+
+				list.init();
+
+				$btnAll.prop("disabled", false).click(() => list.visibleItems.filter(it => !it.data.isSample).forEach(it => it.data.$btnAdd.click()));
+
+				$iptSearch.focus();
+			});
+
+		const $btnCustomUrl = $(`<button class="btn btn-info btn-sm px-2" title="Set Custom Repository URL"><span class="glyphicon glyphicon-cog"></span></button>`)
+			.click(async () => {
+				const customBrewUtl = await StorageUtil.pGet(`HOMEBREW_CUSTOM_REPO_URL`);
+
+				const nxtUrl = await InputUiUtil.pGetUserString({
+					title: "Homebrew Repository URL (Blank for Default)",
+					default: customBrewUtl
+				});
+
+				if (nxtUrl == null) await StorageUtil.pRemove(`HOMEBREW_CUSTOM_REPO_URL`);
+				else await StorageUtil.pSet(`HOMEBREW_CUSTOM_REPO_URL`, nxtUrl);
+			});
+
+		const $btnDelAll = isModal ? null : BrewUtil._$getBtnDeleteAll();
+
+		const $wrpBtns = $$`<div class="flex-vh-center no-shrink mobile__flex-col">
+			<div class="flex-v-center mobile__mb-2">
+				<div class="flex-v-center btn-group mr-2">
+					${$btnGet}
+					${$btnCustomUrl}
+				</div>
+				<label role="button" class="btn btn-default btn-sm mr-2">Upload File${$iptAdd}</label>
+				${$btnLoadFromUrl}
+			</div>
+			<div class="flex-v-center">
+				<a href="https://github.com/TheGiddyLimit/homebrew" class="flex-v-center" target="_blank" rel="noopener noreferrer"><button class="btn btn-default btn-sm">Browse Source Repository</button></a>
+				${$btnDelAll}
+			</div>
+		</div>`;
+
+		if (isModal) {
+			$$($appendTo)`
+			<hr class="manbrew__hr no-shrink">
+			${$brewList}
+			<div class="mb-3 text-center no-shrink">${$wrpBtns}</div>
+		`
+		} else {
+			$$($appendTo)`
+			<div class="mb-3 text-center no-shrink">${$wrpBtns}</div>
+			<hr class="manbrew__hr no-shrink">
+			${$brewList}
+		`
+		}
+
+		BrewUtil.addBrewRemote = async ($ele, jsonUrl, doUnescape) => {
+			let cached;
+			if ($ele) {
+				cached = $ele.html();
+				$ele.text("Loading...");
+			}
+			if (doUnescape) jsonUrl = jsonUrl.unescapeQuotes();
+			const data = await DataUtil.loadJSON(`${jsonUrl}?${(new Date()).getTime()}`);
+			await BrewUtil.pDoHandleBrewJson(data, page, BrewUtil._pRenderBrewScreen_pRefreshBrewList.bind(this, $brewList));
+			if ($ele) {
+				$ele.text("Done!");
+				setTimeout(() => $ele.html(cached), VeCt.DUR_INLINE_NOTIFY);
+			}
+		};
+	},
+
+	_$getBtnDeleteAll (isModal) {
+		return $(`<button class="btn ${isModal ? "btn-xs" : "btn-sm ml-2"} btn-danger">Delete All</button>`)
+			.click(async () => {
+				if (!window.confirm("Are you sure?")) return;
+				await StorageUtil.pSet(VeCt.STORAGE_HOMEBREW, {});
+				StorageUtil.syncSet(VeCt.STORAGE_HOMEBREW_META, {});
+				window.location.hash = "";
+				location.reload();
+			});
+	},
+
+	async _pCleanSaveBrew () {
+		const cpy = MiscUtil.copy(BrewUtil.homebrew);
+		BrewUtil._STORABLE.forEach(prop => {
+			(cpy[prop] || []).forEach(ent => {
+				Object.keys(ent).filter(k => k.startsWith("_")).forEach(k => delete ent[k]);
+			});
+		});
+		await StorageUtil.pSet(VeCt.STORAGE_HOMEBREW, cpy);
+	},
+
+	async _pRenderBrewScreen_pDeleteSource ($brewList, source, doConfirm, isAllSources) {
+		if (doConfirm && !window.confirm(`Are you sure you want to remove all homebrew${!isAllSources ? ` with${source ? ` source "${Parser.sourceJsonToFull(source)}"` : `out a source`}` : ""}?`)) return;
+
+		const vetoolsSourceSet = new Set(BrewUtil._getActiveVetoolsSources().map(it => it.json));
+		const isMatchingSource = (itSrc) => isAllSources || (itSrc === source || (source === undefined && !vetoolsSourceSet.has(itSrc) && !BrewUtil.hasSourceJson(itSrc)));
+
+		await Promise.all(BrewUtil._getBrewCategories().map(async k => {
+			const cat = BrewUtil.homebrew[k];
+			const pDeleteFn = BrewUtil._getPDeleteFunction(k);
+			const toDel = [];
+			cat.filter(it => isMatchingSource(it.source)).forEach(it => toDel.push(it.uniqueId));
+			await Promise.all(toDel.map(async uId => pDeleteFn(uId)));
+		}));
+		if (BrewUtil._lists) BrewUtil._lists.forEach(l => l.update());
+		BrewUtil._persistHomebrewDebounced();
+		BrewUtil.removeJsonSource(source);
+		if (UrlUtil.getCurrentPage() === UrlUtil.PG_MAKE_SHAPED) removeBrewSource(source);
+		// remove the source from the filters and re-render the filter box
+		if (BrewUtil._sourceFilter) BrewUtil._sourceFilter.removeItem(source);
+		if (BrewUtil._filterBox) BrewUtil._filterBox.render();
+		await BrewUtil._pRenderBrewScreen_pRefreshBrewList($brewList);
+		window.location.hash = "";
+		if (BrewUtil._filterBox) BrewUtil._filterBox.fireChangeEvent();
+	},
+
+	async _pRenderBrewScreen_pRefreshBrewList ($brewList) {
+		function showSourceManager (source, showAll) {
+			const $wrpBtnDel = $(`<div class="flex-v-center"></div>`);
+
+			const {$modalInner, doClose} = UiUtil.getShowModal({
+				isHeight100: true,
+				title: `View/Manage ${source ? `Source Contents: ${Parser.sourceJsonToFull(source)}` : showAll ? "Entries from All Sources" : `Entries with No Source`}`,
+				isUncappedHeight: true,
+				isWidth100: true,
+				overlayColor: "transparent",
+				titleSplit: $wrpBtnDel
+			});
+
+			const $cbAll = $(`<input type="checkbox">`);
+			const $ulRows = $$`<ul class="list"></ul>`;
+			const $iptSearch = $(`<input type="search" class="search manbrew__search form-control w-100" placeholder="Search entries...">`);
+			const $wrpBtnsSort = $$`<div class="filtertools manbrew__filtertools sortlabel btn-group">
+				<button class="col-6 sort btn btn-default btn-xs" data-sort="name">Name</button>
+				<button class="col-5 sort btn btn-default btn-xs" data-sort="category">Category</button>
+				<label class="wrp-cb-all pr-0 flex-vh-center mb-0 h-100">${$cbAll}</label>
+			</div>`;
+			$$($modalInner)`
+				${$iptSearch}
+				${$wrpBtnsSort}
+				${$ulRows}`;
+
+			let list;
+
+			// populate list
+			function populateList () {
+				$ulRows.empty();
+
+				list = new List({
+					$iptSearch,
+					$wrpList: $ulRows,
+					fnSort: SortUtil.listSort
+				});
+
+				function mapCategoryEntry (cat, bru) {
+					const out = {};
+					out.name = bru.name;
+					out.uniqueId = bru.uniqueId;
+					out.extraInfo = "";
+					switch (cat) {
+						case "subclass":
+							out.extraInfo = ` (${bru.class})`;
+							break;
+						case "subrace":
+							out.extraInfo = ` (${(bru.race || {}).name})`;
+							break;
+						case "psionic":
+							out.extraInfo = ` (${Parser.psiTypeToMeta(bru.type).short})`;
+							break;
+						case "itemProperty": {
+							if (bru.entries) out.name = Renderer.findName(bru.entries);
+							if (!out.name) out.name = bru.abbreviation;
+							break;
+						}
+						case "adventureData":
+						case "bookData": {
+							const assocData = {
+								"adventureData": "adventure",
+								"bookData": "book"
+							};
+							out.name = (((BrewUtil.homebrew[assocData[cat]] || []).find(a => a.id === bru.id) || {}).name || bru.id);
+						}
+					}
+					out.name = out.name || `(Unknown)`;
+					return out;
+				}
+
+				const vetoolsSourceSet = new Set(BrewUtil._getActiveVetoolsSources().map(it => it.json));
+
+				const isMatchingSource = (itSrc) => showAll || (itSrc === source || (source === undefined && !vetoolsSourceSet.has(itSrc) && !BrewUtil.hasSourceJson(itSrc)));
+				BrewUtil._getBrewCategories().forEach(cat => {
+					BrewUtil.homebrew[cat]
+						.filter(it => isMatchingSource(it.source))
+						.map(it => mapCategoryEntry(cat, it))
+						.sort((a, b) => SortUtil.ascSort(a.name, b.name))
+						.forEach((it, i) => {
+							const dispCat = BrewUtil._pRenderBrewScreen_getDisplayCat(cat, true);
+
+							const eleLi = $(`<li class="lst--border"><label class="mb-0 flex-v-center row">
+									<span class="col-6 bold">${it.name}</span>
+									<span class="col-5 text-center">${dispCat}${it.extraInfo}</span>
+									<span class="pr-0 col-1 text-center"><input type="checkbox"></span>
+								</label></li>`)[0];
+
+							const listItem = new ListItem(
+								i,
+								eleLi,
+								it.name,
+								{
+									category: dispCat,
+									category_raw: cat
+								},
+								{uniqueId: it.uniqueId}
+							);
+							list.addItem(listItem);
+						});
+				});
+				$ulRows.empty();
+
+				list.init();
+				if (!list.items.length) $ulRows.append(`<h5 class="text-center">No results found.</h5>`);
+				SortUtil.initBtnSortHandlers($wrpBtnsSort, list);
+			}
+			populateList();
+
+			$cbAll.change(function () {
+				const val = this.checked;
+				list.items.forEach(it => $(it.ele).find(`input`).prop("checked", val));
+			});
+			$(`<button class="btn btn-danger btn-xs">Delete Selected</button>`).on("click", async () => {
+				const toDel = list.items.filter(it => $(it.ele).find(`input`).prop("checked")).map(it => ({...it.values, ...it.data}));
+
+				if (!toDel.length) return;
+				if (!window.confirm("Are you sure?")) return;
+
+				if (toDel.length === list.items.length) {
+					await BrewUtil._pRenderBrewScreen_pDeleteSource($brewList, source, false, false);
+					doClose();
+				} else {
+					await Promise.all(toDel.map(async it => {
+						const pDeleteFn = BrewUtil._getPDeleteFunction(it.category_raw);
+						await pDeleteFn(it.uniqueId);
+					}));
+					if (BrewUtil._lists) BrewUtil._lists.forEach(l => l.update());
+					BrewUtil._persistHomebrewDebounced();
+					populateList();
+					await BrewUtil._pRenderBrewScreen_pRefreshBrewList($brewList);
+					window.location.hash = "";
+				}
+			}).appendTo($wrpBtnDel);
+
+			$iptSearch.focus();
+		}
+
+		$brewList.empty();
+		if (BrewUtil.homebrew) {
+			const $iptSearch = $(`<input type="search" class="search manbrew__search form-control" placeholder="Search active homebrew...">`);
+			const $wrpList = $(`<ul class="list-display-only brew-list brew-list--target manbrew__list"></ul>`);
+			const $ulGroup = $(`<ul class="list-display-only brew-list brew-list--groups no-shrink" style="height: initial;"></ul>`);
+
+			const list = new List({$iptSearch, $wrpList, isUseJquery: true});
+
+			const $lst = $$`
+				<div class="flex-col h-100">
+					${$iptSearch}
+					<div class="filtertools manbrew__filtertools sortlabel btn-group lst__form-bottom">
+						<button class="col-5 sort btn btn-default btn-xs" data-sort="source">Source</button>
+						<button class="col-4 sort btn btn-default btn-xs" data-sort="authors">Authors</button>
+						<button class="col-1 btn btn-default btn-xs" disabled>Origin</button>
+						<button class="btn btn-default btn-xs" disabled>&nbsp;</button>
+					</div>
+					<div class="flex w-100 h-100 overflow-y-auto relative">${$wrpList}</div>
+				</div>
+			`.appendTo($brewList);
+			$ulGroup.appendTo($brewList);
+			SortUtil.initBtnSortHandlers($lst.find(".manbrew__filtertools"), list);
+
+			const createButtons = (src, $row) => {
+				const $btnViewManage = $(`<button class="btn btn-sm btn-default">View/Manage</button>`)
+					.on("click", () => {
+						showSourceManager(src.json, src._all);
+					});
+
+				const $btnDeleteAll = $(`<button class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>`)
+					.on("click", () => BrewUtil._pRenderBrewScreen_pDeleteSource($brewList, src.json, true, src._all));
+
+				$$`<div class="flex-h-right flex-v-center btn-group">
+					${$btnViewManage}
+					${$btnDeleteAll}
+				</div>`.appendTo($row);
+			};
+
+			const page = UrlUtil.getCurrentPage();
+			const isSourceRelevantForCurrentPage = (source) => {
+				const _PG_SPELLS = ["spell"];
+				const _PG_BESTIARY = ["monster", "legendaryGroup", "monsterFluff"];
+
+				const getPageCats = () => {
+					switch (page) {
+						case UrlUtil.PG_SPELLS: return _PG_SPELLS;
+						case UrlUtil.PG_CLASSES: return ["class", "subclass"];
+						case UrlUtil.PG_BESTIARY: return _PG_BESTIARY;
+						case UrlUtil.PG_BACKGROUNDS: return ["background"];
+						case UrlUtil.PG_FEATS: return ["feat"];
+						case UrlUtil.PG_OPT_FEATURES: return ["optionalfeature"];
+						case UrlUtil.PG_RACES: return ["race", "raceFluff", "subrace"];
+						case UrlUtil.PG_OBJECTS: return ["object"];
+						case UrlUtil.PG_TRAPS_HAZARDS: return ["trap", "hazard"];
+						case UrlUtil.PG_DEITIES: return ["deity"];
+						case UrlUtil.PG_ITEMS: return ["item", "baseitem", "variant", "itemProperty", "itemType"];
+						case UrlUtil.PG_REWARDS: return ["reward"];
+						case UrlUtil.PG_PSIONICS: return ["psionic"];
+						case UrlUtil.PG_VARIATNRULES: return ["variantrule"];
+						case UrlUtil.PG_CONDITIONS_DISEASES: return ["condition", "disease"];
+						case UrlUtil.PG_ADVENTURES: return ["adventure", "adventureData"];
+						case UrlUtil.PG_BOOKS: return ["book", "bookData"];
+						case UrlUtil.PG_TABLES: return ["table", "tableGroup"];
+						case UrlUtil.PG_MAKE_SHAPED: return ["spell", "monster"];
+						case UrlUtil.PG_MAKE_BREW: return [
+							..._PG_SPELLS,
+							..._PG_BESTIARY,
+							"makebrewCreatureTrait"
+						];
+						case UrlUtil.PG_MANAGE_BREW:
+						case UrlUtil.PG_DEMO_RENDER: return BrewUtil._STORABLE;
+						case UrlUtil.PG_VEHICLES: return ["vehicle"];
+						case UrlUtil.PG_ACTIONS: return ["action"];
+						case UrlUtil.PG_CULTS_BOONS: return ["cult", "boon"];
+						case UrlUtil.PG_LANGUAGES: return ["language"];
+						default: throw new Error(`No homebrew properties defined for category ${page}`);
+					}
+				};
+
+				const cats = getPageCats();
+				return !!cats.find(cat => !!(BrewUtil.homebrew[cat] || []).some(entry => entry.source === source));
+			};
+
+			const brewSources = MiscUtil.copy(BrewUtil.getJsonSources()).filter(src => isSourceRelevantForCurrentPage(src.json));
+			brewSources.sort((a, b) => SortUtil.ascSort(a.full, b.full));
+
+			brewSources.forEach((src, i) => {
+				const validAuthors = (!src.authors ? [] : !(src.authors instanceof Array) ? [] : src.authors).join(", ");
+				const isGroup = src._unknown || src._all;
+
+				const $row = $(`<li class="row manbrew__row lst--border">
+						<span class="col-5 manbrew__col--tall source manbrew__source">${isGroup ? "<i>" : ""}${src.full}${isGroup ? "</i>" : ""}</span>
+						<span class="col-4 manbrew__col--tall authors">${validAuthors}</span>
+						<${src.url ? "a" : "span"} class="col-1 manbrew__col--tall text-center" ${src.url ? `href="${src.url}" target="_blank" rel="noopener noreferrer"` : ""}>${src.url ? "View Source" : ""}</${src.url ? "a" : "span"}>
+						<span class="hidden">${src.abbreviation}</span>
+					</li>`);
+				createButtons(src, $row);
+
+				const listItem = new ListItem(
+					i,
+					$row,
+					src.full,
+					{
+						authors: validAuthors,
+						abbreviation: src.abbreviation
+					}
+				);
+				list.addItem(listItem);
+			});
+
+			const createGroupRow = (fullText, modeProp) => {
+				const $row = $(`<div class="row manbrew__row flex-h-right">
+					<div class="manbrew__col--tall source manbrew__source text-right"><i class="mr-3">${fullText}</i></div>
+				</div>`);
+				createButtons({[modeProp]: true}, $row);
+				$ulGroup.append($row);
+			};
+			createGroupRow("Entries From All Sources", "_all");
+			createGroupRow("Entries Without Sources", "_unknown");
+
+			list.init();
+			$iptSearch.focus();
+		}
+	},
+
+	_pRenderBrewScreen_dirToCat (dir) {
+		if (!dir) return "";
+		else if (BrewUtil._STORABLE.includes(dir)) return dir;
+		else {
+			switch (dir) {
+				case "creature": return "monster";
+				case "collection": return dir;
+				case "magicvariant": return "variant";
+				case "makebrew": return "makebrewCreatureTrait";
+			}
+			throw new Error(`Directory was not mapped to a category: "${dir}"`);
+		}
+	},
+
+	_pRenderBrewScreen_getDisplayCat (cat, isManager) {
+		if (cat === "variantrule") return "Variant Rule";
+		if (cat === "legendaryGroup") return "Legendary Group";
+		if (cat === "optionalfeature") return "Optional Feature";
+		if (cat === "adventure") return isManager ? "Adventure Contents/Info" : "Adventure";
+		if (cat === "adventureData") return "Adventure Text";
+		if (cat === "book") return isManager ? "Book Contents/Info" : "Book";
+		if (cat === "bookData") return "Book Text";
+		if (cat === "itemProperty") return "Item Property";
+		if (cat === "baseitem") return "Base Item";
+		if (cat === "variant") return "Magic Item Variant";
+		if (cat === "monsterFluff") return "Monster Fluff";
+		if (cat === "makebrewCreatureTrait") return "Homebrew Builder Creature Trait";
+		return cat.uppercaseFirst();
+	},
+
+	handleLoadbrewClick: async (ele, jsonUrl, name) => {
+		const $ele = $(ele);
+		if (!$ele.hasClass("rd__wrp-loadbrew--ready")) return; // an existing click is being handled
+		const cached = $ele.html();
+		const cachedTitle = $ele.title();
+		$ele.title("");
+		$ele.removeClass("rd__wrp-loadbrew--ready").html(`${name}<span class="glyphicon glyphicon-refresh rd__loadbrew-icon rd__loadbrew-icon--active"></span>`);
+		jsonUrl = jsonUrl.unescapeQuotes();
+		const data = await DataUtil.loadJSON(`${jsonUrl}?${(new Date()).getTime()}`);
+		await BrewUtil.pDoHandleBrewJson(data, UrlUtil.getCurrentPage());
+		$ele.html(`${name}<span class="glyphicon glyphicon-saved rd__loadbrew-icon"></span>`);
+		setTimeout(() => $ele.html(cached).addClass("rd__wrp-loadbrew--ready").title(cachedTitle), 500);
+	},
+
+	async _pDoRemove (arrName, uniqueId, isChild) {
+		function getIndex (arrName, uniqueId, isChild) {
+			return BrewUtil.homebrew[arrName].findIndex(it => isChild ? it.parentUniqueId : it.uniqueId === uniqueId);
+		}
+
+		const index = getIndex(arrName, uniqueId, isChild);
+		if (~index) {
+			const toRemove = BrewUtil.homebrew[arrName][index];
+			BrewUtil.homebrew[arrName].splice(index, 1);
+			if (BrewUtil._lists) {
+				BrewUtil._lists.forEach(l => l.removeItemByData(isChild ? "parentuniqueId" : "uniqueId", uniqueId));
+			}
+			return toRemove;
+		}
+	},
+
+	_getPDeleteFunction (category) {
+		switch (category) {
+			case "spell":
+			case "monster":
+			case "monsterFluff":
+			case "background":
+			case "feat":
+			case "optionalfeature":
+			case "raceFluff":
+			case "subrace":
+			case "object":
+			case "trap":
+			case "hazard":
+			case "deity":
+			case "item":
+			case "baseitem":
+			case "variant":
+			case "itemType":
+			case "itemProperty":
+			case "reward":
+			case "psionic":
+			case "variantrule":
+			case "legendaryGroup":
+			case "condition":
+			case "disease":
+			case "table":
+			case "tableGroup":
+			case "vehicle":
+			case "action":
+			case "cult":
+			case "boon":
+			case "language":
+			case "class":
+			case "makebrewCreatureTrait": return BrewUtil._genPDeleteGenericBrew(category);
+			case "race": return BrewUtil._pDeleteRaceBrew;
+			case "subclass": return BrewUtil._pDeleteSubclassBrew;
+			case "adventure":
+			case "book": return BrewUtil._genPDeleteGenericBookBrew(category);
+			case "adventureData":
+			case "bookData": return () => {}; // Do nothing, handled by deleting the associated book/adventure
+			default: throw new Error(`No homebrew delete function defined for category ${category}`);
+		}
+	},
+
+	async _pDeleteSubclassBrew (uniqueId) {
+		let sc;
+		let index = 0;
+		for (; index < BrewUtil.homebrew.subclass.length; ++index) {
+			if (BrewUtil.homebrew.subclass[index].uniqueId === uniqueId) {
+				sc = BrewUtil.homebrew.subclass[index];
+				break;
 			}
 		}
 
-		function purgeBrew () {
-			BrewUtil.storage.removeItem(brewLocation);
-			BrewUtil.homebrew = null;
-			window.location.hash = "";
+		if (sc) {
+			const forClass = sc.class;
+			BrewUtil.homebrew.subclass.splice(index, 1);
+			BrewUtil._persistHomebrewDebounced();
+
+			if (typeof ClassesPage === "undefined") return;
+			await classesPage.pDeleteSubclassBrew(uniqueId, sc);
 		}
+	},
+
+	async _pDeleteRaceBrew (uniqueId) {
+		const removedRace = await BrewUtil._pDoRemove("race", uniqueId);
+		if (!removedRace || !removedRace.subraces) return;
+		if (typeof racesPage === "undefined" || !BrewUtil._lists) return;
+
+		const subraceMetas = removedRace.subraces
+			.map(it => ({name: it.name, source: it.source || removedRace.source}))
+			.filter(it => it.name);
+		if (!subraceMetas.length) return;
+
+		const allAttachedRaces = racesPage.getMergedSubraces(uniqueId)
+			.filter(it => subraceMetas.some(meta => meta.name === it._subraceName && meta.source === it.source))
+			.filter(it => it.uniqueId);
+
+		if (!allAttachedRaces) return;
+
+		allAttachedRaces.forEach(attachedRace => {
+			BrewUtil._lists.forEach(l => l.removeItemByData("uniqueId", attachedRace.uniqueId));
+		});
+	},
+
+	_genPDeleteGenericBrew (category) {
+		return async (uniqueId) => {
+			await BrewUtil._pDoRemove(category, uniqueId);
+		};
+	},
+
+	_genPDeleteGenericBookBrew (category) {
+		return async (uniqueId) => {
+			await BrewUtil._pDoRemove(category, uniqueId);
+			await BrewUtil._pDoRemove(`${category}Data`, uniqueId, true);
+		};
 	},
 
 	manageBrew: () => {
-		const page = UrlUtil.getCurrentPage();
-		const $body = $(`body`);
-		$body.css("overflow", "hidden");
-		const $overlay = $(`<div class="homebrew-overlay"/>`);
-		$overlay.on("click", () => {
-			$body.css("overflow", "");
-			$overlay.remove();
+		const {$modalInner} = UiUtil.getShowModal({
+			isHeight100: true,
+			isWidth100: true,
+			title: `Manage Homebrew`,
+			isUncappedHeight: true,
+			titleSplit: BrewUtil._$getBtnDeleteAll(true)
 		});
-		const $window = $(`
-		<div class="homebrew-window dropdown-menu" style="display: block;">
-			<h4>Manage Homebrew</h4>
-			<hr>
-		</div>`
-		);
-		$window.on("click", (evt) => {
-			evt.stopPropagation();
-		});
-		const $brewList = $(`<div></div>`);
-		$window.append($brewList);
 
-		refreshBrewList();
+		BrewUtil._pRenderBrewScreen($modalInner, true);
+	},
 
-		const $iptAdd = $(`<input multiple type="file" accept=".json" style="display: none;">`).on("change", (evt) => {
-			addBrew(evt);
-		});
-		$window.append(
-			$(`<div class="text-align-center"/>`)
-				.append($(`<label class="btn btn-default btn-sm btn-file">Load File</label>`).append($iptAdd))
-				.append(" ")
-				.append(`<a href="https://github.com/TheGiddyLimit/homebrew" target="_blank"><button class="btn btn-default btn-sm btn-file">Get Brew</button></a>`)
-		);
+	async pAddEntry (prop, obj) {
+		BrewUtil._mutUniqueId(obj);
+		(BrewUtil.homebrew[prop] = BrewUtil.homebrew[prop] || []).push(obj);
+		BrewUtil._persistHomebrewDebounced();
+		return BrewUtil.homebrew[prop].length - 1;
+	},
 
-		$overlay.append($window);
-		$body.append($overlay);
+	async pRemoveEntry (prop, obj) {
+		const ix = (BrewUtil.homebrew[prop] = BrewUtil.homebrew[prop] || []).findIndex(it => it.uniqueId === obj.uniqueId);
+		if (~ix) {
+			BrewUtil.homebrew[prop].splice(ix, 1);
+			BrewUtil._persistHomebrewDebounced();
+		} else throw new Error(`Could not find object with ID "${obj.uniqueId}" in "${prop}" list`);
+	},
 
-		function refreshBrewList () {
-			function render (type, prop, deleteFn) {
-				BrewUtil.homebrew[prop].forEach(j => {
-					const $btnDel = $(`<button class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash""></span></button>`).on("click", () => {
-						deleteFn(j.uniqueId);
-					});
-					const $btnExport = $(`<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-download-alt"></span></button>`).on("click", () => {
-						DataUtil.userDownload(j.name, JSON.stringify(j, null, "\t"));
-					});
-					$brewList.append($(`<p>`).append($btnDel).append(" ").append($btnExport).append(`&nbsp; <i>${type}${prop === "subclass" ? ` (${j.class})` : ""}:</i> <b>${j.name} ${j.version ? ` (v${j.version})` : ""}</b> by ${j.authors ? j.authors.join(", ") : "Anonymous"}. ${j.url ? `<a href="${j.url}" target="_blank">Source.</a>` : ""}`));
+	getEntryIxByName (prop, obj) {
+		return (BrewUtil.homebrew[prop] = BrewUtil.homebrew[prop] || []).findIndex(it => it.name === obj.name && it.source === obj.source);
+	},
+
+	async pUpdateEntryByIx (prop, ix, obj) {
+		if (~ix && ix < BrewUtil.homebrew[prop].length) {
+			BrewUtil._mutUniqueId(obj);
+			BrewUtil.homebrew[prop].splice(ix, 1, obj);
+			BrewUtil._persistHomebrewDebounced();
+		} else throw new Error(`Index "${ix}" was not valid!`);
+	},
+
+	_mutUniqueId (obj) {
+		delete obj.uniqueId; // avoid basing the hash on the previous hash
+		obj.uniqueId = CryptUtil.md5(JSON.stringify(obj));
+	},
+
+	_DIRS: ["action", "adventure", "background", "book", "boon", "class", "condition", "creature", "cult", "deity", "disease", "feat", "hazard", "item", "language", "magicvariant", "makebrew", "object", "optionalfeature", "psionic", "race", "reward", "spell", "subclass", "subrace", "table", "trap", "variantrule", "vehicle"],
+	_STORABLE: ["class", "subclass", "spell", "monster", "legendaryGroup", "monsterFluff", "background", "feat", "optionalfeature", "race", "raceFluff", "subrace", "deity", "item", "baseitem", "variant", "itemProperty", "itemType", "psionic", "reward", "object", "trap", "hazard", "variantrule", "condition", "disease", "adventure", "adventureData", "book", "bookData", "table", "tableGroup", "vehicle", "action", "cult", "boon", "language", "makebrewCreatureTrait"],
+	async pDoHandleBrewJson (json, page, pFuncRefresh) {
+		await BrewUtil._lockHandleBrewJson.pLock();
+		try {
+			return BrewUtil._pDoHandleBrewJson(json, page, pFuncRefresh);
+		} finally {
+			BrewUtil._lockHandleBrewJson.unlock();
+		}
+	},
+
+	async _pDoHandleBrewJson (json, page, pFuncRefresh) {
+		function storePrep (arrName) {
+			if (json[arrName]) {
+				json[arrName].forEach(it => BrewUtil._mutUniqueId(it));
+			} else json[arrName] = [];
+		}
+
+		// prepare for storage
+		BrewUtil._STORABLE.forEach(storePrep);
+
+		const bookPairs = [
+			["adventure", "adventureData"],
+			["book", "bookData"]
+		];
+		bookPairs.forEach(([bookMetaKey, bookDataKey]) => {
+			if (json[bookMetaKey] && json[bookDataKey]) {
+				json[bookMetaKey].forEach(book => {
+					const data = json[bookDataKey].find(it => it.id === book.id);
+					if (data) {
+						data.parentUniqueId = book.uniqueId;
+					}
 				});
 			}
+		});
 
-			$brewList.html("");
-			if (BrewUtil.homebrew) {
-				switch (page) {
-					case UrlUtil.PG_SPELLS:
-						render("Spell", "spell", deleteSpellBrew);
-						break;
-					case UrlUtil.PG_CLASSES:
-						render("Class", "class", deleteClassBrew);
-						render("Subclass", "subclass", deleteSubclassBrew);
-						break;
-				}
+		// store
+		async function pCheckAndAdd (prop) {
+			if (!BrewUtil.homebrew[prop]) BrewUtil.homebrew[prop] = [];
+			if (IS_DEPLOYED) {
+				// in production mode, skip any existing brew
+				const areNew = [];
+				const existingIds = BrewUtil.homebrew[prop].map(it => it.uniqueId);
+				json[prop].forEach(it => {
+					if (!existingIds.find(id => it.uniqueId === id)) {
+						BrewUtil.homebrew[prop].push(it);
+						areNew.push(it);
+					}
+				});
+				return areNew;
+			} else {
+				// in development mode, replace any existing brew
+				const existing = {};
+				BrewUtil.homebrew[prop].forEach(it => {
+					existing[it.source] = (existing[it.source] || {});
+					existing[it.source][it.name] = it.uniqueId;
+				});
+				const pDeleteFn = BrewUtil._getPDeleteFunction(prop);
+				await Promise.all(json[prop].map(async it => {
+					// Handle magic variants
+					const itSource = it.inherits && it.inherits.source ? it.inherits.source : it.source;
+					if (existing[itSource] && existing[itSource][it.name]) {
+						await pDeleteFn(existing[itSource][it.name]);
+					}
+					BrewUtil.homebrew[prop].push(it);
+				}));
+				return json[prop];
 			}
 		}
 
-		function addBrew (event) {
-			const input = event.target;
+		function checkAndAddMetaGetNewSources () {
+			const areNew = [];
+			if (json._meta) {
+				if (!BrewUtil.homebrewMeta) BrewUtil.homebrewMeta = {sources: []};
 
-			let readIndex = 0;
-			const reader = new FileReader();
-			reader.onload = () => {
-				const text = reader.result;
-				const json = JSON.parse(text);
-
-				function storePrep (arrName) {
-					if (json[arrName]) {
-						json[arrName].forEach(it => {
-							it.uniqueId = CryptUtil.md5(JSON.stringify(it));
-						});
-					} else json[arrName] = [];
-				}
-
-				// prepare for storage
-				storePrep("class");
-				storePrep("subclass");
-				storePrep("spell");
-
-				// store
-				function checkAndAdd (prop) {
-					const areNew = [];
-					const existingIds = BrewUtil.homebrew[prop].map(it => it.uniqueId);
-					json[prop].forEach(it => {
-						if (!existingIds.find(id => it.uniqueId === id)) {
-							BrewUtil.homebrew[prop].push(it);
-							areNew.push(it);
+				Object.keys(json._meta).forEach(k => {
+					switch (k) {
+						case "dateAdded":
+						case "dateLastModified":
+							break;
+						case "sources": {
+							const existing = BrewUtil.homebrewMeta.sources.map(src => src.json);
+							json._meta.sources.forEach(src => {
+								if (!existing.find(it => it === src.json)) {
+									BrewUtil.homebrewMeta.sources.push(src);
+									areNew.push(src);
+								}
+							});
+							break;
 						}
-					});
-					return areNew;
-				}
-
-				let classesToAdd = json.class;
-				let subclassesToAdd = json.subclass;
-				let spellsToAdd = json.spell;
-				if (!BrewUtil.homebrew) {
-					BrewUtil.homebrew = json;
-				} else {
-					// only add if unique ID not already present
-					classesToAdd = checkAndAdd("class");
-					subclassesToAdd = checkAndAdd("subclass");
-					spellsToAdd = checkAndAdd("spell");
-				}
-				BrewUtil.storage.setItem(HOMEBREW_STORAGE, JSON.stringify(BrewUtil.homebrew));
-
-				switch (page) {
-					case UrlUtil.PG_SPELLS:
-						addSpells(spellsToAdd);
-						break;
-					case UrlUtil.PG_CLASSES:
-						addClassData({class: classesToAdd});
-						addSubclassData({subclass: subclassesToAdd});
-						break;
-				}
-
-				refreshBrewList();
-				if (input.files[readIndex]) {
-					reader.readAsText(input.files[readIndex++]);
-				} else {
-					// reset the input
-					$(event.target).val("");
-				}
-			};
-			reader.readAsText(input.files[readIndex++]);
-		}
-
-		function getIndex (arrName, uniqueId) {
-			return BrewUtil.homebrew[arrName].findIndex(it => it.uniqueId === uniqueId);
-		}
-
-		function doRemove (arrName, uniqueId) {
-			const index = getIndex(arrName, uniqueId);
-			if (~index) {
-				BrewUtil.homebrew[arrName].splice(index, 1);
-				BrewUtil.storage.setItem(HOMEBREW_STORAGE, JSON.stringify(BrewUtil.homebrew));
-				refreshBrewList();
-				BrewUtil._list.remove("uniqueid", uniqueId);
-				hashchange();
+						default: {
+							BrewUtil.homebrewMeta[k] = BrewUtil.homebrewMeta[k] || {};
+							Object.assign(BrewUtil.homebrewMeta[k], json._meta[k]);
+							break;
+						}
+					}
+				});
 			}
+			return areNew;
 		}
 
-		function deleteClassBrew (uniqueId) {
-			doRemove("class", uniqueId);
+		let sourcesToAdd = json._meta ? json._meta.sources : [];
+		const toAdd = {};
+		BrewUtil._STORABLE.forEach(k => toAdd[k] = json[k]);
+		BrewUtil.homebrew = BrewUtil.homebrew || {};
+		sourcesToAdd = checkAndAddMetaGetNewSources(); // adding source(s) to Filter should happen in per-page addX functions
+		await Promise.all(BrewUtil._STORABLE.map(async k => toAdd[k] = await pCheckAndAdd(k))); // only add if unique ID not already present
+		BrewUtil._persistHomebrewDebounced(); // Debounce this for mass adds, e.g. "Add All"
+		StorageUtil.syncSet(VeCt.STORAGE_HOMEBREW_META, BrewUtil.homebrewMeta);
+
+		// wipe old cache
+		BrewUtil._resetSourceCache();
+
+		// display on page
+		switch (page) {
+			case UrlUtil.PG_SPELLS:
+			case UrlUtil.PG_CLASSES:
+			case UrlUtil.PG_BESTIARY:
+			case UrlUtil.PG_BACKGROUNDS:
+			case UrlUtil.PG_FEATS:
+			case UrlUtil.PG_OPT_FEATURES:
+			case UrlUtil.PG_RACES:
+			case UrlUtil.PG_OBJECTS:
+			case UrlUtil.PG_TRAPS_HAZARDS:
+			case UrlUtil.PG_DEITIES:
+			case UrlUtil.PG_ITEMS:
+			case UrlUtil.PG_REWARDS:
+			case UrlUtil.PG_PSIONICS:
+			case UrlUtil.PG_VARIATNRULES:
+			case UrlUtil.PG_CONDITIONS_DISEASES:
+			case UrlUtil.PG_ADVENTURE:
+			case UrlUtil.PG_ADVENTURES:
+			case UrlUtil.PG_BOOK:
+			case UrlUtil.PG_BOOKS:
+			case UrlUtil.PG_MAKE_SHAPED:
+			case UrlUtil.PG_TABLES:
+			case UrlUtil.PG_VEHICLES:
+			case UrlUtil.PG_ACTIONS:
+			case UrlUtil.PG_CULTS_BOONS:
+			case UrlUtil.PG_LANGUAGES:
+				await (BrewUtil._pHandleBrew || handleBrew)(MiscUtil.copy(toAdd));
+				break;
+			case UrlUtil.PG_MAKE_BREW:
+				await BrewUtil._pHandleBrew(MiscUtil.copy(toAdd));
+				break;
+			case UrlUtil.PG_MANAGE_BREW:
+			case UrlUtil.PG_DEMO_RENDER:
+			case "NO_PAGE":
+				// No-op
+				break;
+			default:
+				throw new Error(`No homebrew add function defined for category ${page}`);
 		}
 
-		function deleteSubclassBrew (uniqueId) {
-			let subClass;
-			let index = 0;
-			for (; index < BrewUtil.homebrew.subclass.length; ++index) {
-				if (BrewUtil.homebrew.subclass[index].uniqueId === uniqueId) {
-					subClass = BrewUtil.homebrew.subclass[index];
-					break;
+		if (pFuncRefresh) await pFuncRefresh();
+
+		if (BrewUtil._filterBox && BrewUtil._sourceFilter) {
+			const cur = BrewUtil._filterBox.getValues();
+			if (cur.Source) {
+				const toSet = JSON.parse(JSON.stringify(cur.Source));
+
+				if (toSet._totals.yes || toSet._totals.no) {
+					if (page === UrlUtil.PG_CLASSES) toSet["Core"] = 1;
+					else sourcesToAdd.forEach(src => toSet[src.json] = 1);
+					BrewUtil._filterBox.setFromValues({Source: toSet});
 				}
 			}
-			if (subClass) {
-				const forClass = subClass.class;
-				BrewUtil.homebrew.subclass.splice(index, 1);
-				BrewUtil.storage.setItem(HOMEBREW_STORAGE, JSON.stringify(BrewUtil.homebrew));
-				refreshBrewList();
-				const c = classes.find(c => c.name.toLowerCase() === forClass.toLowerCase());
-
-				const indexInClass = c.subclasses.findIndex(it => it.uniqueId === uniqueId);
-				if (~indexInClass) {
-					c.subclasses.splice(indexInClass, 1);
-					c.subclasses = c.subclasses.sort((a, b) => SortUtil.ascSort(a.name, b.name));
-				}
-				refreshBrewList();
-				window.location.hash = "";
-			}
-		}
-
-		function deleteSpellBrew (uniqueId) {
-			doRemove("spell", uniqueId);
+			if (BrewUtil._filterBox) BrewUtil._filterBox.fireChangeEvent();
 		}
 	},
 
 	makeBrewButton: (id) => {
-		$(`#${id}`).on("click", () => {
-			BrewUtil.manageBrew();
-		});
+		$(`#${id}`).on("click", () => BrewUtil.manageBrew());
+	},
+
+	_getBrewCategories () {
+		return Object.keys(BrewUtil.homebrew).filter(it => !it.startsWith("_"));
+	},
+
+	// region sources
+	_buildSourceCache () {
+		function doBuild () {
+			if (BrewUtil.homebrewMeta && BrewUtil.homebrewMeta.sources) {
+				BrewUtil.homebrewMeta.sources.forEach(src => BrewUtil._sourceCache[src.json.toLowerCase()] = ({...src}));
+			}
+		}
+
+		if (!BrewUtil._sourceCache) {
+			BrewUtil._sourceCache = {};
+
+			if (!BrewUtil.homebrewMeta) {
+				const temp = StorageUtil.syncGet(VeCt.STORAGE_HOMEBREW_META) || {};
+				temp.sources = temp.sources || [];
+				BrewUtil.homebrewMeta = temp;
+				doBuild();
+			} else {
+				doBuild();
+			}
+		}
+	},
+
+	_resetSourceCache () {
+		BrewUtil._sourceCache = null;
+	},
+
+	removeJsonSource (source) {
+		if (!source) return;
+		source = source.toLowerCase();
+		BrewUtil._resetSourceCache();
+		const ix = BrewUtil.homebrewMeta.sources.findIndex(it => it.json.toLowerCase() === source);
+		if (~ix) BrewUtil.homebrewMeta.sources.splice(ix, 1);
+		StorageUtil.syncSet(VeCt.STORAGE_HOMEBREW_META, BrewUtil.homebrewMeta);
+	},
+
+	getJsonSources () {
+		BrewUtil._buildSourceCache();
+		return BrewUtil.homebrewMeta && BrewUtil.homebrewMeta.sources ? BrewUtil.homebrewMeta.sources : [];
+	},
+
+	hasSourceJson (source) {
+		if (!source) return false;
+		source = source.toLowerCase();
+		BrewUtil._buildSourceCache();
+		return !!BrewUtil._sourceCache[source];
+	},
+
+	sourceJsonToFull (source) {
+		if (!source) return "";
+		source = source.toLowerCase();
+		BrewUtil._buildSourceCache();
+		return BrewUtil._sourceCache[source] ? BrewUtil._sourceCache[source].full || source : source;
+	},
+
+	sourceJsonToAbv (source) {
+		if (!source) return "";
+		source = source.toLowerCase();
+		BrewUtil._buildSourceCache();
+		return BrewUtil._sourceCache[source] ? BrewUtil._sourceCache[source].abbreviation || source : source;
+	},
+
+	sourceJsonToDate (source) {
+		if (!source) return "";
+		source = source.toLowerCase();
+		BrewUtil._buildSourceCache();
+		return BrewUtil._sourceCache[source] ? BrewUtil._sourceCache[source].dateReleased || source : source;
+	},
+
+	sourceJsonToSource (source) {
+		if (!source) return null;
+		source = source.toLowerCase();
+		BrewUtil._buildSourceCache();
+		return BrewUtil._sourceCache[source] ? BrewUtil._sourceCache[source] : null;
+	},
+
+	sourceJsonToStyle (source) {
+		if (!source) return "";
+		source = source.toLowerCase();
+		const color = BrewUtil.sourceJsonToColor(source);
+		if (color) return `style="color: #${color}; border-color: #${color}; text-decoration-color: #${color};"`;
+		return "";
+	},
+
+	sourceJsonToColor (source) {
+		if (!source) return "";
+		source = source.toLowerCase();
+		BrewUtil._buildSourceCache();
+		if (BrewUtil._sourceCache[source] && BrewUtil._sourceCache[source].color) {
+			const validColor = BrewUtil.getValidColor(BrewUtil._sourceCache[source].color);
+			if (validColor.length) return validColor;
+			return "";
+		} else return "";
+	},
+
+	getValidColor (color) {
+		// Prevent any injection shenanigans
+		return color.replace(/[^a-fA-F0-9]/g, "").slice(0, 8);
+	},
+
+	addSource (sourceObj) {
+		BrewUtil._resetSourceCache();
+		const exists = BrewUtil.homebrewMeta.sources.some(it => it.json === sourceObj.json);
+		if (exists) throw new Error(`Source "${sourceObj.json}" already exists!`);
+		(BrewUtil.homebrewMeta.sources = BrewUtil.homebrewMeta.sources || []).push(sourceObj);
+		StorageUtil.syncSet(VeCt.STORAGE_HOMEBREW_META, BrewUtil.homebrewMeta);
+	},
+
+	updateSource (sourceObj) {
+		BrewUtil._resetSourceCache();
+		const ix = BrewUtil.homebrewMeta.sources.findIndex(it => it.json === sourceObj.json);
+		if (!~ix) throw new Error(`Source "${sourceObj.json}" does not exist!`);
+		const json = BrewUtil.homebrewMeta.sources[ix].json;
+		BrewUtil.homebrewMeta.sources[ix] = {
+			...sourceObj,
+			json
+		};
+		StorageUtil.syncSet(VeCt.STORAGE_HOMEBREW_META, BrewUtil.homebrewMeta);
+	},
+
+	_getActiveVetoolsSources () {
+		if (BrewUtil.homebrew === null) throw new Error(`Homebrew was not initialized!`);
+
+		const allActiveSources = new Set();
+		Object.keys(BrewUtil.homebrew).forEach(k => BrewUtil.homebrew[k].forEach(it => it.source && allActiveSources.add(it.source)));
+		return Object.keys(Parser.SOURCE_JSON_TO_FULL).map(k => ({
+			json: k,
+			full: Parser.SOURCE_JSON_TO_FULL[k],
+			abbreviation: Parser.SOURCE_JSON_TO_ABV[k],
+			dateReleased: Parser.SOURCE_JSON_TO_DATE[k]
+		})).sort((a, b) => SortUtil.ascSort(a.full, b.full)).filter(it => allActiveSources.has(it.json));
+	},
+	// endregion
+
+	/**
+	 * Get data in a format similar to the main search index
+	 */
+	async pGetSearchIndex () {
+		BrewUtil._buildSourceCache();
+		const indexer = new Omnidexer(Omnisearch.highestId + 1);
+
+		await BrewUtil.pAddBrewData();
+		if (BrewUtil.homebrew) {
+			const INDEX_DEFINITIONS = [Omnidexer.TO_INDEX__FROM_INDEX_JSON, Omnidexer.TO_INDEX];
+
+			// Run these in serial, to prevent any ID race condition antics
+			for (const IX_DEF of INDEX_DEFINITIONS) {
+				for (const arbiter of IX_DEF) {
+					if (!(BrewUtil.homebrew[arbiter.brewProp || arbiter.listProp] || []).length) continue;
+
+					if (arbiter.pFnPreProcBrew) {
+						const toProc = await arbiter.pFnPreProcBrew.bind(arbiter)(BrewUtil.homebrew);
+						indexer.addToIndex(arbiter, toProc)
+					} else {
+						indexer.addToIndex(arbiter, BrewUtil.homebrew)
+					}
+				}
+			}
+		}
+		return Omnidexer.decompressIndex(indexer.getIndex());
+	},
+
+	async pGetAdditionalSearchIndices (highestId, addiProp) {
+		BrewUtil._buildSourceCache();
+		const indexer = new Omnidexer(highestId + 1);
+
+		await BrewUtil.pAddBrewData();
+		if (BrewUtil.homebrew) {
+			const INDEX_DEFINITIONS = [Omnidexer.TO_INDEX__FROM_INDEX_JSON, Omnidexer.TO_INDEX];
+
+			await Promise.all(INDEX_DEFINITIONS.map(IXDEF => {
+				return Promise.all(IXDEF
+					.filter(ti => ti.additionalIndexes && (BrewUtil.homebrew[ti.listProp] || []).length)
+					.map(ti => {
+						return Promise.all(Object.entries(ti.additionalIndexes).filter(([prop]) => prop === addiProp).map(async ([prop, pGetIndex]) => {
+							const toIndex = await pGetIndex(indexer, {[ti.listProp]: BrewUtil.homebrew[ti.listProp]});
+							toIndex.forEach(add => indexer.pushToIndex(add));
+						}));
+					}));
+			}));
+		}
+		return Omnidexer.decompressIndex(indexer.getIndex());
+	},
+
+	async pGetAlternateSearchIndices (highestId, altProp) {
+		BrewUtil._buildSourceCache();
+		const indexer = new Omnidexer(highestId + 1);
+
+		await BrewUtil.pAddBrewData();
+		if (BrewUtil.homebrew) {
+			const INDEX_DEFINITIONS = [Omnidexer.TO_INDEX__FROM_INDEX_JSON, Omnidexer.TO_INDEX];
+
+			INDEX_DEFINITIONS.forEach(IXDEF => {
+				IXDEF
+					.filter(ti => ti.alternateIndexes && (BrewUtil.homebrew[ti.listProp] || []).length)
+					.forEach(ti => {
+						Object.entries(ti.alternateIndexes)
+							.filter(([prop]) => prop === altProp)
+							.map(async ([prop, pGetIndex]) => {
+								indexer.addToIndex(ti, BrewUtil.homebrew, {alt: ti.alternateIndexes[prop]})
+							});
+					});
+			});
+		}
+		return Omnidexer.decompressIndex(indexer.getIndex());
+	},
+
+	__pPersistHomebrewDebounced: null,
+	_persistHomebrewDebounced () {
+		if (BrewUtil.__pPersistHomebrewDebounced == null) {
+			BrewUtil.__pPersistHomebrewDebounced = MiscUtil.debounce(() => BrewUtil._pCleanSaveBrew(), 125);
+		}
+		BrewUtil.__pPersistHomebrewDebounced();
 	}
 };
-BrewUtil.storage = BrewUtil.tryGetStorage();
 
 // ID GENERATION =======================================================================================================
 CryptUtil = {
+	// region md5 internals
 	// stolen from http://www.myersdaily.org/joseph/javascript/md5.js
 	_md5cycle: (x, k) => {
 		let a = x[0];
@@ -2338,29 +4471,65 @@ CryptUtil = {
 		return md5blks;
 	},
 
-	_hex_chr: '0123456789abcdef'.split(''),
+	_hex_chr: "0123456789abcdef".split(""),
 
 	_rhex: (n) => {
-		let s = '';
+		let s = "";
 		for (let j = 0; j < 4; j++) {
 			s += CryptUtil._hex_chr[(n >> (j * 8 + 4)) & 0x0F] + CryptUtil._hex_chr[(n >> (j * 8)) & 0x0F];
 		}
 		return s;
 	},
 
+	_add32: (a, b) => {
+		return (a + b) & 0xFFFFFFFF;
+	},
+	// endregion
+
 	hex: (x) => {
 		for (let i = 0; i < x.length; i++) {
 			x[i] = CryptUtil._rhex(x[i]);
 		}
-		return x.join('');
+		return x.join("");
+	},
+
+	hex2Dec (hex) {
+		return parseInt(`0x${hex}`);
 	},
 
 	md5: (s) => {
 		return CryptUtil.hex(CryptUtil._md51(s));
 	},
 
-	_add32: (a, b) => {
-		return (a + b) & 0xFFFFFFFF;
+	/**
+	 * Based on Java's implementation.
+	 * @param obj An object to hash.
+	 * @return {*} An integer hashcode for the object.
+	 */
+	hashCode (obj) {
+		if (typeof obj === "string") {
+			if (!obj) return 0;
+			let h = 0;
+			for (let i = 0; i < obj.length; ++i) h = 31 * h + obj.charCodeAt(i);
+			return h;
+		} else if (typeof obj === "number") return obj;
+		else throw new Error(`No hashCode implementation for ${obj}`);
+	},
+
+	uid () { // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+		if (RollerUtil.isCrypto()) {
+			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+		} else {
+			let d = Date.now();
+			if (typeof performance !== "undefined" && typeof performance.now === "function") {
+				d += performance.now();
+			}
+			return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+				const r = (d + Math.random() * 16) % 16 | 0;
+				d = Math.floor(d / 16);
+				return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16);
+			});
+		}
 	}
 };
 
@@ -2382,7 +4551,609 @@ CollectionUtil = {
 		}
 	},
 
-	joinConjunct: (arr, joinWith, conjunctWith) => {
-		return arr.length === 1 ? String(arr[0]) : arr.length === 2 ? arr.join(conjunctWith) : arr.slice(0, -1).join(joinWith) + conjunctWith + arr.slice(-1);
+	setEq (a, b) {
+		if (a.size !== b.size) return false;
+		for (const it of a) if (!b.has(it)) return false;
+		return true;
+	},
+
+	setDiff (set1, set2) {
+		return new Set([...set1].filter(it => !set2.has(it)));
+	},
+
+	deepEquals (a, b) {
+		if (CollectionUtil._eq_sameValueZeroEqual(a, b)) return true;
+		if (a && b && typeof a === "object" && typeof b === "object") {
+			if (CollectionUtil._eq_isPlainObject(a) && CollectionUtil._eq_isPlainObject(b)) return CollectionUtil._eq_areObjectsEqual(a, b);
+			const arrayA = Array.isArray(a);
+			const arrayB = Array.isArray(b);
+			if (arrayA || arrayB) return arrayA === arrayB && CollectionUtil._eq_areArraysEqual(a, b);
+			const setA = a instanceof Set;
+			const setB = b instanceof Set;
+			if (setA || setB) return setA === setB && CollectionUtil.setEq(a, b);
+			return CollectionUtil._eq_areObjectsEqual(a, b);
+		}
+		return false;
+	},
+
+	// This handles the NaN != NaN case; ignore linter complaints
+	// eslint-disable-next-line no-self-compare
+	_eq_sameValueZeroEqual: (a, b) => a === b || (a !== a && b !== b),
+	_eq_isPlainObject: (value) => value.constructor === Object || value.constructor == null,
+	_eq_areObjectsEqual (a, b) {
+		const keysA = Object.keys(a);
+		const {length} = keysA;
+		if (Object.keys(b).length !== length) return false;
+		for (let i = 0; i < length; i++) {
+			if (!b.hasOwnProperty(keysA[i])) return false;
+			if (!CollectionUtil.deepEquals(a[keysA[i]], b[keysA[i]])) return false;
+		}
+		return true;
+	},
+	_eq_areArraysEqual (a, b) {
+		const {length} = a;
+		if (b.length !== length) return false;
+		for (let i = 0; i < length; i++) if (!CollectionUtil.deepEquals(a[i], b[i])) return false;
+		return true;
 	}
+};
+
+Array.prototype.last = Array.prototype.last || function (arg) {
+	if (arg !== undefined) this[this.length - 1] = arg;
+	else return this[this.length - 1];
+};
+
+Array.prototype.filterIndex = Array.prototype.filterIndex || function (fnCheck) {
+	const out = [];
+	this.forEach((it, i) => {
+		if (fnCheck(it)) out.push(i);
+	});
+	return out;
+};
+
+Array.prototype.equals = Array.prototype.equals || function (array2) {
+	const array1 = this;
+	if (!array1 && !array2) return true;
+	else if ((!array1 && array2) || (array1 && !array2)) return false;
+
+	let temp = [];
+	if ((!array1[0]) || (!array2[0])) return false;
+	if (array1.length !== array2.length) return false;
+	let key;
+	// Put all the elements from array1 into a "tagged" array
+	for (let i = 0; i < array1.length; i++) {
+		key = `${(typeof array1[i])}~${array1[i]}`; // Use "typeof" so a number 1 isn't equal to a string "1".
+		if (temp[key]) temp[key]++;
+		else temp[key] = 1;
+	}
+	// Go through array2 - if same tag missing in "tagged" array, not equal
+	for (let i = 0; i < array2.length; i++) {
+		key = `${(typeof array2[i])}~${array2[i]}`;
+		if (temp[key]) {
+			if (temp[key] === 0) return false;
+			else temp[key]--;
+		} else return false;
+	}
+	return true;
+};
+
+Array.prototype.partition = Array.prototype.partition || function (fnIsValid) {
+	return this.reduce(([pass, fail], elem) => fnIsValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]], [[], []]);
+};
+
+Array.prototype.getNext = Array.prototype.getNext || function (curVal) {
+	let ix = this.indexOf(curVal);
+	if (!~ix) throw new Error("Value was not in array!");
+	if (++ix >= this.length) ix = 0;
+	return this[ix];
+};
+
+Array.prototype.shuffle = Array.prototype.shuffle || function () {
+	for (let i = 0; i < 10000; ++i) this.sort(() => Math.random() - 0.5);
+	return this;
+};
+
+/** Map each array item to a k:v pair, then flatten them into one object. */
+Array.prototype.mergeMap = Array.prototype.mergeMap || function (fnMap) {
+	return this.map((...args) => fnMap(...args)).reduce((a, b) => Object.assign(a, b), {});
+};
+
+// OVERLAY VIEW ========================================================================================================
+/**
+ * Relies on:
+ * - page implementing HashUtil's `loadSubHash` with handling to show/hide the book view based on hashKey changes
+ * - page running no-argument `loadSubHash` when `hashchange` occurs
+ *
+ * @param opts Options object.
+ * @param opts.hashKey to use in the URL so that forward/back can open/close the view
+ * @param opts.$openBtn jQuery-selected button to bind click open/close
+ * @param opts.noneVisibleMsg "error" message to display if user has not selected any viewable content
+ * @param opts.pageTitle Title.
+ * @param opts.state State to modify when opening/closing.
+ * @param opts.stateKey Key in state to set true/false when opening/closing.
+ * @param opts.popTblGetNumShown function which should populate the view with HTML content and return the number of items displayed
+ * @param [opts.hasPrintColumns] True if the overlay should contain a dropdown for adjusting print columns.
+ * @constructor
+ */
+function BookModeView (opts) {
+	opts = opts || {};
+	const {hashKey, $openBtn, noneVisibleMsg, pageTitle, popTblGetNumShown, isFlex, state, stateKey} = opts;
+
+	if (hashKey && stateKey) throw new Error();
+
+	this.hashKey = hashKey;
+	this.stateKey = stateKey;
+	this.state = state;
+	this.$openBtn = $openBtn;
+	this.noneVisibleMsg = noneVisibleMsg;
+	this.popTblGetNumShown = popTblGetNumShown;
+
+	this.active = false;
+	this._$body = null;
+	this._$wrpBook = null;
+
+	this._$wrpRenderedContent = null;
+	this._$wrpNoneShown = null;
+	this._doRenderContent = null; // N.B. currently unused, but can be used to refresh the contents of the view
+
+	this.$openBtn.off("click").on("click", () => {
+		if (this.stateKey) {
+			this.state[this.stateKey] = true;
+		} else {
+			Hist.cleanSetHash(`${window.location.hash}${HASH_PART_SEP}${this.hashKey}${HASH_SUB_KV_SEP}true`);
+		}
+	});
+
+	this._doHashTeardown = () => {
+		if (this.stateKey) {
+			this.state[this.stateKey] = false;
+		} else {
+			Hist.cleanSetHash(window.location.hash.replace(`${this.hashKey}${HASH_SUB_KV_SEP}true`, ""));
+		}
+	};
+
+	this._renderContent = async ($wrpContent, $dispName, $wrpControlsToPass) => {
+		this._$wrpRenderedContent = this._$wrpRenderedContent
+			? this._$wrpRenderedContent.empty()
+			: $$`<div class="bkmv__scroller h-100 overflow-y-auto ${isFlex ? "flex" : ""}">${$wrpContent}</div>`.appendTo(this._$wrpBook);
+
+		const numShown = await this.popTblGetNumShown($wrpContent, $dispName, $wrpControlsToPass);
+
+		if (numShown) {
+			if (this._$wrpNoneShown) {
+				this._$wrpNoneShown.remove();
+				this._$wrpNoneShown = null;
+			}
+		} else {
+			if (!this._$wrpNoneShown) {
+				const $btnClose = $(`<button class="btn btn-default">Close</button>`)
+					.click(() => this._doHashTeardown());
+
+				this._$wrpNoneShown = $$`<div class="w-100 flex-col no-shrink bkmv__footer mb-3">
+					<div class="mb-2 flex-vh-center"><span class="initial-message">${this.noneVisibleMsg}</span></div>
+					<div class="flex-vh-center">${$btnClose}</div>
+				</div>`.appendTo(this._$wrpBook);
+			}
+		}
+	};
+
+	// NOTE: Avoid using `flex` css, as it doesn't play nice with printing
+	this.pOpen = async () => {
+		if (this.active) return;
+		this.active = true;
+		document.title = `${pageTitle} - 5etools`;
+
+		this._$body = $(`body`);
+		this._$wrpBook = $(`<div class="bkmv"></div>`);
+
+		this._$body.css("overflow", "hidden");
+		this._$body.addClass("bkmv-active");
+
+		const $btnClose = $(`<span class="delete-icon glyphicon glyphicon-remove"></span>`)
+			.click(() => this._doHashTeardown());
+		const $dispName = $(`<div></div>`); // pass this to the content function to allow it to set a main header
+		$$`<div class="bkmv__spacer-name split-v-center no-shrink">${$dispName}${$btnClose}</div>`.appendTo(this._$wrpBook);
+
+		// region controls
+		// Optionally usable "controls" section at the top of the pane
+		const $wrpControls = $(`<div class="w-100 flex-col bkmv__wrp-controls"></div>`)
+			.appendTo(this._$wrpBook);
+
+		let $wrpControlsToPass = $wrpControls;
+		if (opts.hasPrintColumns) {
+			$wrpControls.addClass("px-2 mt-2");
+
+			const injectPrintCss = (cols) => {
+				$(`#bkmv__print-style`).remove();
+				$(`<style media="print" id="bkmv__print-style">.bkmv__wrp { column-count: ${cols}; }</style>`)
+					.appendTo($(document.body))
+			};
+
+			const lastColumns = StorageUtil.syncGetForPage(BookModeView._BOOK_VIEW_COLUMNS_K);
+
+			const $selColumns = $(`<select class="form-control input-sm">
+				<option value="0">Two (book style)</option>
+				<option value="1">One</option>
+			</select>`)
+				.change(() => {
+					const val = Number($selColumns.val());
+					if (val === 0) injectPrintCss(2);
+					else injectPrintCss(1);
+
+					StorageUtil.syncSetForPage(BookModeView._BOOK_VIEW_COLUMNS_K, val);
+				});
+			if (lastColumns != null) $selColumns.val(lastColumns);
+			$selColumns.change();
+
+			$wrpControlsToPass = $$`<div class="w-100 flex">
+				<div class="flex-vh-center"><div class="mr-2 no-wrap help--subtle" title="Applied when printing the page.">Print columns:</div>${$selColumns}</div>
+			</div>`.appendTo($wrpControls);
+		}
+		// endregion
+
+		const $wrpContent = $(`<div class="bkmv__wrp p-2"></div>`);
+
+		await this._renderContent($wrpContent, $dispName, $wrpControlsToPass);
+
+		this._pRenderContent = () => this._renderContent($wrpContent, $dispName, $wrpControlsToPass);
+
+		this._$body.append(this._$wrpBook);
+	};
+
+	this.teardown = () => {
+		if (this.active) {
+			this._$body.css("overflow", "");
+			this._$body.removeClass("bkmv-active");
+			this._$wrpBook.remove();
+			this.active = false;
+
+			this._$wrpRenderedContent = null;
+			this._$wrpNoneShown = null;
+			this._pRenderContent = null;
+		}
+	};
+
+	this.pHandleSub = (sub) => {
+		if (this.stateKey) return; // Assume anything with state will handle this itself.
+
+		const bookViewHash = sub.find(it => it.startsWith(this.hashKey));
+		if (bookViewHash && UrlUtil.unpackSubHash(bookViewHash)[this.hashKey][0] === "true") return this.pOpen();
+		else this.teardown();
+	};
+}
+BookModeView._BOOK_VIEW_COLUMNS_K = "bookViewColumns";
+
+// CONTENT EXCLUSION ===================================================================================================
+ExcludeUtil = {
+	isInitialised: false,
+	_excludes: null,
+
+	async pInitialise () {
+		ExcludeUtil.pSave = MiscUtil.throttle(ExcludeUtil._pSave, 50);
+		try {
+			ExcludeUtil._excludes = await StorageUtil.pGet(VeCt.STORAGE_EXCLUDES) || [];
+		} catch (e) {
+			JqueryUtil.doToast({
+				content: "Error when loading content blacklist! Purged blacklist data. (See the log for more information.)",
+				type: "danger"
+			});
+			try {
+				await StorageUtil.pRemove(VeCt.STORAGE_EXCLUDES);
+			} catch (e) {
+				setTimeout(() => { throw e });
+			}
+			ExcludeUtil._excludes = null;
+			window.location.hash = "";
+			setTimeout(() => { throw e });
+		}
+		ExcludeUtil.isInitialised = true;
+	},
+
+	getList () {
+		return ExcludeUtil._excludes || [];
+	},
+
+	async pSetList (toSet) {
+		ExcludeUtil._excludes = toSet;
+		await ExcludeUtil.pSave();
+	},
+
+	_excludeCount: 0,
+	isExcluded (name, category, source) {
+		if (!ExcludeUtil._excludes || !ExcludeUtil._excludes.length) return false;
+		if (!source) throw new Error(`Entity had no source!`);
+
+		source = source.source || source;
+		const out = !!ExcludeUtil._excludes.find(row => (row.source === "*" || row.source === source) && (row.category === "*" || row.category === category) && (row.name === "*" || row.name === name));
+		if (out) ++ExcludeUtil._excludeCount;
+		return out;
+	},
+
+	checkShowAllExcluded (list, $pagecontent) {
+		if ((!list.length && ExcludeUtil._excludeCount) || (list.length > 0 && list.length === ExcludeUtil._excludeCount)) {
+			$pagecontent.html(`
+				<tr><th class="border" colspan="6"></th></tr>
+				<tr><td colspan="6" class="initial-message">(Content <a href="blacklist.html">blacklisted</a>)</td></tr>
+				<tr><th class="border" colspan="6"></th></tr>
+			`);
+		}
+	},
+
+	addExclude (name, category, source) {
+		if (!ExcludeUtil._excludes.find(row => row.source === source && row.category === category && row.name === name)) {
+			ExcludeUtil._excludes.push({name, category, source});
+			ExcludeUtil.pSave();
+			return true;
+		}
+		return false;
+	},
+
+	removeExclude (name, category, source) {
+		const ix = ExcludeUtil._excludes.findIndex(row => row.source === source && row.category === category && row.name === name);
+		if (~ix) {
+			ExcludeUtil._excludes.splice(ix, 1);
+			ExcludeUtil.pSave();
+		}
+	},
+
+	async _pSave () {
+		return StorageUtil.pSet(VeCt.STORAGE_EXCLUDES, ExcludeUtil._excludes);
+	},
+
+	// The throttled version, available post-initialisation
+	async pSave () { /* no-op */ },
+
+	resetExcludes () {
+		ExcludeUtil._excludes = [];
+		ExcludeUtil.pSave();
+	}
+};
+
+// ENCOUNTERS ==========================================================================================================
+EncounterUtil = {
+	async pGetInitialState () {
+		if (await EncounterUtil._pHasSavedStateLocal()) {
+			if (await EncounterUtil._hasSavedStateUrl()) {
+				return {
+					type: "url",
+					data: EncounterUtil._getSavedStateUrl()
+				};
+			} else {
+				return {
+					type: "local",
+					data: await EncounterUtil._pGetSavedStateLocal()
+				};
+			}
+		} else return null;
+	},
+
+	_hasSavedStateUrl () {
+		return window.location.hash.length && Hist.getSubHash(EncounterUtil.SUB_HASH_PREFIX) != null;
+	},
+
+	_getSavedStateUrl () {
+		let out = null;
+		try {
+			out = JSON.parse(decodeURIComponent(Hist.getSubHash(EncounterUtil.SUB_HASH_PREFIX)));
+		} catch (e) {
+			setTimeout(() => {
+				throw e;
+			});
+		}
+		Hist.setSubhash(EncounterUtil.SUB_HASH_PREFIX, null);
+		return out;
+	},
+
+	async _pHasSavedStateLocal () {
+		return !!StorageUtil.pGet(VeCt.STORAGE_ENCOUNTER);
+	},
+
+	async _pGetSavedStateLocal () {
+		try {
+			return await StorageUtil.pGet(VeCt.STORAGE_ENCOUNTER);
+		} catch (e) {
+			JqueryUtil.doToast({
+				content: "Error when loading encounters! Purged encounter data. (See the log for more information.)",
+				type: "danger"
+			});
+			await StorageUtil.pRemove(VeCt.STORAGE_ENCOUNTER);
+			setTimeout(() => { throw e; });
+		}
+	},
+
+	async pDoSaveState (toSave) {
+		StorageUtil.pSet(VeCt.STORAGE_ENCOUNTER, toSave);
+	},
+
+	async pGetSavedState () {
+		const saved = await StorageUtil.pGet(EncounterUtil.SAVED_ENCOUNTER_SAVE_LOCATION);
+		return saved || {};
+	},
+
+	getEncounterName (encounter) {
+		if (encounter.l && encounter.l.items && encounter.l.items.length) {
+			const largestCount = encounter.l.items.sort((a, b) => SortUtil.ascSort(Number(b.c), Number(a.c)))[0];
+			const name = decodeURIComponent(largestCount.h.split(HASH_LIST_SEP)[0]).toTitleCase();
+			return `Encounter with ${name} ×${largestCount.c}`;
+		} else return "(Unnamed Encounter)"
+	}
+};
+EncounterUtil.SUB_HASH_PREFIX = "encounter";
+EncounterUtil.SAVED_ENCOUNTER_SAVE_LOCATION = "ENCOUNTER_SAVED_STORAGE";
+
+// EXTENSIONS ==========================================================================================================
+ExtensionUtil = {
+	ACTIVE: false,
+
+	_doSend (type, data) {
+		const detail = MiscUtil.copy({type, data});
+		window.dispatchEvent(new CustomEvent("rivet.send", {detail}));
+	},
+
+	async pDoSendStats (evt, ele) {
+		const $parent = $(ele).closest(`th.rnd-name`);
+		const page = $parent.attr("data-page");
+		const source = $parent.attr("data-source");
+		const hash = $parent.attr("data-hash");
+		const extensionData = $parent.attr("data-extension");
+
+		if (page && source && hash) {
+			let toSend = await Renderer.hover.pCacheAndGet(page, source, hash);
+
+			if (extensionData) {
+				switch (page) {
+					case UrlUtil.PG_BESTIARY: {
+						toSend = await ScaleCreature.scale(toSend, Number(extensionData));
+					}
+				}
+			}
+
+			ExtensionUtil._doSend("entity", {page, entity: toSend, isTemp: !!evt.shiftKey});
+		}
+	},
+
+	doSendRoll (data) { ExtensionUtil._doSend("roll", data); }
+};
+if (typeof window !== "undefined") window.addEventListener("rivet.active", () => ExtensionUtil.ACTIVE = true);
+
+// TOKENS ==============================================================================================================
+TokenUtil = {
+	handleStatblockScroll (event, ele) {
+		$(`#token_image`)
+			.toggle(ele.scrollTop < 32)
+			.css({
+				opacity: (32 - ele.scrollTop) / 32,
+				top: -ele.scrollTop
+			})
+	}
+}
+
+// LOCKS ===============================================================================================================
+VeLock = function () {
+	this._lockMeta = null;
+
+	this.pLock = async () => {
+		while (this._lockMeta) await this._lockMeta.lock;
+		let unlock = null;
+		const lock = new Promise(resolve => unlock = resolve);
+		this._lockMeta = {
+			lock,
+			unlock
+		}
+	};
+
+	this.unlock = () => {
+		const lockMeta = this._lockMeta;
+		if (lockMeta) {
+			this._lockMeta = null;
+			lockMeta.unlock();
+		}
+	};
+}
+BrewUtil._lockHandleBrewJson = new VeLock();
+
+// MISC WEBPAGE ONLOADS ================================================================================================
+if (!IS_VTT && typeof window !== "undefined") {
+	// add an obnoxious banner
+	// TODO is this something we want? If so, uncomment
+	/*
+	window.addEventListener("load", async () => {
+		if (!StorageUtil.isSyncFake() && await StorageUtil.pGet("seenLegal")) return;
+		const $wrpBanner = $(`<div id="legal-notice"><span>Don't go posting this shit to Reddit</span></div>`);
+		$(`<button class="btn btn-sm btn-default">Whatever, kid</button>`).on("click", () => {
+			StorageUtil.pSet("seenLegal", true);
+			$wrpBanner.remove();
+		}).appendTo($wrpBanner);
+		$(`body`).append($wrpBanner);
+	});
+	*/
+
+	const ivsCancer = [];
+	if (location.origin === "https://5e.tools") {
+		[
+			"div-gpt-ad-5etools35927", // main banner
+			"div-gpt-ad-5etools35930", // side banner
+			"div-gpt-ad-5etools35928", // sidebar top
+			"div-gpt-ad-5etools35929", // sidebar bottom
+			"div-gpt-ad-5etools36159", // bottom floater
+			"div-gpt-ad-5etools36834" // mobile middle
+		].forEach(id => {
+			const iv = setInterval(() => {
+				const $wrp = $(`#${id}`);
+				if (!$wrp.length) return;
+				if (!$wrp.children().length) return;
+				if ($wrp.children()[0].tagName === "SCRIPT") return;
+				const $tgt = $wrp.closest(".cancer__anchor").find(".cancer__disp-cancer");
+				if ($tgt.length) {
+					$tgt.css({display: "flex"}).text("advertisement");
+					clearInterval(iv);
+				}
+			}, 250);
+
+			ivsCancer.push(iv);
+		});
+	}
+
+	// Hack to lock the ad space at original size--prevents the screen from shifting around once loaded
+	setTimeout(() => {
+		const $wrp = $(`.cancer__wrp-leaderboard-inner`);
+		// const w = $wrp.outerWidth();
+		const h = $wrp.outerHeight();
+		$wrp.css({
+			// width: w,
+			height: h
+		});
+		ivsCancer.forEach(iv => clearInterval(iv));
+	}, 5000);
+}
+
+_Donate = {
+	// TAG Disabled until further notice
+	/*
+	init () {
+		if (IS_DEPLOYED) {
+			DataUtil.loadJSON(`https://get.5etools.com/money.php`).then(dosh => {
+				const pct = Number(dosh.donated) / Number(dosh.Goal);
+				$(`#don-total`).text(`€${dosh.Goal}`);
+				if (isNaN(pct)) {
+					throw new Error(`Was not a number! Values were ${dosh.donated} and ${dosh.Goal}`);
+				} else {
+					const $bar = $(`.don__bar_inner`);
+					$bar.css("width", `${Math.min(Math.ceil(100 * pct), 100)}%`).html(pct !== 0 ? `€${dosh.donated}&nbsp;` : "");
+					if (pct >= 1) $bar.css("background-color", "lightgreen");
+				}
+			}).catch(noDosh => {
+				$(`#don-wrapper`).remove();
+				throw noDosh;
+			});
+		}
+	},
+
+	async pNotDonating () {
+		const isFake = await StorageUtil.pIsAsyncFake();
+		const isNotDonating = await StorageUtil.pGet("notDonating");
+		return isFake || isNotDonating;
+	},
+	*/
+
+	// region Test code, please ignore
+	cycleLeader (ele) {
+		const modes = [{width: 970, height: 90}, {width: 970, height: 250}, {width: 320, height: 50}, {width: 728, height: 90}];
+		_Donate._cycleMode(ele, modes);
+	},
+
+	cycleSide (ele) {
+		const modes = [{width: 300, height: 250}, {width: 300, height: 600}];
+		_Donate._cycleMode(ele, modes);
+	},
+
+	_cycleMode (ele, modes) {
+		const $e = $(ele);
+		const pos = $e.data("pos") || 0;
+		const mode = modes[pos];
+		$e.css(mode);
+		$e.text(`${mode.width}*${mode.height}`);
+		$e.data("pos", (pos + 1) % modes.length)
+	}
+	// endregion
 };

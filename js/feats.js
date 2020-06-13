@@ -1,107 +1,103 @@
 "use strict";
-const JSON_URL = "data/feats.json";
-let tabledefault = "";
-let featlist;
 
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad);
-};
+class FeatsPage extends ListPage {
+	constructor () {
+		const pageFilter = new PageFilterFeats();
+		super({
+			dataSource: "data/feats.json",
 
-let filterBox;
-function onJsonLoad (data) {
-	tabledefault = $("#pagecontent").html();
-	featlist = data.feat;
+			pageFilter,
 
-	// TODO prerequisite filter?
-	const sourceFilter = getSourceFilter();
-	const asiFilter = getAsiFilter();
-	filterBox = initFilterBox(
-		sourceFilter,
-		asiFilter
-	);
+			listClass: "feats",
 
-	const featTable = $("ul.feats");
-	let tempString = "";
-	for (let i = 0; i < featlist.length; i++) {
-		const curfeat = featlist[i];
-		const name = curfeat.name;
-		const ability = utils_getAbilityData(curfeat.ability);
-		if (!ability.asText) ability.asText = STR_NONE;
-		curfeat._fAbility = ability.asCollection.filter(a => !ability.areNegative.includes(a)); // used for filtering
-		let prereqText = EntryRenderer.feat.getPrerequisiteText(curfeat.prerequisite, true);
-		if (!prereqText) prereqText = STR_NONE;
-		const CLS_COL_1 = "name col-xs-3 col-xs-3-8";
-		const CLS_COL_2 = `source col-xs-1 col-xs-1-7 source${curfeat.source}`;
-		const CLS_COL_3 = "ability " + (ability.asText === STR_NONE ? "list-entry-none " : "") + "col-xs-3 col-xs-3-5";
-		const CLS_COL_4 = "prerequisite " + (prereqText === STR_NONE ? "list-entry-none " : "") + "col-xs-3";
+			sublistClass: "subfeats",
 
-		tempString += `
-			<li ${FLTR_ID}="${i}">
-				<a id='${i}' href='#${UrlUtil.autoEncodeHash(curfeat)}' title='${name}'>
-					<span class='${CLS_COL_1}'>${name}</span>
-					<span class='${CLS_COL_2}' title='${Parser.sourceJsonToFull(curfeat.source)}'>${Parser.sourceJsonToAbv(curfeat.source)}</span>
-					<span class='${CLS_COL_3}'>${ability.asText}</span>
-					<span class='${CLS_COL_4}'>${prereqText}</span>
-				</a>
-			</li>`;
-
-		// populate filters
-		sourceFilter.addIfAbsent(curfeat.source);
-	}
-	featTable.append(tempString);
-
-	// sort filters
-	sourceFilter.items.sort(SortUtil.ascSort);
-
-	// init list
-	const list = ListUtil.search({
-		valueNames: ['name', 'source', 'ability', 'prerequisite'],
-		listClass: "feats"
-	});
-
-	filterBox.render();
-
-	// filtering function
-	$(filterBox).on(
-		FilterBox.EVNT_VALCHANGE,
-		handleFilterChange
-	);
-
-	// filtering function
-	function handleFilterChange () {
-		const f = filterBox.getValues();
-		list.filter(function (item) {
-			const ft = featlist[$(item.elm).attr(FLTR_ID)];
-			return filterBox.toDisplay(
-				f,
-				ft.source,
-				ft._fAbility
-			);
+			dataProps: ["feat"]
 		});
 	}
 
-	initHistory();
-	handleFilterChange();
-	RollerUtil.addListRollButton();
+	getListItem (feat, ftI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(feat, isExcluded);
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const source = Parser.sourceJsonToAbv(feat.source);
+		const hash = UrlUtil.autoEncodeHash(feat);
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="bold col-3-8 pl-0">${feat.name}</span>
+			<span class="col-3-5 ${feat._slAbility === VeCt.STR_NONE ? "list-entry-none " : ""}">${feat._slAbility}</span>
+			<span class="col-3 ${feat._slPrereq === VeCt.STR_NONE ? "list-entry-none " : ""}">${feat._slPrereq}</span>
+			<span class="source col-1-7 text-center ${Parser.sourceJsonToColor(feat.source)} pr-0" title="${Parser.sourceJsonToFull(feat.source)}" ${BrewUtil.sourceJsonToStyle(feat.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			ftI,
+			eleLi,
+			feat.name,
+			{
+				hash,
+				source,
+				ability: feat._slAbility,
+				prerequisite: feat._slPrereq
+			},
+			{
+				uniqueId: feat.uniqueId ? feat.uniqueId : ftI,
+				isExcluded
+			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._filterBox.getValues();
+		this._list.filter(item => this._pageFilter.toDisplay(f, this._dataList[item.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (feat, pinId) {
+		const hash = UrlUtil.autoEncodeHash(feat);
+
+		const $ele = $(`<li class="row">
+			<a href="#${hash}" class="lst--border">
+				<span class="bold col-4 pl-0">${feat.name}</span>
+				<span class="col-4 ${feat._slAbility === VeCt.STR_NONE ? "list-entry-none" : ""}">${feat._slAbility}</span>
+				<span class="col-4 ${feat._slPrereq === VeCt.STR_NONE ? "list-entry-none" : ""} pr-0">${feat._slPrereq}</span>
+			</a>
+		</li>`)
+			.contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			feat.name,
+			{
+				hash,
+				ability: feat._slAbility,
+				prerequisite: feat._slPrereq
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		const feat = this._dataList[id];
+
+		$("#pagecontent").empty().append(RenderFeats.$getRenderedFeat(feat));
+
+		ListUtil.updateSelected();
+	}
+
+	async pDoLoadSubHash (sub) {
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
+	}
 }
 
-const renderer = new EntryRenderer();
-function loadhash (id) {
-	$("#pagecontent").html(tabledefault);
-	const feat = featlist[id];
-	const source = feat.source;
-	const sourceFull = Parser.sourceJsonToFull(source);
-
-	$("th.name").html(`<span class="stats-name">${feat.name}</span><span class="stats-source source${source}" title="${sourceFull}">${Parser.sourceJsonToAbv(source)}</span>`);
-
-	const prerequisite = EntryRenderer.feat.getPrerequisiteText(feat.prerequisite);
-	$("td#prerequisite").html(prerequisite ? `Prerequisite: ${prerequisite}` : "");
-	$("tr.text").remove();
-	EntryRenderer.feat.mergeAbilityIncrease(feat);
-
-	const renderStack = [];
-	renderer.recursiveEntryRender({entries: feat.entries}, renderStack, 2);
-
-	$("tr#text").after(`<tr class='text'><td colspan='6'>${renderStack.join("")}</td></tr>`);
-	$(`#source`).html(`<td colspan=6><b>Source: </b> <i>${sourceFull}</i>, page ${feat.page}</td>`);
-}
+const featsPage = new FeatsPage();
+window.addEventListener("load", () => featsPage.pOnLoad());

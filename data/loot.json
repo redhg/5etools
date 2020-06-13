@@ -10,40 +10,35 @@
 				{
 					"min": 1,
 					"max": 30,
-					"coins":
-					{
+					"coins": {
 						"cp": "5d6"
 					}
 				},
 				{
 					"min": 31,
 					"max": 60,
-					"coins":
-					{
+					"coins": {
 						"sp": "4d6"
 					}
 				},
 				{
 					"min": 61,
 					"max": 70,
-					"coins":
-					{
+					"coins": {
 						"ep": "3d6"
 					}
 				},
 				{
 					"min": 71,
 					"max": 95,
-					"coins":
-					{
+					"coins": {
 						"gp": "3d6"
 					}
 				},
 				{
 					"min": 96,
 					"max": 100,
-					"coins":
-					{
+					"coins": {
 						"pp": "1d6"
 					}
 				}
@@ -59,8 +54,7 @@
 				{
 					"min": 1,
 					"max": 30,
-					"coins":
-					{
+					"coins": {
 						"cp": "4d6*100",
 						"ep": "1d6*10"
 					}
@@ -68,8 +62,7 @@
 				{
 					"min": 31,
 					"max": 60,
-					"coins":
-					{
+					"coins": {
 						"sp": "6d6*10",
 						"gp": "2d6*10"
 					}
@@ -77,8 +70,7 @@
 				{
 					"min": 61,
 					"max": 70,
-					"coins":
-					{
+					"coins": {
 						"ep": "3d6*10",
 						"gp": "2d6*10"
 					}
@@ -86,16 +78,14 @@
 				{
 					"min": 71,
 					"max": 95,
-					"coins":
-					{
+					"coins": {
 						"gp": "4d6*10"
 					}
 				},
 				{
 					"min": 96,
 					"max": 100,
-					"coins":
-					{
+					"coins": {
 						"gp": "2d6*10",
 						"pp": "3d6"
 					}
@@ -112,8 +102,7 @@
 				{
 					"min": 1,
 					"max": 20,
-					"coins":
-					{
+					"coins": {
 						"sp": "4d6*100",
 						"gp": "1d6*100"
 					}
@@ -121,8 +110,7 @@
 				{
 					"min": 21,
 					"max": 35,
-					"coins":
-					{
+					"coins": {
 						"ep": "1d6*100",
 						"gp": "1d6*100"
 					}
@@ -130,8 +118,7 @@
 				{
 					"min": 36,
 					"max": 75,
-					"coins":
-					{
+					"coins": {
 						"gp": "2d6*100",
 						"pp": "1d6*10"
 					}
@@ -139,8 +126,7 @@
 				{
 					"min": 76,
 					"max": 100,
-					"coins":
-					{
+					"coins": {
 						"gp": "2d6*100",
 						"pp": "2d6*10"
 					}
@@ -157,17 +143,15 @@
 				{
 					"min": 1,
 					"max": 15,
-					"coins":
-					{
+					"coins": {
 						"ep": "2d6*1000",
-						"pp": "8d6*100"
+						"gp": "8d6*100"
 					}
 				},
 				{
 					"min": 16,
 					"max": 55,
-					"coins":
-					{
+					"coins": {
 						"gp": "1d6*1000",
 						"pp": "1d6*100"
 					}
@@ -175,8 +159,7 @@
 				{
 					"min": 56,
 					"max": 100,
-					"coins":
-					{
+					"coins": {
 						"gp": "1d6*1000",
 						"pp": "2d6*100"
 					}
@@ -191,8 +174,7 @@
 			"page": 137,
 			"mincr": 0,
 			"maxcr": 4,
-			"coins":
-			{
+			"coins": {
 				"cp": "6d6*100",
 				"sp": "3d6*100",
 				"gp": "2d6*10"
@@ -205,8 +187,7 @@
 				{
 					"min": 7,
 					"max": 16,
-					"gems":
-					{
+					"gems": {
 						"type": "10",
 						"amount": "2d6"
 					}
@@ -214,8 +195,7 @@
 				{
 					"min": 17,
 					"max": 26,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					}
@@ -223,8 +203,7 @@
 				{
 					"min": 27,
 					"max": 36,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "2d6"
 					}
@@ -232,13 +211,11 @@
 				{
 					"min": 37,
 					"max": 44,
-					"gems":
-					{
+					"gems": {
 						"type": "10",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -246,13 +223,11 @@
 				{
 					"min": 45,
 					"max": 52,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -260,13 +235,11 @@
 				{
 					"min": 53,
 					"max": 60,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -274,13 +247,11 @@
 				{
 					"min": 61,
 					"max": 65,
-					"gems":
-					{
+					"gems": {
 						"type": "10",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -288,13 +259,11 @@
 				{
 					"min": 66,
 					"max": 70,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -302,13 +271,11 @@
 				{
 					"min": 71,
 					"max": 75,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -316,13 +283,11 @@
 				{
 					"min": 76,
 					"max": 78,
-					"gems":
-					{
+					"gems": {
 						"type": "10",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -330,13 +295,11 @@
 				{
 					"min": 79,
 					"max": 80,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -344,13 +307,11 @@
 				{
 					"min": 81,
 					"max": 85,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -358,13 +319,11 @@
 				{
 					"min": 86,
 					"max": 92,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F",
 						"amount": "1d4"
 					}
@@ -372,13 +331,11 @@
 				{
 					"min": 93,
 					"max": 97,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F",
 						"amount": "1d4"
 					}
@@ -386,13 +343,11 @@
 				{
 					"min": 98,
 					"max": 99,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d1"
 					}
@@ -400,18 +355,15 @@
 				{
 					"min": 100,
 					"max": 100,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "2d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d1"
 					}
 				}
-
 			]
 		},
 		{
@@ -420,8 +372,7 @@
 			"page": 137,
 			"mincr": 5,
 			"maxcr": 10,
-			"coins":
-			{
+			"coins": {
 				"cp": "2d6*100",
 				"sp": "2d6*1000",
 				"gp": "6d6*100",
@@ -435,8 +386,7 @@
 				{
 					"min": 5,
 					"max": 10,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					}
@@ -444,8 +394,7 @@
 				{
 					"min": 11,
 					"max": 16,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "3d6"
 					}
@@ -453,8 +402,7 @@
 				{
 					"min": 17,
 					"max": 22,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					}
@@ -462,8 +410,7 @@
 				{
 					"min": 23,
 					"max": 28,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					}
@@ -471,13 +418,11 @@
 				{
 					"min": 29,
 					"max": 32,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -485,13 +430,11 @@
 				{
 					"min": 33,
 					"max": 36,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -499,13 +442,11 @@
 				{
 					"min": 37,
 					"max": 40,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -513,13 +454,11 @@
 				{
 					"min": 41,
 					"max": 44,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A",
 						"amount": "1d6"
 					}
@@ -527,13 +466,11 @@
 				{
 					"min": 45,
 					"max": 49,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -541,13 +478,11 @@
 				{
 					"min": 50,
 					"max": 54,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -555,13 +490,11 @@
 				{
 					"min": 55,
 					"max": 59,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -569,13 +502,11 @@
 				{
 					"min": 60,
 					"max": 63,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "B",
 						"amount": "1d4"
 					}
@@ -583,13 +514,11 @@
 				{
 					"min": 64,
 					"max": 66,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -597,13 +526,11 @@
 				{
 					"min": 67,
 					"max": 69,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -611,13 +538,11 @@
 				{
 					"min": 70,
 					"max": 72,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -625,13 +550,11 @@
 				{
 					"min": 73,
 					"max": 74,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d4"
 					}
@@ -639,13 +562,11 @@
 				{
 					"min": 75,
 					"max": 76,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d1"
 					}
@@ -653,13 +574,11 @@
 				{
 					"min": 77,
 					"max": 78,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d1"
 					}
@@ -667,13 +586,11 @@
 				{
 					"min": 79,
 					"max": 79,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d1"
 					}
@@ -681,13 +598,11 @@
 				{
 					"min": 80,
 					"max": 80,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d1"
 					}
@@ -695,13 +610,11 @@
 				{
 					"min": 81,
 					"max": 84,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "25",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F",
 						"amount": "1d4"
 					}
@@ -709,13 +622,11 @@
 				{
 					"min": 85,
 					"max": 88,
-					"gems":
-					{
+					"gems": {
 						"type": "50",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F",
 						"amount": "1d4"
 					}
@@ -723,13 +634,11 @@
 				{
 					"min": 89,
 					"max": 91,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F",
 						"amount": "1d4"
 					}
@@ -737,13 +646,11 @@
 				{
 					"min": 92,
 					"max": 94,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F",
 						"amount": "1d4"
 					}
@@ -751,13 +658,11 @@
 				{
 					"min": 95,
 					"max": 96,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d4"
 					}
@@ -765,13 +670,11 @@
 				{
 					"min": 97,
 					"max": 98,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d4"
 					}
@@ -779,13 +682,11 @@
 				{
 					"min": 99,
 					"max": 99,
-					"gems":
-					{
+					"gems": {
 						"type": "100",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d1"
 					}
@@ -793,13 +694,11 @@
 				{
 					"min": 100,
 					"max": 100,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d1"
 					}
@@ -812,8 +711,7 @@
 			"page": 138,
 			"mincr": 11,
 			"maxcr": 16,
-			"coins":
-			{
+			"coins": {
 				"gp": "4d6*1000",
 				"pp": "5d6*100"
 			},
@@ -825,8 +723,7 @@
 				{
 					"min": 4,
 					"max": 6,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					}
@@ -834,8 +731,7 @@
 				{
 					"min": 7,
 					"max": 9,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					}
@@ -843,8 +739,7 @@
 				{
 					"min": 10,
 					"max": 12,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					}
@@ -852,8 +747,7 @@
 				{
 					"min": 13,
 					"max": 15,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					}
@@ -861,13 +755,11 @@
 				{
 					"min": 16,
 					"max": 19,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A,B",
 						"amount": "1d4,1d6"
 					}
@@ -875,13 +767,11 @@
 				{
 					"min": 20,
 					"max": 23,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A,B",
 						"amount": "1d4,1d6"
 					}
@@ -889,13 +779,11 @@
 				{
 					"min": 24,
 					"max": 26,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A,B",
 						"amount": "1d4,1d6"
 					}
@@ -903,13 +791,11 @@
 				{
 					"min": 27,
 					"max": 29,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "A,B",
 						"amount": "1d4,1d6"
 					}
@@ -917,13 +803,11 @@
 				{
 					"min": 30,
 					"max": 35,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d6"
 					}
@@ -931,13 +815,11 @@
 				{
 					"min": 36,
 					"max": 40,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d6"
 					}
@@ -945,13 +827,11 @@
 				{
 					"min": 41,
 					"max": 45,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d6"
 					}
@@ -959,13 +839,11 @@
 				{
 					"min": 46,
 					"max": 50,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d6"
 					}
@@ -973,13 +851,11 @@
 				{
 					"min": 51,
 					"max": 54,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d4"
 					}
@@ -987,13 +863,11 @@
 				{
 					"min": 55,
 					"max": 58,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d4"
 					}
@@ -1001,13 +875,11 @@
 				{
 					"min": 59,
 					"max": 62,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d4"
 					}
@@ -1015,13 +887,11 @@
 				{
 					"min": 63,
 					"max": 66,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d4"
 					}
@@ -1029,13 +899,11 @@
 				{
 					"min": 67,
 					"max": 68,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d1"
 					}
@@ -1043,13 +911,11 @@
 				{
 					"min": 69,
 					"max": 70,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d1"
 					}
@@ -1057,13 +923,11 @@
 				{
 					"min": 71,
 					"max": 72,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d1"
 					}
@@ -1071,13 +935,11 @@
 				{
 					"min": 73,
 					"max": 74,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d1"
 					}
@@ -1085,13 +947,11 @@
 				{
 					"min": 75,
 					"max": 76,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F,G",
 						"amount": "1d1,1d4"
 					}
@@ -1099,13 +959,11 @@
 				{
 					"min": 77,
 					"max": 78,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F,G",
 						"amount": "1d1,1d4"
 					}
@@ -1113,13 +971,11 @@
 				{
 					"min": 79,
 					"max": 80,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F,G",
 						"amount": "1d1,1d4"
 					}
@@ -1127,13 +983,11 @@
 				{
 					"min": 81,
 					"max": 82,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "F,G",
 						"amount": "1d1,1d4"
 					}
@@ -1141,13 +995,11 @@
 				{
 					"min": 83,
 					"max": 85,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1155,13 +1007,11 @@
 				{
 					"min": 86,
 					"max": 88,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1169,13 +1019,11 @@
 				{
 					"min": 89,
 					"max": 90,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1183,13 +1031,11 @@
 				{
 					"min": 91,
 					"max": 92,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1197,13 +1043,11 @@
 				{
 					"min": 93,
 					"max": 94,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "250",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d1"
 					}
@@ -1211,13 +1055,11 @@
 				{
 					"min": 95,
 					"max": 96,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "750",
 						"amount": "2d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d1"
 					}
@@ -1225,13 +1067,11 @@
 				{
 					"min": 97,
 					"max": 98,
-					"gems":
-					{
+					"gems": {
 						"type": "500",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d1"
 					}
@@ -1239,13 +1079,11 @@
 				{
 					"min": 99,
 					"max": 100,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d1"
 					}
@@ -1258,8 +1096,7 @@
 			"page": 137,
 			"mincr": 17,
 			"maxcr": 30,
-			"coins":
-			{
+			"coins": {
 				"gp": "12d6*1000",
 				"pp": "8d6*1000"
 			},
@@ -1271,13 +1108,11 @@
 				{
 					"min": 3,
 					"max": 5,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d8"
 					}
@@ -1285,13 +1120,11 @@
 				{
 					"min": 6,
 					"max": 8,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "2500",
 						"amount": "1d10"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d8"
 					}
@@ -1299,13 +1132,11 @@
 				{
 					"min": 9,
 					"max": 11,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d8"
 					}
@@ -1313,13 +1144,11 @@
 				{
 					"min": 12,
 					"max": 14,
-					"gems":
-					{
+					"gems": {
 						"type": "5000",
 						"amount": "1d8"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "C",
 						"amount": "1d8"
 					}
@@ -1327,13 +1156,11 @@
 				{
 					"min": 15,
 					"max": 22,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d6"
 					}
@@ -1341,13 +1168,11 @@
 				{
 					"min": 23,
 					"max": 30,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "2500",
 						"amount": "1d10"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d6"
 					}
@@ -1355,13 +1180,11 @@
 				{
 					"min": 31,
 					"max": 38,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d6"
 					}
@@ -1369,13 +1192,11 @@
 				{
 					"min": 39,
 					"max": 46,
-					"gems":
-					{
+					"gems": {
 						"type": "5000",
 						"amount": "1d8"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "D",
 						"amount": "1d6"
 					}
@@ -1383,13 +1204,11 @@
 				{
 					"min": 47,
 					"max": 52,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d6"
 					}
@@ -1397,13 +1216,11 @@
 				{
 					"min": 53,
 					"max": 58,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "2500",
 						"amount": "1d10"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d6"
 					}
@@ -1411,13 +1228,11 @@
 				{
 					"min": 59,
 					"max": 63,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d6"
 					}
@@ -1425,13 +1240,11 @@
 				{
 					"min": 64,
 					"max": 68,
-					"gems":
-					{
+					"gems": {
 						"type": "5000",
 						"amount": "1d8"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "E",
 						"amount": "1d6"
 					}
@@ -1439,13 +1252,11 @@
 				{
 					"min": 69,
 					"max": 69,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d4"
 					}
@@ -1453,13 +1264,11 @@
 				{
 					"min": 70,
 					"max": 70,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d10"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d4"
 					}
@@ -1467,13 +1276,11 @@
 				{
 					"min": 71,
 					"max": 71,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d4"
 					}
@@ -1481,13 +1288,11 @@
 				{
 					"min": 72,
 					"max": 72,
-					"gems":
-					{
+					"gems": {
 						"type": "5000",
 						"amount": "1d8"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "G",
 						"amount": "1d4"
 					}
@@ -1495,13 +1300,11 @@
 				{
 					"min": 73,
 					"max": 74,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1509,13 +1312,11 @@
 				{
 					"min": 75,
 					"max": 76,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "2500",
 						"amount": "1d10"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1523,13 +1324,11 @@
 				{
 					"min": 77,
 					"max": 78,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1537,13 +1336,11 @@
 				{
 					"min": 79,
 					"max": 80,
-					"gems":
-					{
+					"gems": {
 						"type": "5000",
 						"amount": "1d8"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "H",
 						"amount": "1d4"
 					}
@@ -1551,13 +1348,11 @@
 				{
 					"min": 81,
 					"max": 85,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d4"
 					}
@@ -1565,13 +1360,11 @@
 				{
 					"min": 86,
 					"max": 90,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "2500",
 						"amount": "1d10"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d4"
 					}
@@ -1579,13 +1372,11 @@
 				{
 					"min": 91,
 					"max": 95,
-					"artobjects":
-					{
+					"artobjects": {
 						"type": "7500",
 						"amount": "1d4"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d4"
 					}
@@ -1593,13 +1384,11 @@
 				{
 					"min": 96,
 					"max": 100,
-					"gems":
-					{
+					"gems": {
 						"type": "1000",
 						"amount": "3d6"
 					},
-					"magicitems":
-					{
+					"magicitems": {
 						"type": "I",
 						"amount": "1d4"
 					}
@@ -1659,11 +1448,11 @@
 				"Chrysoberyl (transparent yellow-green to pale green)",
 				"Coral (opaque crimson)",
 				"Garnet (transparent red, brown-green, or violet)",
-				"Jade (translucent light green, deep green , or white)",
+				"Jade (translucent light green, deep green, or white)",
 				"Jet (opaque deep black)",
 				"Pearl (opaque lustrous white, yellow, or pink)",
 				"Spinel (transparent red, red-brown, or deep green)",
-				"Tourmaline (transparent pale green , blue, brown , or red)"
+				"Tourmaline (transparent pale green, blue, brown , or red)"
 			]
 		},
 		{
@@ -1814,7 +1603,8 @@
 				{
 					"min": 51,
 					"max": 60,
-					"item": "{@item Spell Scroll (Cantrip)}"
+					"item": "{@item Spell Scroll (Cantrip)}",
+					"spellLevel": 0
 				},
 				{
 					"min": 61,
@@ -1824,12 +1614,14 @@
 				{
 					"min": 71,
 					"max": 90,
-					"item": "{@item Spell Scroll (1st Level)}"
+					"item": "{@item Spell Scroll (1st Level)}",
+					"spellLevel": 1
 				},
 				{
 					"min": 91,
 					"max": 94,
-					"item": "{@item Spell Scroll (2nd Level)}"
+					"item": "{@item Spell Scroll (2nd Level)}",
+					"spellLevel": 2
 				},
 				{
 					"min": 95,
@@ -1867,12 +1659,20 @@
 				{
 					"min": 23,
 					"max": 29,
-					"item": "Potion of Resistance"
+					"choose": {
+						"fromGroup": [
+							"Potion of Resistance"
+						]
+					}
 				},
 				{
 					"min": 30,
 					"max": 34,
-					"item": "{@item Ammunition +1|dmg}"
+					"choose": {
+						"fromGeneric": [
+							"Ammunition +1"
+						]
+					}
 				},
 				{
 					"min": 35,
@@ -1897,12 +1697,14 @@
 				{
 					"min": 55,
 					"max": 59,
-					"item": "{@item Spell Scroll (2nd Level)}"
+					"item": "{@item Spell Scroll (2nd Level)}",
+					"spellLevel": 2
 				},
 				{
 					"min": 60,
 					"max": 64,
-					"item": "{@item Spell Scroll (3rd Level)}"
+					"item": "{@item Spell Scroll (3rd Level)}",
+					"spellLevel": 3
 				},
 				{
 					"min": 65,
@@ -1937,7 +1739,7 @@
 				{
 					"min": 80,
 					"max": 81,
-					"item": "{@item Elemental Gem, Red Corundum|dmg|Elemental Gem}"
+					"item": "{@item Elemental Gem}"
 				},
 				{
 					"min": 82,
@@ -1987,12 +1789,20 @@
 				{
 					"min": 92,
 					"max": 92,
-					"item": "{@item Mariner's Armor}"
+					"choose": {
+						"fromGeneric": [
+							"Mariner's Armor"
+						]
+					}
 				},
 				{
 					"min": 93,
 					"max": 93,
-					"item": "{@item Mithral Armor}"
+					"choose": {
+						"fromGeneric": [
+							"Mithral Armor"
+						]
+					}
 				},
 				{
 					"min": 94,
@@ -2045,12 +1855,17 @@
 				{
 					"min": 16,
 					"max": 22,
-					"item": "{@item Spell Scroll (4th Level)}"
+					"item": "{@item Spell Scroll (4th Level)}",
+					"spellLevel": 4
 				},
 				{
 					"min": 23,
 					"max": 27,
-					"item": "{@item Ammunition +2|dmg}"
+					"choose": {
+						"fromGeneric": [
+							"Ammunition +2"
+						]
+					}
 				},
 				{
 					"min": 28,
@@ -2095,7 +1910,8 @@
 				{
 					"min": 68,
 					"max": 72,
-					"item": "{@item Spell Scroll (5th Level)}"
+					"item": "{@item Spell Scroll (5th Level)}",
+					"spellLevel": 5
 				},
 				{
 					"min": 73,
@@ -2115,12 +1931,12 @@
 				{
 					"min": 82,
 					"max": 84,
-					"item": "{@item Quaal's Feather Token, Anchor|dmg|Quaal's Feather Token}"
+					"item": "{@item Quaal's Feather Token}"
 				},
 				{
 					"min": 85,
 					"max": 87,
-					"item": "{@item Scroll of Protection from Aberrations|dmg|Scroll of Protection}"
+					"item": "{@item Scroll of Protection}"
 				},
 				{
 					"min": 88,
@@ -2203,17 +2019,23 @@
 				{
 					"min": 41,
 					"max": 50,
-					"item": "{@item Spell Scroll (6th level)}"
+					"item": "{@item Spell Scroll (6th level)}",
+					"spellLevel": 6
 				},
 				{
 					"min": 51,
 					"max": 57,
-					"item": "{@item Spell Scroll (7th level)}"
+					"item": "{@item Spell Scroll (7th level)}",
+					"spellLevel": 7
 				},
 				{
 					"min": 58,
 					"max": 62,
-					"item": "{@item Ammunition +3|dmg}"
+					"choose": {
+						"fromGeneric": [
+							"Ammunition +3"
+						]
+					}
 				},
 				{
 					"min": 63,
@@ -2243,7 +2065,8 @@
 				{
 					"min": 88,
 					"max": 92,
-					"item": "{@item Spell Scroll (8th level)}"
+					"item": "{@item Spell Scroll (8th level)}",
+					"spellLevel": 8
 				},
 				{
 					"min": 93,
@@ -2276,7 +2099,8 @@
 				{
 					"min": 1,
 					"max": 30,
-					"item": "{@item Spell Scroll (8th level)}"
+					"item": "{@item Spell Scroll (8th level)}",
+					"spellLevel": 8
 				},
 				{
 					"min": 31,
@@ -2290,8 +2114,9 @@
 				},
 				{
 					"min": 71,
-					"max": 86,
-					"item": "{@item Spell Scroll (9th level)}"
+					"max": 85,
+					"item": "{@item Spell Scroll (9th level)}",
+					"spellLevel": 9
 				},
 				{
 					"min": 86,
@@ -2319,12 +2144,16 @@
 				{
 					"min": 1,
 					"max": 15,
-					"item": "{@item Weapon +1|dmg}"
+					"choose": {
+						"fromGeneric": [
+							"Weapon +1"
+						]
+					}
 				},
 				{
 					"min": 16,
 					"max": 18,
-					"item": "{@item Shield +1|dmg}"
+					"item": "{@item Shield +1}"
 				},
 				{
 					"min": 19,
@@ -2394,7 +2223,7 @@
 				{
 					"min": 46,
 					"max": 47,
-					"item": "{@item Rod of the Pact Keeper, +1|dmg}"
+					"item": "{@item Rod of the Pact Keeper, +1}"
 				},
 				{
 					"min": 48,
@@ -2414,7 +2243,11 @@
 				{
 					"min": 54,
 					"max": 55,
-					"item": "{@item Sword of Vengeance}"
+					"choose": {
+						"fromGeneric": [
+							"Sword of Vengeance"
+						]
+					}
 				},
 				{
 					"min": 56,
@@ -2429,7 +2262,7 @@
 				{
 					"min": 60,
 					"max": 61,
-					"item": "{@item Wand of the War Mage, +1|dmg}"
+					"item": "{@item Wand of the War Mage, +1}"
 				},
 				{
 					"min": 62,
@@ -2439,7 +2272,11 @@
 				{
 					"min": 64,
 					"max": 65,
-					"item": "{@item Weapon of Warning}"
+					"choose": {
+						"fromGeneric": [
+							"Weapon of Warning"
+						]
+					}
 				},
 				{
 					"min": 66,
@@ -2459,17 +2296,17 @@
 				{
 					"min": 69,
 					"max": 69,
-					"item": "{@item Bag of Tricks, Gray|dmg}"
+					"item": "{@item Bag of Tricks, Gray}"
 				},
 				{
 					"min": 70,
 					"max": 70,
-					"item": "{@item Bag of Tricks, Rust|dmg}"
+					"item": "{@item Bag of Tricks, Rust}"
 				},
 				{
 					"min": 71,
 					"max": 71,
-					"item": "{@item Bag of Tricks, Tan|dmg}"
+					"item": "{@item Bag of Tricks, Tan}"
 				},
 				{
 					"min": 72,
@@ -2504,7 +2341,7 @@
 				{
 					"min": 78,
 					"max": 78,
-					"item": "{@item Figurine of Wondrous Power, Silver Raven|dmg}"
+					"item": "{@item Figurine of Wondrous Power, Silver Raven}"
 				},
 				{
 					"min": 79,
@@ -2539,17 +2376,17 @@
 				{
 					"min": 85,
 					"max": 85,
-					"item": "{@item Instrument of the Bards, Doss Lute|dmg}"
+					"item": "{@item Instrument of the Bards, Doss Lute}"
 				},
 				{
 					"min": 86,
 					"max": 86,
-					"item": "{@item Instrument of the Bards, Fochlucan Bandore|dmg}"
+					"item": "{@item Instrument of the Bards, Fochlucan Bandore}"
 				},
 				{
 					"min": 87,
 					"max": 87,
-					"item": "{@item Instrument of the Bards, Mac-Fuirmidh Cittern|dmg}"
+					"item": "{@item Instrument of the Bards, Mac-Fuirmidh Cittern}"
 				},
 				{
 					"min": 88,
@@ -2627,21 +2464,46 @@
 				{
 					"min": 1,
 					"max": 11,
-					"item": "{@item Weapon +2|dmg}"
+					"choose": {
+						"fromGeneric": [
+							"Weapon +2"
+						]
+					}
 				},
 				{
 					"min": 12,
 					"max": 14,
 					"item": "Figurine of Wondrous Power",
 					"table": [
-						"{@item Figurine of Wondrous Power, Bronze Griffon|dmg}",
-						"{@item Figurine of Wondrous Power, Ebony Fly|dmg}",
-						"{@item Figurine of Wondrous Power, Golden Lions|dmg}",
-						"{@item Figurine of Wondrous Power, Ivory Goats|dmg}",
-						"{@item Figurine of Wondrous Power, Marble Elephant|dmg}",
-						"{@item Figurine of Wondrous Power, Onyx Dog|dmg}",
-						"{@item Figurine of Wondrous Power, Onyx Dog|dmg}",
-						"{@item Figurine of Wondrous Power, Serpentine Owl|dmg}"
+						{
+							"min": 1,
+							"item": "{@item Figurine of Wondrous Power, Bronze Griffon}"
+						},
+						{
+							"min": 2,
+							"item": "{@item Figurine of Wondrous Power, Ebony Fly}"
+						},
+						{
+							"min": 3,
+							"item": "{@item Figurine of Wondrous Power, Golden Lions}"
+						},
+						{
+							"min": 4,
+							"item": "{@item Figurine of Wondrous Power, Ivory Goats}"
+						},
+						{
+							"min": 5,
+							"item": "{@item Figurine of Wondrous Power, Marble Elephant}"
+						},
+						{
+							"min": 6,
+							"max": 7,
+							"item": "{@item Figurine of Wondrous Power, Onyx Dog}"
+						},
+						{
+							"min": 8,
+							"item": "{@item Figurine of Wondrous Power, Serpentine Owl}"
+						}
 					]
 				},
 				{
@@ -2662,12 +2524,16 @@
 				{
 					"min": 18,
 					"max": 18,
-					"item": "{@item Armor of Vulnerability (Bludgeoning)|dmg|Armor of Vulnerability}"
+					"choose": {
+						"fromGroup": [
+							"Armor of Vulnerability"
+						]
+					}
 				},
 				{
 					"min": 19,
 					"max": 19,
-					"item": "{@item Arrow-catching Shield|dmg}"
+					"item": "{@item Arrow-catching Shield}"
 				},
 				{
 					"min": 20,
@@ -2682,7 +2548,11 @@
 				{
 					"min": 22,
 					"max": 22,
-					"item": "{@item Berserker Axe}"
+					"choose": {
+						"fromGeneric": [
+							"Berserker Axe"
+						]
+					}
 				},
 				{
 					"min": 23,
@@ -2722,22 +2592,50 @@
 				{
 					"min": 30,
 					"max": 30,
-					"item": "{@item Chain Mail +1|dmg}"
+					"item": "{@item Chain Mail +1}"
 				},
 				{
 					"min": 31,
 					"max": 31,
-					"item": "Chain Mail of Resistance"
+					"item": "Chain Mail of Resistance",
+					"choose": {
+						"fromItems": [
+							"Chain Mail of Acid Resistance",
+							"Chain Mail of Cold Resistance",
+							"Chain Mail of Fire Resistance",
+							"Chain Mail of Force Resistance",
+							"Chain Mail of Lightning Resistance",
+							"Chain Mail of Necrotic Resistance",
+							"Chain Mail of Poison Resistance",
+							"Chain Mail of Psychic Resistance",
+							"Chain Mail of Radiant Resistance",
+							"Chain Mail of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 32,
 					"max": 32,
-					"item": "{@item Chain Shirt +1|dmg}"
+					"item": "{@item Chain Shirt +1}"
 				},
 				{
 					"min": 33,
 					"max": 33,
-					"item": "Chain Shirt of Resistance"
+					"item": "Chain Shirt of Resistance",
+					"choose": {
+						"fromItems": [
+							"Chain Shirt of Acid Resistance",
+							"Chain Shirt of Cold Resistance",
+							"Chain Shirt of Fire Resistance",
+							"Chain Shirt of Force Resistance",
+							"Chain Shirt of Lightning Resistance",
+							"Chain Shirt of Necrotic Resistance",
+							"Chain Shirt of Poison Resistance",
+							"Chain Shirt of Psychic Resistance",
+							"Chain Shirt of Radiant Resistance",
+							"Chain Shirt of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 34,
@@ -2772,7 +2670,11 @@
 				{
 					"min": 40,
 					"max": 40,
-					"item": "{@item Dragon Slayer}"
+					"choose": {
+						"fromGeneric": [
+							"Dragon Slayer"
+						]
+					}
 				},
 				{
 					"min": 41,
@@ -2782,7 +2684,11 @@
 				{
 					"min": 42,
 					"max": 42,
-					"item": "{@item Flame Tongue}"
+					"choose": {
+						"fromGeneric": [
+							"Flame Tongue"
+						]
+					}
 				},
 				{
 					"min": 43,
@@ -2792,7 +2698,11 @@
 				{
 					"min": 44,
 					"max": 44,
-					"item": "{@item Giant Slayer}"
+					"choose": {
+						"fromGeneric": [
+							"Giant Slayer"
+						]
+					}
 				},
 				{
 					"min": 45,
@@ -2812,37 +2722,37 @@
 				{
 					"min": 48,
 					"max": 48,
-					"item": "Horn of Valhalla ({@item Horn of Valhalla, Silver|dmg|silver} or {@item Horn of Valhalla, Brass|dmg|brass})"
+					"item": "Horn of Valhalla ({@item Horn of Valhalla, Silver||silver} or {@item Horn of Valhalla, Brass||brass})"
 				},
 				{
 					"min": 49,
 					"max": 49,
-					"item": "{@item Instrument of the Bards, Canaith Mandolin|dmg}"
+					"item": "{@item Instrument of the Bards, Canaith Mandolin}"
 				},
 				{
 					"min": 50,
 					"max": 50,
-					"item": "{@item Instrument of the Bards, Cli Lyre|dmg}"
+					"item": "{@item Instrument of the Bards, Cli Lyre}"
 				},
 				{
 					"min": 51,
 					"max": 51,
-					"item": "{@item Ioun Stone, Awareness|dmg}"
+					"item": "{@item Ioun Stone, Awareness}"
 				},
 				{
 					"min": 52,
 					"max": 52,
-					"item": "{@item Ioun Stone, Protection|dmg}"
+					"item": "{@item Ioun Stone, Protection}"
 				},
 				{
 					"min": 53,
 					"max": 53,
-					"item": "{@item Ioun Stone, Reserve|dmg}"
+					"item": "{@item Ioun Stone, Reserve}"
 				},
 				{
 					"min": 54,
 					"max": 54,
-					"item": "{@item Ioun Stone, Sustenance|dmg}"
+					"item": "{@item Ioun Stone, Sustenance}"
 				},
 				{
 					"min": 55,
@@ -2852,12 +2762,26 @@
 				{
 					"min": 56,
 					"max": 56,
-					"item": "{@item Leather Armor +1|dmg}"
+					"item": "{@item Leather Armor +1}"
 				},
 				{
 					"min": 57,
 					"max": 57,
-					"item": "Leather Armor of Resistance"
+					"item": "Leather Armor of Resistance",
+					"choose": {
+						"fromItems": [
+							"Leather Armor of Acid Resistance",
+							"Leather Armor of Cold Resistance",
+							"Leather Armor of Fire Resistance",
+							"Leather Armor of Force Resistance",
+							"Leather Armor of Lightning Resistance",
+							"Leather Armor of Necrotic Resistance",
+							"Leather Armor of Poison Resistance",
+							"Leather Armor of Psychic Resistance",
+							"Leather Armor of Radiant Resistance",
+							"Leather Armor of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 58,
@@ -2887,7 +2811,7 @@
 				{
 					"min": 63,
 					"max": 63,
-					"item": "{@item Periapt of Proof Against Poison}"
+					"item": "{@item Periapt of Proof against Poison}"
 				},
 				{
 					"min": 64,
@@ -2917,7 +2841,11 @@
 				{
 					"min": 69,
 					"max": 69,
-					"item": "Ring of Resistance"
+					"choose": {
+						"fromGeneric": [
+							"Ring of Resistance"
+						]
+					}
 				},
 				{
 					"min": 70,
@@ -2932,7 +2860,7 @@
 				{
 					"min": 72,
 					"max": 72,
-					"item": "{@item Ring of X-ray Vision|dmg}"
+					"item": "{@item Ring of X-ray Vision}"
 				},
 				{
 					"min": 73,
@@ -2947,7 +2875,7 @@
 				{
 					"min": 75,
 					"max": 75,
-					"item": "{@item Rod of the Pact Keeper, +2|dmg}"
+					"item": "{@item Rod of the Pact Keeper, +2}"
 				},
 				{
 					"min": 76,
@@ -2957,17 +2885,31 @@
 				{
 					"min": 77,
 					"max": 77,
-					"item": "{@item Scale Mail +1|dmg}"
+					"item": "{@item Scale Mail +1}"
 				},
 				{
 					"min": 78,
 					"max": 78,
-					"item": "Scale Mail of Resistance"
+					"item": "Scale Mail of Resistance",
+					"choose": {
+						"fromItems": [
+							"Scale Mail of Acid Resistance",
+							"Scale Mail of Cold Resistance",
+							"Scale Mail of Fire Resistance",
+							"Scale Mail of Force Resistance",
+							"Scale Mail of Lightning Resistance",
+							"Scale Mail of Necrotic Resistance",
+							"Scale Mail of Poison Resistance",
+							"Scale Mail of Psychic Resistance",
+							"Scale Mail of Radiant Resistance",
+							"Scale Mail of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 79,
 					"max": 79,
-					"item": "{@item Shield +2|dmg}"
+					"item": "{@item Shield +2}"
 				},
 				{
 					"min": 80,
@@ -3012,12 +2954,20 @@
 				{
 					"min": 88,
 					"max": 88,
-					"item": "{@item Sword of Life Stealing}"
+					"choose": {
+						"fromGeneric": [
+							"Sword of Life Stealing"
+						]
+					}
 				},
 				{
 					"min": 89,
 					"max": 89,
-					"item": "{@item Sword of Wounding}"
+					"choose": {
+						"fromGeneric": [
+							"Sword of Wounding"
+						]
+					}
 				},
 				{
 					"min": 90,
@@ -3027,7 +2977,11 @@
 				{
 					"min": 91,
 					"max": 91,
-					"item": "{@item Vicious Weapon}"
+					"choose": {
+						"fromGeneric": [
+							"Vicious Weapon"
+						]
+					}
 				},
 				{
 					"min": 92,
@@ -3062,7 +3016,7 @@
 				{
 					"min": 98,
 					"max": 98,
-					"item": "{@item Wand of the War Mage, +2|dmg}"
+					"item": "{@item Wand of the War Mage, +2}"
 				},
 				{
 					"min": 99,
@@ -3085,7 +3039,11 @@
 				{
 					"min": 1,
 					"max": 10,
-					"item": "{@item Weapon +3|dmg}"
+					"choose": {
+						"fromGeneric": [
+							"Weapon +3"
+						]
+					}
 				},
 				{
 					"min": 11,
@@ -3095,7 +3053,11 @@
 				{
 					"min": 13,
 					"max": 14,
-					"item": "Carpet of Flying"
+					"choose": {
+						"fromGroup": [
+							"Carpet of Flying"
+						]
+					}
 				},
 				{
 					"min": 15,
@@ -3145,7 +3107,7 @@
 				{
 					"min": 33,
 					"max": 34,
-					"item": "{@item Rod of the Pact Keeper, +3|dmg}"
+					"item": "{@item Rod of the Pact Keeper, +3}"
 				},
 				{
 					"min": 35,
@@ -3155,7 +3117,7 @@
 				{
 					"min": 37,
 					"max": 38,
-					"item": "{@item Shield +3|dmg}"
+					"item": "{@item Shield +3}"
 				},
 				{
 					"min": 39,
@@ -3185,7 +3147,11 @@
 				{
 					"min": 49,
 					"max": 50,
-					"item": "{@item Sword of Sharpness}"
+					"choose": {
+						"fromGeneric": [
+							"Sword of Sharpness"
+						]
+					}
 				},
 				{
 					"min": 51,
@@ -3195,7 +3161,7 @@
 				{
 					"min": 53,
 					"max": 54,
-					"item": "{@item Wand of the War Mage, +3|dmg}"
+					"item": "{@item Wand of the War Mage, +3}"
 				},
 				{
 					"min": 55,
@@ -3220,17 +3186,37 @@
 				{
 					"min": 59,
 					"max": 59,
-					"item": "Belt of {@item Belt of Frost Giant Strength|dmg|frost} or {@item Belt of Stone Giant Strength|dmg|stone} giant strength"
+					"item": "Belt of {@item Belt of Frost Giant Strength||frost} or {@item Belt of Stone Giant Strength||stone} giant strength",
+					"choose": {
+						"fromItems": [
+							"Belt of Frost Giant Strength",
+							"Belt of Stone Giant Strength"
+						]
+					}
 				},
 				{
 					"min": 60,
 					"max": 60,
-					"item": "{@item Breastplate +1|dmg}"
+					"item": "{@item Breastplate +1}"
 				},
 				{
 					"min": 61,
 					"max": 61,
-					"item": "Breastplate of Resistance"
+					"item": "Breastplate of Resistance",
+					"choose": {
+						"fromItems": [
+							"Breastplate of Acid Resistance",
+							"Breastplate of Cold Resistance",
+							"Breastplate of Fire Resistance",
+							"Breastplate of Force Resistance",
+							"Breastplate of Lightning Resistance",
+							"Breastplate of Necrotic Resistance",
+							"Breastplate of Poison Resistance",
+							"Breastplate of Psychic Resistance",
+							"Breastplate of Radiant Resistance",
+							"Breastplate of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 62,
@@ -3240,12 +3226,12 @@
 				{
 					"min": 63,
 					"max": 63,
-					"item": "{@item Chain Mail +2|dmg}"
+					"item": "{@item Chain Mail +2}"
 				},
 				{
 					"min": 64,
 					"max": 64,
-					"item": "{@item Chain Shirt +2|dmg}"
+					"item": "{@item Chain Shirt +2}"
 				},
 				{
 					"min": 65,
@@ -3255,7 +3241,11 @@
 				{
 					"min": 66,
 					"max": 66,
-					"item": "{@item Dancing Sword}"
+					"choose": {
+						"fromGeneric": [
+							"Dancing Sword"
+						]
+					}
 				},
 				{
 					"min": 67,
@@ -3265,7 +3255,11 @@
 				{
 					"min": 68,
 					"max": 68,
-					"item": "Dragon Scale Mail"
+					"choose": {
+						"fromGroup": [
+							"Dragon Scale Mail"
+						]
+					}
 				},
 				{
 					"min": 69,
@@ -3285,12 +3279,17 @@
 				{
 					"min": 72,
 					"max": 72,
-					"item": "{@item Figurine of Wondrous Power, Obsidian Steed|dmg}"
+					"item": "{@item Figurine of Wondrous Power, Obsidian Steed}"
 				},
 				{
 					"min": 73,
 					"max": 73,
-					"item": "{@item Frost Brand}"
+					"item": "{@item Frost Brand}",
+					"choose": {
+						"fromGeneric": [
+							"Frost Brand"
+						]
+					}
 				},
 				{
 					"min": 74,
@@ -3300,52 +3299,52 @@
 				{
 					"min": 75,
 					"max": 75,
-					"item": "{@item Horn of Valhalla, Bronze|dmg}"
+					"item": "{@item Horn of Valhalla, Bronze}"
 				},
 				{
 					"min": 76,
 					"max": 76,
-					"item": "{@item Instrument of the Bards, Anstruth Harp|dmg}"
+					"item": "{@item Instrument of the Bards, Anstruth Harp}"
 				},
 				{
 					"min": 77,
 					"max": 77,
-					"item": "{@item Ioun Stone, Absorption|dmg},"
+					"item": "{@item Ioun Stone, Absorption},"
 				},
 				{
 					"min": 78,
 					"max": 78,
-					"item": "{@item Ioun Stone, Agility|dmg},"
+					"item": "{@item Ioun Stone, Agility},"
 				},
 				{
 					"min": 79,
 					"max": 79,
-					"item": "{@item Ioun Stone, Fortitude|dmg},"
+					"item": "{@item Ioun Stone, Fortitude},"
 				},
 				{
 					"min": 80,
 					"max": 80,
-					"item": "{@item Ioun Stone, Insight|dmg}"
+					"item": "{@item Ioun Stone, Insight}"
 				},
 				{
 					"min": 81,
 					"max": 81,
-					"item": "{@item Ioun Stone, Intellect|dmg}"
+					"item": "{@item Ioun Stone, Intellect}"
 				},
 				{
 					"min": 82,
 					"max": 82,
-					"item": "{@item Ioun Stone, Leadership|dmg}"
+					"item": "{@item Ioun Stone, Leadership}"
 				},
 				{
 					"min": 83,
 					"max": 83,
-					"item": "{@item Ioun Stone, Strength|dmg}"
+					"item": "{@item Ioun Stone, Strength}"
 				},
 				{
 					"min": 84,
 					"max": 84,
-					"item": "{@item Leather Armor +2|dmg}"
+					"item": "{@item Leather Armor +2}"
 				},
 				{
 					"min": 85,
@@ -3360,7 +3359,11 @@
 				{
 					"min": 87,
 					"max": 87,
-					"item": "{@item Manual of Clay Golems|dmg|Manual of Golems}"
+					"choose": {
+						"fromGroup": [
+							"Manual of Golems"
+						]
+					}
 				},
 				{
 					"min": 88,
@@ -3385,7 +3388,7 @@
 				{
 					"min": 92,
 					"max": 92,
-					"item": "{@item Scale Mail +2|dmg}"
+					"item": "{@item Scale Mail +2}"
 				},
 				{
 					"min": 93,
@@ -3395,22 +3398,50 @@
 				{
 					"min": 94,
 					"max": 94,
-					"item": "{@item Splint Armor +1|dmg}"
+					"item": "{@item Splint Armor +1}"
 				},
 				{
 					"min": 95,
 					"max": 95,
-					"item": "Splint Armor of Resistance"
+					"item": "Splint Armor of Resistance",
+					"choose": {
+						"fromItems": [
+							"Splint Armor of Acid Resistance",
+							"Splint Armor of Cold Resistance",
+							"Splint Armor of Fire Resistance",
+							"Splint Armor of Force Resistance",
+							"Splint Armor of Lightning Resistance",
+							"Splint Armor of Necrotic Resistance",
+							"Splint Armor of Poison Resistance",
+							"Splint Armor of Psychic Resistance",
+							"Splint Armor of Radiant Resistance",
+							"Splint Armor of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 96,
 					"max": 96,
-					"item": "{@item Studded Leather Armor +1|dmg}"
+					"item": "{@item Studded Leather Armor +1}"
 				},
 				{
 					"min": 97,
 					"max": 97,
-					"item": "Studded Leather Armor of Resistance"
+					"item": "Studded Leather Armor of Resistance",
+					"choose": {
+						"fromItems": [
+							"Studded Leather Armor of Acid Resistance",
+							"Studded Leather Armor of Cold Resistance",
+							"Studded Leather Armor of Fire Resistance",
+							"Studded Leather Armor of Force Resistance",
+							"Studded Leather Armor of Lightning Resistance",
+							"Studded Leather Armor of Necrotic Resistance",
+							"Studded Leather Armor of Poison Resistance",
+							"Studded Leather Armor of Psychic Resistance",
+							"Studded Leather Armor of Radiant Resistance",
+							"Studded Leather Armor of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 98,
@@ -3438,7 +3469,11 @@
 				{
 					"min": 1,
 					"max": 5,
-					"item": "{@item Defender}"
+					"choose": {
+						"fromGeneric": [
+							"Defender"
+						]
+					}
 				},
 				{
 					"min": 6,
@@ -3448,17 +3483,29 @@
 				{
 					"min": 11,
 					"max": 15,
-					"item": "{@item Luck Blade}"
+					"choose": {
+						"fromGeneric": [
+							"Luck Blade"
+						]
+					}
 				},
 				{
 					"min": 16,
 					"max": 20,
-					"item": "Sword of Answering"
+					"choose": {
+						"fromGroup": [
+							"Sword of Answering"
+						]
+					}
 				},
 				{
 					"min": 21,
 					"max": 23,
-					"item": "{@item Holy Avenger}"
+					"choose": {
+						"fromGeneric": [
+							"Holy Avenger"
+						]
+					}
 				},
 				{
 					"min": 24,
@@ -3498,17 +3545,17 @@
 				{
 					"min": 44,
 					"max": 45,
-					"item": "{@item Breastplate +2|dmg}"
+					"item": "{@item Breastplate +2}"
 				},
 				{
 					"min": 46,
 					"max": 47,
-					"item": "{@item Chain Mail +3|dmg}"
+					"item": "{@item Chain Mail +3}"
 				},
 				{
 					"min": 48,
 					"max": 49,
-					"item": "{@item Chain Shirt +3|dmg}"
+					"item": "{@item Chain Shirt +3}"
 				},
 				{
 					"min": 50,
@@ -3518,12 +3565,19 @@
 				{
 					"min": 52,
 					"max": 53,
-					"item": "Crystal Ball (legendary version)"
+					"item": "Crystal Ball (legendary version)",
+					"choose": {
+						"fromItems": [
+							"Crystal Ball of Mind Reading",
+							"Crystal Ball of Telepathy",
+							"Crystal Ball of True Seeing"
+						]
+					}
 				},
 				{
 					"min": 54,
 					"max": 55,
-					"item": "{@item Half Plate Armor +1|dmg}"
+					"item": "{@item Half Plate Armor +1}"
 				},
 				{
 					"min": 56,
@@ -3533,12 +3587,12 @@
 				{
 					"min": 58,
 					"max": 59,
-					"item": "{@item Leather Armor +3|dmg}"
+					"item": "{@item Leather Armor +3}"
 				},
 				{
 					"min": 60,
 					"max": 61,
-					"item": "{@item Plate Armor +1|dmg}"
+					"item": "{@item Plate Armor +1}"
 				},
 				{
 					"min": 62,
@@ -3553,7 +3607,7 @@
 				{
 					"min": 66,
 					"max": 67,
-					"item": "{@item Scale Mail +1|dmg}"
+					"item": "{@item Scale Mail +1}"
 				},
 				{
 					"min": 68,
@@ -3563,12 +3617,12 @@
 				{
 					"min": 70,
 					"max": 71,
-					"item": "{@item Splint Armor +2|dmg}"
+					"item": "{@item Splint Armor +2}"
 				},
 				{
 					"min": 72,
 					"max": 73,
-					"item": "{@item Studded Leather Armor +2|dmg}"
+					"item": "{@item Studded Leather Armor +2}"
 				},
 				{
 					"min": 74,
@@ -3580,18 +3634,41 @@
 					"max": 76,
 					"item": "Magic armor",
 					"table": [
-						"{@item Half Plate Armor +2|dmg}",
-						"{@item Half Plate Armor +2|dmg}",
-						"{@item Plate Armor +2|dmg}",
-						"{@item Plate Armor +2|dmg}",
-						"{@item Studded Leather Armor +3|dmg}",
-						"{@item Studded Leather Armor +3|dmg}",
-						"{@item Breastplate +3|dmg}",
-						"{@item Breastplate +3|dmg}",
-						"{@item Splint Armor +3|dmg}",
-						"{@item Splint Armor +3|dmg}",
-						"{@item Half Plate Armor +3|dmg}",
-						"{@item Plate Armor +3|dmg}"
+						{
+							"min": 1,
+							"max": 2,
+							"item": "{@item Half Plate Armor +2}"
+						},
+						{
+							"min": 3,
+							"max": 4,
+							"item": "{@item Plate Armor +2}"
+						},
+						{
+							"min": 5,
+							"max": 6,
+							"item": "{@item Studded Leather Armor +3}"
+						},
+						{
+							"min": 7,
+							"max": 8,
+							"item": "{@item Breastplate +3}"
+						},
+						{
+							"min": 9,
+							"max": 10,
+							"item": "{@item Splint Armor +3}"
+						},
+						{
+							"min": 11,
+							"max": 11,
+							"item": "{@item Half Plate Armor +3}"
+						},
+						{
+							"min": 12,
+							"max": 12,
+							"item": "{@item Plate Armor +3}"
+						}
 					]
 				},
 				{
@@ -3627,32 +3704,46 @@
 				{
 					"min": 83,
 					"max": 83,
-					"item": "Half Plate Armor of Resistance"
+					"item": "Half Plate Armor of Resistance",
+					"choose": {
+						"fromItems": [
+							"Half Plate Armor of Acid Resistance",
+							"Half Plate Armor of Cold Resistance",
+							"Half Plate Armor of Fire Resistance",
+							"Half Plate Armor of Force Resistance",
+							"Half Plate Armor of Lightning Resistance",
+							"Half Plate Armor of Necrotic Resistance",
+							"Half Plate Armor of Poison Resistance",
+							"Half Plate Armor of Psychic Resistance",
+							"Half Plate Armor of Radiant Resistance",
+							"Half Plate Armor of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 84,
 					"max": 84,
-					"item": "{@item Horn of Valhalla, Iron|dmg}"
+					"item": "{@item Horn of Valhalla, Iron}"
 				},
 				{
 					"min": 85,
 					"max": 85,
-					"item": "{@item Instrument of the Bards, Ollamh Harp|dmg}"
+					"item": "{@item Instrument of the Bards, Ollamh Harp}"
 				},
 				{
 					"min": 86,
 					"max": 86,
-					"item": "{@item Ioun Stone, Greater Absorption|dmg}"
+					"item": "{@item Ioun Stone, Greater Absorption}"
 				},
 				{
 					"min": 87,
 					"max": 87,
-					"item": "{@item Ioun Stone, Mastery|dmg}"
+					"item": "{@item Ioun Stone, Mastery}"
 				},
 				{
 					"min": 88,
 					"max": 88,
-					"item": "{@item Ioun Stone, Regeneration|dmg}"
+					"item": "{@item Ioun Stone, Regeneration}"
 				},
 				{
 					"min": 89,
@@ -3662,7 +3753,21 @@
 				{
 					"min": 90,
 					"max": 90,
-					"item": "Plate Armor of Resistance"
+					"item": "Plate Armor of Resistance",
+					"choose": {
+						"fromItems": [
+							"Plate Armor of Acid Resistance",
+							"Plate Armor of Cold Resistance",
+							"Plate Armor of Fire Resistance",
+							"Plate Armor of Force Resistance",
+							"Plate Armor of Lightning Resistance",
+							"Plate Armor of Necrotic Resistance",
+							"Plate Armor of Poison Resistance",
+							"Plate Armor of Psychic Resistance",
+							"Plate Armor of Radiant Resistance",
+							"Plate Armor of Thunder Resistance"
+						]
+					}
 				},
 				{
 					"min": 91,

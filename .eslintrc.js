@@ -5,6 +5,10 @@ module.exports = {
 		"es6": true,
 		"jquery": true
 	},
+	"parserOptions": {
+		"ecmaVersion": 9,
+		"sourceType": "module"
+	},
 	"rules": {
 		"accessor-pairs": "error",
 		"arrow-spacing": ["error", {"before": true, "after": true}],
@@ -24,7 +28,7 @@ module.exports = {
 		"dot-location": ["error", "property"],
 		"eqeqeq": ["error", "always", {"null": "ignore"}],
 		"func-call-spacing": ["error", "never"],
-		"generator-star-spacing": ["error", {"before": true, "after": true}],
+		"generator-star-spacing": ["error", {"before": false, "after": true}],
 		"handle-callback-err": ["error", "^(err|error)$"],
 		"indent": [
 			"error",
@@ -68,7 +72,7 @@ module.exports = {
 		"no-irregular-whitespace": "error",
 		"no-iterator": "error",
 		"no-label-var": "error",
-		"no-labels": ["error", {"allowLoop": false, "allowSwitch": false}],
+		"no-labels": ["error", {"allowLoop": true, "allowSwitch": false}],
 		"no-lone-blocks": "error",
 		"no-mixed-operators": ["error", {
 			"groups": [
@@ -131,7 +135,18 @@ module.exports = {
 		"no-with": "error",
 		"object-property-newline": ["error", {"allowMultiplePropertiesPerLine": true}],
 		"one-var": ["error", {"initialized": "never"}],
-		"operator-linebreak": ["error", "after", {"overrides": {"?": "before", ":": "before"}}],
+		"operator-linebreak": ["error", "after", {
+			"overrides": {
+				"?": "before",
+				":": "before",
+				"+": "before",
+				"-": "before",
+				"*": "before",
+				"/": "before",
+				"||": "before",
+				"&&": "before"
+			}
+		}],
 		"padded-blocks": ["error", {"blocks": "never", "switches": "never", "classes": "never"}],
 		"prefer-promise-reject-errors": "error",
 		"rest-spread-spacing": ["error", "never"],
@@ -157,6 +172,12 @@ module.exports = {
 		"valid-typeof": ["error", {"requireStringLiterals": true}],
 		"wrap-iife": ["error", "any", {"functionPrototypeMethods": true}],
 		"yield-star-spacing": ["error", "both"],
-		"yoda": ["error", "never"]
+		"yoda": ["error", "never"],
+		"no-prototype-builtins": "off",
+		"require-atomic-updates": "off",
+		"no-console": "error",
+		"prefer-template": "error",
+		"quotes": ["error", "double", {"allowTemplateLiterals": true}],
+		"no-var": "error"
 	}
 };

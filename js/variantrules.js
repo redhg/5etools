@@ -1,85 +1,102 @@
 "use strict";
-const JSON_URL = "data/variantrules.json";
 
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad);
-};
+class VariantRulesPage extends ListPage {
+	constructor () {
+		const pageFilter = new PageFilterVariantRules();
+		super({
+			dataSource: "data/variantrules.json",
 
-let rulesList;
-let tableDefault;
+			pageFilter,
 
-const entryRenderer = new EntryRenderer();
+			listClass: "variantrules",
 
-function onJsonLoad (data) {
-	rulesList = data.variantrule;
-	tableDefault = $("#pagecontent").html();
+			sublistClass: "subvariantrules",
 
-	const sourceFilter = getSourceFilter();
-	const filterBox = initFilterBox(sourceFilter);
-
-	let tempString = "";
-	for (let i = 0; i < rulesList.length; i++) {
-		const curRule = rulesList[i];
-
-		const searchStack = [];
-		for (const e1 of curRule.entries) {
-			EntryRenderer.getNames(searchStack, e1);
-		}
-
-		// populate table
-		tempString += `
-			<li ${FLTR_ID}="${i}">
-				<a id="${i}" href="#${UrlUtil.autoEncodeHash(curRule)}" title="${curRule.name}">
-					<span class="name col-xs-10">${curRule.name}</span>
-					<span class="source col-xs-2 source${Parser.sourceJsonToAbv(curRule.source)}" title="${Parser.sourceJsonToFull(curRule.source)}">${Parser.sourceJsonToAbv(curRule.source)}</span>
-					<span class="search hidden">${searchStack.join(",")}</span>
-				</a>
-			</li>`;
-
-		// populate filters
-		sourceFilter.addIfAbsent(curRule.source);
-	}
-	$("ul.variantRules").append(tempString);
-
-	const list = ListUtil.search({
-		valueNames: ['name', 'source', 'search'],
-		listClass: "variantRules"
-	});
-
-	sourceFilter.items.sort(SortUtil.ascSort);
-
-	filterBox.render();
-
-	// filtering function
-	$(filterBox).on(
-		FilterBox.EVNT_VALCHANGE,
-		handleFilterChange
-	);
-
-	function handleFilterChange () {
-		const f = filterBox.getValues();
-		list.filter(function (item) {
-			const r = rulesList[$(item.elm).attr(FLTR_ID)];
-			return filterBox.toDisplay(f, r.source);
+			dataProps: ["variantrule"]
 		});
 	}
 
-	addListShowHide();
-	initHistory();
-	handleFilterChange();
+	getListItem (rule, rlI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(rule, isExcluded);
+
+		const searchStack = [];
+		for (const e1 of rule.entries) {
+			Renderer.getNames(searchStack, e1);
+		}
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const source = Parser.sourceJsonToAbv(rule.source);
+		const hash = UrlUtil.autoEncodeHash(rule);
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="bold col-10 pl-0">${rule.name}</span>
+			<span class="col-2 text-center ${Parser.sourceJsonToColor(rule.source)} pr-0" title="${Parser.sourceJsonToFull(rule.source)}" ${BrewUtil.sourceJsonToStyle(rule.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			rlI,
+			eleLi,
+			rule.name,
+			{
+				hash,
+				search: searchStack.join(","),
+				source
+			},
+			{
+				uniqueId: rule.uniqueId ? rule.uniqueId : rlI,
+				isExcluded
+			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._filterBox.getValues();
+		this._list.filter(item => this._pageFilter.toDisplay(f, this._dataList[item.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (it, pinId) {
+		const hash = UrlUtil.autoEncodeHash(it);
+
+		const $ele = $(`<li class="row"><a href="#${hash}" class="lst--border"><span class="bold col-12 px-0">${it.name}</span></a></li>`)
+			.contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			it.name,
+			{
+				hash
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		const rule = this._dataList[id];
+
+		$("#pagecontent").empty().append(RenderVariantRules.$getRenderedVariantRule(rule));
+
+		ListUtil.updateSelected();
+	}
+
+	async pDoLoadSubHash (sub) {
+		if (!sub.length) return;
+
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
+
+		const $title = $(`.rd__h[data-title-index="${sub[0]}"]`);
+		if ($title.length) $title[0].scrollIntoView();
+	}
 }
 
-function loadhash (id) {
-	// reset details pane to initial HTML
-	$("#pagecontent").html(tableDefault);
-
-	const curRule = rulesList[id];
-
-	$("th.name").html(curRule.name);
-
-	// build text list and display
-	$("tr.text").remove();
-	const textStack = [];
-	entryRenderer.recursiveEntryRender(curRule, textStack);
-	$("tr#text").after("<tr class='text'><td colspan='6'>" + textStack.join("") + "</td></tr>");
-}
+const variantRulesPage = new VariantRulesPage();
+window.addEventListener("load", () => variantRulesPage.pOnLoad());

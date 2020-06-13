@@ -1,167 +1,125 @@
 "use strict";
 
-const JSON_URL = "data/deities.json";
 const STR_REPRINTED = "reprinted";
 
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad);
-};
-
-function alignSort (a, b) {
-	const first = ["L", "C"];
-	const last = ["G", "E"];
-	if (a === b) return 0;
-	if (first.includes(a)) return -1;
-	if (last.includes(a)) return 1;
-	if (first.includes(b)) return 1;
-	if (last.includes(b)) return -1;
-	return 0;
+function unpackAlignment (g) {
+	g.alignment.sort(SortUtil.alignmentSort);
+	if (g.alignment.length === 2 && g.alignment.includes("N")) {
+		const out = [...g.alignment];
+		if (out[0] === "N") out[0] = "NX";
+		else out[1] = "NY";
+		return out;
+	}
+	return MiscUtil.copy(g.alignment);
 }
 
-let deitiesList;
+class DeitiesPage extends ListPage {
+	constructor () {
+		const pageFilter = new PageFilterDeities();
+		super({
+			dataSource: DataUtil.deity.loadJSON,
 
-function onJsonLoad (data) {
-	deitiesList = data.deity;
+			pageFilter,
 
-	const sourceFilter = getSourceFilter();
-	const alignmentFilter = new Filter({
-		header: "Alignment",
-		items: ["C", "E", "G", "L", "N"],
-		displayFn: Parser.dtAlignmentToFull
-	});
-	const pantheonFilter = new Filter({
-		header: "Pantheon",
-		items: [
-			"Celtic",
-			"Dawn War",
-			"Dragonlance",
-			"Drow",
-			"Dwarven",
-			"Eberron",
-			"Egyptian",
-			"Elven",
-			"Faerûnian",
-			"Forgotten Realms",
-			"Gnomish",
-			"Greek",
-			"Greyhawk",
-			"Halfling",
-			"Nonhuman",
-			"Norse",
-			"Orc"
-		]
-	});
-	const categoryFilter = new Filter({
-		header: "Category",
-		items: [
-			STR_NONE,
-			"Other Faiths of Eberron",
-			"The Dark Six",
-			"The Gods of Evil",
-			"The Gods of Good",
-			"The Gods of Neutrality",
-			"The Sovereign Host"
-		]
-	});
-	const domainFilter = new Filter({
-		header: "Domain",
-		items: ["Arcana", "Death", "Forge", "Grave", "Knowledge", "Life", "Light", "Nature", STR_NONE, "Tempest", "Trickery", "War"]
-	});
-	const miscFilter = new Filter({
-		header: "Miscellaneous",
-		items: [STR_REPRINTED],
-		displayFn: StrUtil.uppercaseFirst,
-		deselFn: (it) => { return it === STR_REPRINTED }
-	});
+			listClass: "deities",
 
-	const filterBox = initFilterBox(sourceFilter, alignmentFilter, pantheonFilter, categoryFilter, domainFilter, miscFilter);
+			sublistClass: "subdeities",
 
-	let tempString = "";
-	deitiesList.forEach((g, i) => {
-		const abvSource = Parser.sourceJsonToAbv(g.source);
-
-		g.alignment.sort(alignSort);
-		if (!g.category) g.category = STR_NONE;
-		if (!g.domains) g.domains = [STR_NONE];
-		g.domains.sort(SortUtil.ascSort);
-
-		g._fReprinted = g.reprinted ? STR_REPRINTED : "";
-
-		tempString += `
-			<li class="row" ${FLTR_ID}="${i}">
-				<a id="${i}" href="#${UrlUtil.autoEncodeHash(g)}" title="${g.name}">
-					<span class="name col-xs-3">${g.name}</span>
-					<span class="pantheon col-xs-2 text-align-center">${g.pantheon}</span>
-					<span class="alignment col-xs-2 text-align-center">${g.alignment.join("")}</span>
-					<span class="domains col-xs-3 ${g.domains[0] === STR_NONE ? `list-entry-none` : ""}">${g.domains.join(", ")}</span>
-					<span class="source col-xs-2 source${abvSource}" title="${Parser.sourceJsonToFull(g.source)}">${abvSource}</span>
-				</a>
-			</li>
-		`;
-
-		sourceFilter.addIfAbsent(g.source);
-		categoryFilter.addIfAbsent(g.category);
-	});
-	$(`#deitiesList`).append(tempString);
-	// sort filters
-	categoryFilter.items.sort();
-
-	const list = ListUtil.search({
-		valueNames: ["name", "pantheon", "alignment", "domains", "symbol", "source"],
-		listClass: "deities",
-		sortFunction: SortUtil.listSort
-	});
-
-	filterBox.render();
-
-	// filtering function
-	$(filterBox).on(
-		FilterBox.EVNT_VALCHANGE,
-		handleFilterChange
-	);
-
-	function handleFilterChange () {
-		const f = filterBox.getValues();
-		list.filter(function (item) {
-			const g = deitiesList[$(item.elm).attr(FLTR_ID)];
-			return filterBox.toDisplay(
-				f,
-				g.source,
-				g.alignment,
-				g.pantheon,
-				g.category,
-				g.domains,
-				g._fReprinted
-			);
+			dataProps: ["deity"]
 		});
 	}
 
-	initHistory();
-	handleFilterChange();
-	RollerUtil.addListRollButton();
-	addListShowHide();
+	getListItem (g, dtI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(g, isExcluded);
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const source = Parser.sourceJsonToAbv(g.source);
+		const hash = UrlUtil.autoEncodeHash(g);
+		const alignment = g.alignment ? g.alignment.join("") : "\u2014";
+		const domains = g.domains.join(", ");
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="bold col-3 pl-0">${g.name}</span>
+			<span class="col-2 text-center">${g.pantheon}</span>
+			<span class="col-2 text-center">${alignment}</span>
+			<span class="col-3 ${g.domains[0] === VeCt.STR_NONE ? `list-entry-none` : ""}">${domains}</span>
+			<span class="col-2 text-center ${Parser.sourceJsonToColor(g.source)} pr-0" title="${Parser.sourceJsonToFull(g.source)}" ${BrewUtil.sourceJsonToStyle(g.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			dtI,
+			eleLi,
+			g.name,
+			{
+				hash,
+				source,
+				pantheon: g.pantheon,
+				alignment,
+				domains
+			},
+			{
+				uniqueId: g.uniqueId ? g.uniqueId : dtI,
+				isExcluded
+			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._filterBox.getValues();
+		this._list.filter(item => this._pageFilter.toDisplay(f, this._dataList[item.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (g, pinId) {
+		const hash = UrlUtil.autoEncodeHash(g);
+
+		const alignment = g.alignment ? g.alignment.join("") : "\u2014";
+		const domains = g.domains.join(", ");
+
+		const $ele = $(`<li class="row">
+			<a href="#${hash}" class="lst--border">
+				<span class="bold col-4 pl-0">${g.name}</span>
+				<span class="col-2">${g.pantheon}</span>
+				<span class="col-2">${alignment}</span>
+				<span class="col-4 ${g.domains[0] === VeCt.STR_NONE ? `list-entry-none` : ""} pr-0">${domains}</span>
+			</a>
+		</li>`)
+			.contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			g.name,
+			{
+				hash,
+				pantheon: g.pantheon,
+				alignment,
+				domains
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		const deity = this._dataList[id];
+
+		$(`#pagecontent`).empty().append(RenderDeities.$getRenderedDeity(deity));
+
+		ListUtil.updateSelected();
+	}
+
+	async pDoLoadSubHash (sub) {
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
+	}
 }
 
-const renderer = new EntryRenderer();
-function loadhash (jsonIndex) {
-	const deity = deitiesList[jsonIndex];
-
-	const renderStack = [];
-	if (deity.entries) renderer.recursiveEntryRender({entries: deity.entries}, renderStack);
-
-	const $content = $(`#pagecontent`);
-	$content.html(`
-		${EntryRenderer.utils.getBorderTr()}
-		${EntryRenderer.utils.getNameTr(deity, false, "", `, ${deity.title.toTitleCase()}`)}
-		<tr><td colspan="6"><span class="bold">Pantheon: </span>${deity.pantheon}</td></tr>
-		${deity.category ? `<tr><td colspan="6"><span class="bold">Category: </span>${deity.category}</td></tr>` : ""}
-		<tr><td colspan="6"><span class="bold">Alignment: </span>${deity.alignment.map(a => Parser.dtAlignmentToFull(a)).join(" ")}</td></tr>
-		<tr><td colspan="6"><span class="bold">Domains: </span>${deity.domains.join(", ")}</td></tr>
-		${deity.altNames ? `<tr><td colspan="6"><span class="bold">Alternate Names: </span>${deity.altNames.join(", ")}</td></tr>` : ""}
-		<tr><td colspan="6"><span class="bold">Symbol: </span>${deity.symbol}</td></tr>
-		${deity.symbolImg ? `<tr><td colspan="6">${renderer.renderEntry({entries: [deity.symbolImg]})}</td></tr>` : ""}
-		${renderStack.length ? `<tr class="text"><td colspan="6">${renderStack.join("")}</td></tr>` : ""}
-		${EntryRenderer.utils.getPageTr(deity)}
-		${EntryRenderer.utils.getBorderTr()}
-	`);
-}
+const deitiesPage = new DeitiesPage();
+window.addEventListener("load", () => deitiesPage.pOnLoad());

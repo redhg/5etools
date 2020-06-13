@@ -1,10 +1,12 @@
 {
-	"$schema": "http://json-schema.org/draft-06/schema#",
-	"title": "SpellsArray",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "spells.json",
+	"version": "1.5.4",
+	"title": "Spells",
 	"type": "object",
 
 	"definitions": {
-		"spell": {
+		"spellData": {
 			"properties": {
 				"name": {
 					"type": "string"
@@ -22,8 +24,16 @@
 						"D",
 						"N",
 						"T",
-						"C"
+						"C",
+						"P"
 					]
+				},
+				"subschools": {
+					"description": "For homebrew use only.",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
 				},
 				"meta": {
 					"type": "object",
@@ -56,7 +66,8 @@
 								"cone",
 								"radius",
 								"sphere",
-								"hemisphere"
+								"hemisphere",
+								"cylinder"
 							]
 						},
 						"distance": {
@@ -69,13 +80,29 @@
 										"miles",
 										"self",
 										"touch",
-										"special",
 										"unlimited",
 										"plane",
 										"sight"
 									]
 								},
 								"amount": {
+									"type": "integer"
+								},
+								"typeSecondary": {
+									"description": "Homebrew only",
+									"type": "string",
+									"enum": [
+										"feet",
+										"miles",
+										"self",
+										"touch",
+										"unlimited",
+										"plane",
+										"sight"
+									]
+								},
+								"amountSecondary": {
+									"description": "Homebrew only",
 									"type": "integer"
 								}
 							},
@@ -100,7 +127,35 @@
 							"type": "boolean"
 						},
 						"m": {
-							"type": ["boolean", "string"]
+							"oneOf": [
+								{
+									"type": "object",
+									"properties": {
+										"text": {
+											"type": "string"
+										},
+										"cost": {
+											"description": "In copper pieces.",
+											"type": "number"
+										},
+										"consume": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"text"
+									],
+									"additionalProperties": false
+
+								},
+								{
+									"type": ["boolean", "string"]
+								}
+							]
+						},
+						"r": {
+							"description": "\"Royalty\" components, as introduced in Acquisitions Incorporated",
+							"type": "boolean"
 						}
 					},
 					"additionalProperties": false
@@ -112,19 +167,25 @@
 				"entries": {
 					"type": "array",
 					"items": {
-						"$ref": "/Entry"
+						"$ref": "entry.json"
 					}
 				},
 				"entriesHigherLevel": {
 					"type": "array",
 					"items": {
-						"$ref": "/Entry"
+						"$ref": "entry.json"
 					}
 				},
 				"classes": {
 					"type": "object",
 					"properties": {
 						"fromClassList": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/class"
+							}
+						},
+						"fromClassListVariant": {
 							"type": "array",
 							"items": {
 								"$ref": "#/definitions/class"
@@ -166,10 +227,43 @@
 							}
 						}
 					},
-					"required": [
-						"fromClassList"
-					],
 					"additionalProperties": false
+				},
+				"races": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"source": {
+								"type": "string"
+							},
+							"baseName": {
+								"type": "string"
+							},
+							"baseSource": {
+								"type": "string"
+							}
+						},
+						"required": ["name", "source"]
+					}
+				},
+				"backgrounds": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"source": {
+								"type": "string"
+							}
+						},
+						"required": ["name", "source"]
+					}
 				},
 				"source": {
 					"type": "string"
@@ -177,8 +271,12 @@
 				"page": {
 					"type": "integer"
 				},
+				"otherSources": {
+					"$ref": "util.json#/definitions/otherSources"
+				},
 				"damageInflict": {
 					"type": "array",
+					"uniqueItems": true,
 					"items": {
 						"type": "string",
 						"enum": [
@@ -188,6 +286,7 @@
 				},
 				"damageResist": {
 					"type": "array",
+					"uniqueItems": true,
 					"items": {
 						"type": "string",
 						"enum": [
@@ -197,6 +296,7 @@
 				},
 				"damageImmune": {
 					"type": "array",
+					"uniqueItems": true,
 					"items": {
 						"type": "string",
 						"enum": [
@@ -206,6 +306,7 @@
 				},
 				"damageVulnerable": {
 					"type": "array",
+					"uniqueItems": true,
 					"items": {
 						"type": "string",
 						"enum": [
@@ -213,8 +314,12 @@
 						]
 					}
 				},
+				"conditionInflict": {
+					"$ref": "util.json#/definitions/tagsConditions"
+				},
 				"savingThrow": {
 					"type": "array",
+					"uniqueItems": true,
 					"items": {
 						"type": "string",
 						"enum": [
@@ -224,28 +329,96 @@
 				},
 				"opposedCheck": {
 					"type": "array",
+					"uniqueItems": true,
 					"items": {
 						"type": "string",
 						"enum": [
 							"strength", "constitution", "dexterity", "intelligence", "wisdom", "charisma"
 						]
 					}
+				},
+				"spellAttack": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"enum": [
+							"M", "R", "O"
+						]
+					}
+				},
+				"areaTags": {
+					"description": "By convention, only the effects of the spell cast at its base level are considered when populating these.",
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"enum": ["ST", "MT", "R", "N", "C","Y", "H", "L", "S", "Q", "W"]
+					}
+				},
+				"miscTags": {
+					"type": "array",
+					"description": "PRM = permanentEffects = 'Used to flag spells that can/will have permanent effects, but are not listed as having permanent duration'; SCL = scalingEffects; HL = isHeal; SMN = isSummon; SGT = requiresSight",
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"enum": ["PRM", "SCL", "HL", "SMN", "SGT"]
+					}
+				},
+				"srd": {
+					"$ref": "util.json#/definitions/srd"
+				},
+				"scalingLevelDice": {
+					"oneOf": [
+						{
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/scalingLevelDiceItem"
+							}
+						},
+						{
+							"$ref": "#/definitions/scalingLevelDiceItem"
+						}
+					]
 				}
 			},
-			"required": [
-				"name",
-				"level",
-				"school",
-				"time",
-				"range",
-				"components",
-				"duration",
-				"classes",
-				"entries",
-				"source",
-				"page"
-			],
 			"additionalProperties": false
+		},
+
+		"spell": {
+			"anyOf": [
+				{
+					"type": "object",
+					"$$merge": [
+						{
+							"$ref": "#/definitions/spellData"
+						},
+						{
+							"required": [
+								"name",
+								"level",
+								"school",
+								"time",
+								"range",
+								"duration",
+								"entries",
+								"source"
+							]
+						}
+					]
+				},
+				{
+					"type": "object",
+					"$$merge": [
+						{
+							"$ref": "#/definitions/spellData"
+						},
+						{
+							"$ref": "util.json#/definitions/copyBlock"
+						}
+					]
+				}
+			]
 		},
 
 		"time": {
@@ -283,13 +456,13 @@
 						"type": {
 							"type": "string",
 							"enum": [
-								"hours",
-								"minutes",
-								"turns",
-								"rounds",
-								"weeks",
-								"days",
-								"years"
+								"hour",
+								"minute",
+								"turn",
+								"round",
+								"week",
+								"day",
+								"year"
 							]
 						},
 						"amount": {
@@ -311,7 +484,7 @@
 					"type": "array",
 					"items": {
 						"type": "string",
-						"enum": ["dispell", "trigger", "discharge"]
+						"enum": ["dispel", "trigger", "discharge"]
 					}
 				},
 				"condition": {
@@ -338,6 +511,25 @@
 				"source"
 			],
 			"additionalProperties": false
+		},
+
+		"scalingLevelDiceItem": {
+			"type": "object",
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"scaling": {
+					"type": "object",
+					"patternProperties": {
+						"\\d+": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
 		}
 	},
 
@@ -345,6 +537,13 @@
 		"spell": {
 			"type": "array",
 			"items": {"$ref": "#/definitions/spell"}
+		},
+		"_meta": {
+			"$ref": "util.json#/definitions/metaBlock"
 		}
-	}
+	},
+	"required": [
+		"spell"
+	],
+	"additionalProperties": false
 }

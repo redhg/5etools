@@ -1,204 +1,188 @@
 "use strict";
-const JSON_URL = "data/races.json";
-let tableDefault = "";
 
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad)
-};
-
-let raceList;
-
-function getAbilityObjs (abils) {
-	function makeAbilObj (asi, amount) {
-		return {
-			asi: asi,
-			amount: amount,
-			_toIdString: () => {
-				return `${asi}${amount}`
-			}
-		}
+class RacesPage extends ListPage {
+	static _getInvertedName (name) {
+		// convert e.g. "Elf (High)" to "High Elf" for use as a searchable field
+		const bracketMatch = /^(.*?) \((.*?)\)$/.exec(name);
+		return bracketMatch ? `${bracketMatch[2]} ${bracketMatch[1]}` : null;
 	}
 
-	const out = new CollectionUtil.ObjectSet();
-	if (abils.choose) {
-		abils.choose.forEach(ch => {
-			const by = ch.amount || 1;
-			ch.from.forEach(asi => {
-				out.add(makeAbilObj(asi, by));
-			});
+	constructor () {
+		const pageFilter = new PageFilterRaces();
+		super({
+			dataSource: async () => {
+				const rawRaceData = await DataUtil.loadJSON("data/races.json");
+				const raceData = Renderer.race.mergeSubraces(rawRaceData.race, {isAddBaseRaces: true});
+				return {race: raceData};
+			},
+			dataSourceFluff: "data/fluff-races.json",
+
+			pageFilter,
+
+			listClass: "races",
+
+			sublistClass: "subraces",
+
+			dataProps: ["race"],
+
+			hasAudio: true
 		});
 	}
-	Object.keys(abils).forEach(abil => {
-		if (abil !== "choose") {
-			out.add(makeAbilObj(abil, abils[abil]));
-		}
-	});
-	return Array.from(out.values());
-}
 
-function mapAbilityObjToFull (abilObj) {
-	return `${Parser.attAbvToFull(abilObj.asi)} ${abilObj.amount < 0 ? "" : "+"}${abilObj.amount}`;
-}
+	_addData (data) {
+		if (data.race && data.race.length) super._addData(data);
+		if (!data.subrace || !data.subrace.length) return;
 
-let filterBox;
-function onJsonLoad (data) {
-	tableDefault = $("#pagecontent").html();
+		// Attach each subrace to a parent race, and recurse
+		const nxtData = Renderer.race.adoptSubraces(this._dataList, data.subrace);
 
-	raceList = EntryRenderer.race.mergeSubraces(data.race);
-
-	const sourceFilter = getSourceFilter();
-	const asiFilter = new Filter({
-		header: "Ability Bonus (Including Subrace)",
-		items: [
-			"Strength +2",
-			"Strength +1",
-			"Dexterity +2",
-			"Dexterity +1",
-			"Constitution +2",
-			"Constitution +1",
-			"Intelligence +2",
-			"Intelligence +1",
-			"Wisdom +2",
-			"Wisdom +1",
-			"Charisma +2",
-			"Charisma +1"
-		]
-	});
-	const sizeFilter = new Filter({header: "Size", displayFn: Parser.sizeAbvToFull});
-	const speedFilter = new Filter({header: "Speed", items: ["Climb", "Fly", "Swim", "Walk"]});
-	const miscFilter = new Filter({
-		header: "Miscellaneous",
-		items: ["Darkvision", "NPC Race"],
-		deselFn: (it) => {
-			return it === "NPC Race";
-		}
-	});
-
-	filterBox = initFilterBox(
-		sourceFilter,
-		asiFilter,
-		sizeFilter,
-		speedFilter,
-		miscFilter
-	);
-
-	const racesTable = $("ul.races");
-	let tempString = "";
-	for (let i = 0; i < raceList.length; i++) {
-		const race = raceList[i];
-
-		const ability = race.ability ? utils_getAbilityData(race.ability) : {asTextShort: "None"};
-		race._fAbility = race.ability ? getAbilityObjs(race.ability).map(a => mapAbilityObjToFull(a)) : []; // used for filtering
-		race._fSpeed = race.speed.walk ? [race.speed.climb ? "Climb" : null, race.speed.fly ? "Fly" : null, race.speed.swim ? "Swim" : null, "Walk"].filter(it => it) : "Walk";
-		race._fMisc = [race.darkvision ? "Darkvision" : null, race.npc ? "NPC Race" : null].filter(it => it);
-		// convert e.g. "Elf (High)" to "High Elf" and add as a searchable field
-		const bracketMatch = /^(.*?) \((.*?)\)$/.exec(race.name);
-
-		tempString +=
-			`<li ${FLTR_ID}='${i}'>
-				<a id='${i}' href='#${UrlUtil.autoEncodeHash(race)}' title='${race.name}'>
-					<span class='name col-xs-4'>${race.name}</span>
-					<span class='ability col-xs-4'>${ability.asTextShort}</span>
-					<span class='size col-xs-2'>${Parser.sizeAbvToFull(race.size)}</span>
-					<span class='source col-xs-2 source${race.source}' title="${Parser.sourceJsonToFull(race.source)}">${Parser.sourceJsonToAbv(race.source)}</span>
-					${bracketMatch ? `<span class="clean-name hidden">${bracketMatch[2]} ${bracketMatch[1]}</span>` : ""}
-				</a>
-			</li>`;
-
-		// populate filters
-		sourceFilter.addIfAbsent(race.source);
-		sizeFilter.addIfAbsent(race.size);
+		if (nxtData.length) this._addData({race: Renderer.race.mergeSubraces(nxtData)})
 	}
 
-	racesTable.append(tempString);
+	async _pHandleBrew (homebrew) {
+		if (homebrew.race) {
+			homebrew = MiscUtil.copy(homebrew);
+			homebrew.race = Renderer.race.mergeSubraces(homebrew.race, {isAddBaseRaces: true});
+		}
+		return super._pHandleBrew(homebrew);
+	}
 
-	// sort filters
-	sourceFilter.items.sort(SortUtil.ascSort);
-	sizeFilter.items.sort(ascSortSize);
+	/**
+	 * For a given homebrew race, fetch entries that have been expanded from its "subraces" array.
+	 * @param uniqueId
+	 */
+	getMergedSubraces (uniqueId) {
+		const race = this._dataList.find(it => it.uniqueId === uniqueId);
+		if (!race || !race._isBaseRace) return [];
+		// Note that this may include other subraces which were not on the original
+		return this._dataList.filter(it => it._baseName === race.name && it._baseSource === race.source);
+	}
 
-	function ascSortSize (a, b) {
-		return SortUtil.ascSort(toNum(a), toNum(b));
+	getListItem (race, rcI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(race, isExcluded);
 
-		function toNum (size) {
-			switch (size) {
-				case "M":
-					return 0;
-				case "S":
-					return -1;
-				case "V":
-					return 1;
+		const ability = race.ability ? Renderer.getAbilityData(race.ability) : {asTextShort: "None"};
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const hash = UrlUtil.autoEncodeHash(race);
+		const size = Parser.sizeAbvToFull(race.size || SZ_VARIES);
+		const source = Parser.sourceJsonToAbv(race.source);
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="bold col-4 pl-0">${race.name}</span>
+			<span class="col-4">${ability.asTextShort}</span>
+			<span class="col-2">${size}</span>
+			<span class="col-2 text-center ${Parser.sourceJsonToColor(race.source)} pr-0" title="${Parser.sourceJsonToFull(race.source)}" ${BrewUtil.sourceJsonToStyle(race.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			rcI,
+			eleLi,
+			race.name,
+			{
+				hash,
+				ability: ability.asTextShort,
+				size,
+				source,
+				cleanName: RacesPage._getInvertedName(race.name) || "",
+				alias: (race.alias || [])
+					.map(it => {
+						const invertedName = RacesPage._getInvertedName(it);
+						return [`"${it}"`, invertedName ? `"${invertedName}"` : false].filter(Boolean);
+					})
+					.flat()
+					.join(",")
+			},
+			{
+				uniqueId: race.uniqueId ? race.uniqueId : rcI,
+				isExcluded
 			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._pageFilter.filterBox.getValues();
+		this._list.filter(it => this._pageFilter.toDisplay(f, this._dataList[it.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (race, pinId) {
+		const hash = UrlUtil.autoEncodeHash(race);
+
+		const $ele = $(`
+			<li class="row">
+				<a href="#${UrlUtil.autoEncodeHash(race)}" class="lst--border">
+					<span class="bold col-5 pl-0">${race.name}</span>
+					<span class="col-5">${race._slAbility}</span>
+					<span class="col-2 pr-0">${Parser.sizeAbvToFull(race.size || SZ_VARIES)}</span>
+				</a>
+			</li>
+		`).contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			race.name,
+			{
+				hash,
+				ability: race._slAbility
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		const renderer = this._renderer;
+		renderer.setFirstSection(true);
+		const $content = $("#pagecontent").empty();
+		const race = this._dataList[id];
+
+		function buildStatsTab () {
+			$content.append(RenderRaces.$getRenderedRace(race));
 		}
+
+		function buildFluffTab (isImageTab) {
+			return Renderer.utils.pBuildFluffTab({
+				isImageTab,
+				$content,
+				entity: race,
+				pFnGetFluff: Renderer.race.pGetFluff
+			});
+		}
+
+		const traitTab = Renderer.utils.tabButton(
+			"Traits",
+			() => {},
+			buildStatsTab
+		);
+		const infoTab = Renderer.utils.tabButton(
+			"Info",
+			() => {},
+			buildFluffTab
+		);
+		const picTab = Renderer.utils.tabButton(
+			"Images",
+			() => {},
+			buildFluffTab.bind(null, true)
+		);
+
+		Renderer.utils.bindTabButtons(traitTab, infoTab, picTab);
+
+		ListUtil.updateSelected();
 	}
 
-	const list = ListUtil.search({
-		valueNames: ['name', 'ability', 'size', 'source', 'clean-name'],
-		listClass: "races"
-	});
-
-	filterBox.render();
-
-	// filtering function
-	$(filterBox).on(
-		FilterBox.EVNT_VALCHANGE,
-		handleFilterChange
-	);
-
-	function handleFilterChange () {
-		const f = filterBox.getValues();
-		list.filter(function (item) {
-			const r = raceList[$(item.elm).attr(FLTR_ID)];
-			return filterBox.toDisplay(
-				f,
-				r.source,
-				r._fAbility,
-				r.size,
-				r._fSpeed,
-				r._fMisc
-			);
-		})
+	async pDoLoadSubHash (sub) {
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
 	}
-
-	initHistory();
-	handleFilterChange();
-	RollerUtil.addListRollButton();
 }
 
-const renderer = new EntryRenderer();
-
-function loadhash (id) {
-	const $pgContent = $("#pagecontent");
-	$pgContent.html(tableDefault);
-	$pgContent.find("td").show();
-
-	const race = raceList[id];
-
-	$("th.name").html(`<span class="stats-name">${race.name}</span><span class="stats-source source${race.source}" title="${Parser.sourceJsonToFull(race.source)}">${Parser.sourceJsonToAbv(race.source)}</span>`);
-
-	const size = Parser.sizeAbvToFull(race.size);
-	$("td#size span").html(size);
-
-	const ability = race.ability ? utils_getAbilityData(race.ability) : {asText: "None"};
-	$("td#ability span").html(ability.asText);
-
-	$("td#speed span").html(EntryRenderer.race.getSpeedString(race));
-
-	const renderStack = [];
-	renderStack.push("<tr class='text'><td colspan='6'>");
-	renderer.recursiveEntryRender({type: "entries", entries: race.entries}, renderStack, 1);
-	renderStack.push("</td></tr>");
-	if (race.npc) {
-		renderStack.push(`<tr class="text"><td colspan="6"><section class="text-muted">`);
-		renderer.recursiveEntryRender(
-			`{@i Note: This race is listed in the {@i Dungeon Master's Guide} as an option for creating NPCs. It is not designed for use as a playable race.}`
-			, renderStack, 2);
-		renderStack.push(`</section></td></tr>`);
-	}
-	renderStack.push(EntryRenderer.utils.getPageTr(race));
-
-	$('table#pagecontent tbody tr:last').before(renderStack.join(""));
-}
-
-function loadsub (sub) {
-	filterBox.setFromSubHashes(sub);
-}
+const racesPage = new RacesPage();
+window.addEventListener("load", () => racesPage.pOnLoad());

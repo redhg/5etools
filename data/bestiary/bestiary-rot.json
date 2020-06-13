@@ -1,71 +1,151 @@
 {
+	"_meta": {
+		"dependencies": {
+			"monster": [
+				"MM"
+			]
+		},
+		"internalCopies": [
+			"monster"
+		],
+		"otherSources": {
+			"monster": {
+				"HotDQ": "RoT",
+				"MM": "RoT"
+			}
+		}
+	},
 	"monster": [
 		{
-			"name": "Dragonclaw",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"human"
-				]
-			},
+			"name": "Animated Tile Chimera",
 			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "14 (leather armor)",
-			"hp": "16 (3d8+3)",
-			"speed": "30 ft.",
-			"str": 9,
-			"dex": 16,
-			"con": 13,
-			"int": 11,
-			"wis": 10,
-			"cha": 12,
-			"save": "Wis +2",
-			"skill": {
-				"deception": "+3",
-				"stealth": "+5"
+			"page": 42,
+			"_copy": {
+				"name": "Chimera",
+				"source": "MM",
+				"_mod": {
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "Rejuvenation",
+							"entries": [
+								"If destroyed, the tile creature regains all its hit points and becomes active again in 24 hours unless at least half its tiles are collected and kept separate from the rest of the creature's tiles."
+							]
+						}
+					},
+					"reaction": {
+						"mode": "appendArr",
+						"items": {
+							"name": "Narrow Dodge",
+							"entries": [
+								"When targeted by a melee attack, the tile creature can take a reaction to turn its narrowest aspect toward the attacker. The attacker has disadvantage on the attack roll."
+							]
+						}
+					}
+				}
 			},
-			"passive": 10,
-			"languages": "Common, Draconic",
-			"cr": "1",
-			"trait": [
+			"resist": [
+				"piercing"
+			],
+			"immune": [
+				"poison",
+				"psychic"
+			],
+			"conditionImmune": [
+				"charmed",
+				"frightened",
+				"paralyzed",
+				"petrified",
+				"poisoned"
+			],
+			"hasToken": true,
+			"traitTags": [
+				"Rejuvenation"
+			]
+		},
+		{
+			"name": "Aquatic Troll",
+			"source": "RoT",
+			"page": 36,
+			"otherSources": [
 				{
-					"name": "Dragon Fanatic",
-					"entries": [
-						"The dragonclaw has advantage on saving throws against being charmed or frightened. While the dragonclaw can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonclaw ignores the effects of being charmed or frightened."
-					]
-				},
-				{
-					"name": "Fanatic Advantage",
-					"entries": [
-						"Once per turn, if the dragonclaw makes a weapon attack with advantage on the attack roll and hits, it deals an extra 7 (2d6) damage."
-					]
-				},
-				{
-					"name": "Pack Tactics",
-					"entries": [
-						"The dragonclaw has advantage on an attack roll against a creature if at least one of the dragonclaw's allies is within 5 feet of the creature and the ally isn't incapacitated."
-					]
+					"source": "PotA",
+					"page": 88
 				}
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"The dragonclaw attacks twice with its scimitar."
-					]
-				},
-				{
-					"name": "Scimitar",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) slashing damage."
-					]
+			"_copy": {
+				"name": "Troll",
+				"source": "MM",
+				"_mod": {
+					"trait": {
+						"mode": "appendArr",
+						"items": {
+							"name": "Water Breathing",
+							"entries": [
+								"The troll can breathe underwater."
+							]
+						}
+					}
 				}
+			},
+			"speed": {
+				"walk": 30,
+				"swim": 30
+			},
+			"resist": [
+				"cold"
 			],
-			"page": 89
+			"hasToken": true,
+			"traitTags": [
+				"Keen Senses",
+				"Regeneration",
+				"Water Breathing"
+			]
+		},
+		{
+			"name": "Carnivorous Flower",
+			"source": "RoT",
+			"page": 67,
+			"_copy": {
+				"name": "Otyugh",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "otyugh",
+						"with": "plant"
+					}
+				}
+			},
+			"type": "plant",
+			"speed": {
+				"walk": 0
+			},
+			"hasToken": true
+		},
+		{
+			"name": "Diderius",
+			"isNpc": true,
+			"isNamedCreature": true,
+			"source": "RoT",
+			"page": 40,
+			"_copy": {
+				"name": "Mummy Lord",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the mummy lord",
+						"with": "Diderius",
+						"flags": "i"
+					}
+				}
+			}
 		},
 		{
 			"name": "Dragonfang",
+			"source": "RoT",
+			"page": 89,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -73,43 +153,80 @@
 					"human"
 				]
 			},
-			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "15 (studded leather)",
-			"hp": "78 (12d8+24)",
-			"speed": "30 ft.",
+			"alignment": [
+				"N",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 15,
+					"from": [
+						"{@item studded leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 78,
+				"formula": "12d8 + 24"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 11,
 			"dex": 16,
 			"con": 14,
 			"int": 12,
 			"wis": 12,
 			"cha": 14,
-			"save": "Wis +3",
+			"save": {
+				"wis": "+3"
+			},
 			"skill": {
 				"deception": "+4",
 				"stealth": "+5"
 			},
-			"resist": "one of the following: acid, cold, fire, lightning or poison",
 			"passive": 11,
-			"languages": "Common, Draconic, Infernal",
+			"resist": [
+				{
+					"resist": [
+						"acid",
+						"cold",
+						"fire",
+						"lightning",
+						"poison"
+					],
+					"preNote": "one of the following:"
+				}
+			],
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal"
+			],
 			"cr": "5",
 			"trait": [
 				{
 					"name": "Dragon Fanatic",
 					"entries": [
-						"The dragonfang has advantage on saving throws against being charmed or frightened. While the dragonfang can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonfang ignores the effects of being charmed or frightened."
+						"The dragonfang has advantage on saving throws against being {@condition charmed} or {@condition frightened}. While the dragonfang can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonfang ignores the effects of being {@condition charmed} or {@condition frightened}."
 					]
 				},
 				{
 					"name": "Fanatic Advantage",
 					"entries": [
-						"Once per turn, if the dragonfang makes a weapon attack with advantage on the attack roll and hits, the target takes an extra 10 (3d6) damage."
+						"Once per turn, if the dragonfang makes a weapon attack with advantage on the attack roll and hits, the target takes an extra 10 ({@dice 3d6}) damage."
 					]
 				},
 				{
 					"name": "Limited Flight",
 					"entries": [
 						"The dragonfang can use a bonus action to gain a flying speed of 30 feet until the end of its turn."
+					]
+				},
+				{
+					"name": "Pack Tactics",
+					"entries": [
+						"The dragonfang has advantage on an attack roll against a creature if at least one of the dragonfang's allies is within 5 feet of the creature and the ally isn't {@condition incapacitated}."
 					]
 				}
 			],
@@ -123,20 +240,39 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) piercing damage plus 7 (2d6) damage of the type to which the dragonfang has resistance."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage plus 7 ({@dice 2d6}) damage of the type to which the dragonfang has resistance."
 					]
 				},
 				{
 					"name": "Orb of Dragon's Breath (2/Day)",
 					"entries": [
-						"Ranged Spell Attack: +5 to hit, range 50 ft., one target. Hit: 22 (5d8) damage of the type to which the dragonfang has damage resistance."
+						"{@atk rs} {@hit 5} to hit, range 50 ft., one target. {@h}22 ({@dice 5d8}) damage of the type to which the dragonfang has damage resistance."
 					]
 				}
 			],
-			"page": 89
+			"hasToken": true,
+			"traitTags": [
+				"Pack Tactics"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"I"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
 			"name": "Dragonsoul",
+			"source": "RoT",
+			"page": 89,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -144,37 +280,68 @@
 					"human"
 				]
 			},
-			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "16 (studded leather)",
-			"hp": "110 (17d8+34)",
-			"speed": "30 ft.",
+			"alignment": [
+				"N",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 16,
+					"from": [
+						"{@item studded leather armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 110,
+				"formula": "17d8 + 34"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 11,
 			"dex": 18,
 			"con": 14,
 			"int": 13,
 			"wis": 12,
 			"cha": 16,
-			"save": "Wis +4",
+			"save": {
+				"wis": "+4"
+			},
 			"skill": {
 				"deception": "+6",
 				"stealth": "+7"
 			},
-			"resist": "one of the following: acid, cold, fire, lightning or poison",
 			"passive": 11,
-			"languages": "Common, Draconic, Infernal",
+			"resist": [
+				{
+					"resist": [
+						"acid",
+						"cold",
+						"fire",
+						"lightning",
+						"poison"
+					],
+					"preNote": "one of the following:"
+				}
+			],
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal"
+			],
 			"cr": "7",
 			"trait": [
 				{
 					"name": "Dragon Fanatic",
 					"entries": [
-						"The dragonsoul has advantage on saving throws against being charmed or frightened. While the dragonsoul can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonsoul ignores the effects of being charmed or frightened."
+						"The dragonsoul has advantage on saving throws against being {@condition charmed} or {@condition frightened}. While the dragonsoul can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonsoul ignores the effects of being {@condition charmed} or {@condition frightened}."
 					]
 				},
 				{
 					"name": "Fanatic Advantage",
 					"entries": [
-						"Once per turn, if the dragonsoul makes a weapon attack with advantage on the attack roll and hits, the target takes an extra 10 (3d6) damage."
+						"Once per turn, if the dragonsoul makes a weapon attack with advantage on the attack roll and hits, the target takes an extra 10 ({@dice 3d6}) damage."
 					]
 				},
 				{
@@ -186,7 +353,7 @@
 				{
 					"name": "Pack Tactics",
 					"entries": [
-						"The dragonsoul has advantage on an attack roll against a creature if at least one of the dragonclaw's allies is within 5 feet of the creature and the ally isn't incapacitated."
+						"The dragonsoul has advantage on an attack roll against a creature if at least one of the dragonsoul's allies is within 5 feet of the creature and the ally isn't {@condition incapacitated}."
 					]
 				}
 			],
@@ -200,143 +367,263 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) piercing damage plus 10 (3d6) damage of the type to which the dragonsoul has resistance."
+						"{@atk mw} {@hit 5} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage plus 10 ({@dice 3d6}) damage of the type to which the dragonsoul has resistance."
 					]
 				},
 				{
 					"name": "Orb of Dragon's Breath (3/Day)",
 					"entries": [
-						"Ranged Spell Attack: +7 to hit, range 90 ft., one target. Hit: 27 (6d8) damage of the type to which the dragonsoul has damage resistance."
+						"{@atk rs} {@hit 7} to hit, range 90 ft., one target. {@h}27 ({@dice 6d8}) damage of the type to which the dragonsoul has damage resistance."
 					]
 				}
 			],
-			"page": 89
+			"hasToken": true,
+			"traitTags": [
+				"Pack Tactics"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"I"
+			],
+			"damageTags": [
+				"P"
+			],
+			"miscTags": [
+				"MW"
+			]
 		},
 		{
-			"name": "Dragonwing",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"human"
-				]
-			},
+			"name": "Galvan",
+			"isNpc": true,
 			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "14 (leather armor)",
-			"hp": "33 (6d8+6)",
-			"speed": "30 ft.",
-			"str": 11,
-			"dex": 16,
-			"con": 13,
-			"int": 11,
-			"wis": 11,
-			"cha": 13,
-			"save": "Wis +2",
-			"skill": {
-				"deception": "+3",
-				"stealth": "+5"
+			"page": 9,
+			"_copy": {
+				"name": "Dragonsoul",
+				"source": "RoT",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the dragonsoul",
+						"with": "Galvan",
+						"flags": "i"
+					},
+					"trait": {
+						"mode": "prependArr",
+						"items": [
+							{
+								"name": "5etools Note",
+								"entries": [
+									"While Galvan is not presented in an encounter in {@adventure The Rise of Tiamat|RoT}, the {@creature dragonsoul|RoT} stat block has been provided here for ease of use, with optional alterations for the {@item Blue Dragon Mask|RoTOS}."
+								]
+							},
+							{
+								"name": "Special Equipment",
+								"entries": [
+									"Galvan has the {@item Blue Dragon Mask|RoTOS}."
+								]
+							},
+							{
+								"name": "Draconic Majesty",
+								"entries": [
+									"While wearing no armor and wearing the Blue Dragon Mask, Galvan adds his Charisma bonus to her AC (included)."
+								]
+							},
+							{
+								"name": "Lingering Shock",
+								"entries": [
+									"If Galvan deals lightning damage to a creature while wearing the Blue Dragon Mask, that creature can't take reactions until its next turn."
+								]
+							},
+							{
+								"name": "Legendary Resistance (1/Day)",
+								"entries": [
+									"If Galvan fails a saving throw while wearing the Blue Dragon Mask, he can choose to succeed instead."
+								]
+							}
+						]
+					}
+				}
 			},
-			"resist": "one of the following: acid, cold, fire, lightning or poison",
-			"passive": 10,
-			"languages": "Common, Draconic",
-			"cr": "2",
-			"trait": [
+			"ac": [
 				{
-					"name": "Dragon Fanatic",
-					"entries": [
-						"The dragonwing has advantage on saving throws against being charmed or frightened. While the dragonwing can see a dragon or higher-ranking Cult of the Dragon cultist friendly to it, the dragonwing ignores the effects of being charmed or frightened."
+					"ac": 16,
+					"from": [
+						"{@item studded leather armor|phb}"
 					]
 				},
 				{
-					"name": "Fanatic Advantage",
-					"entries": [
-						"Once per turn, if the dragonwing makes a weapon attack with advantage on the attack roll and hits, the target takes an extra 7 (2d6) damage."
-					]
-				},
-				{
-					"name": "Limited Flight",
-					"entries": [
-						"The dragonwing can use a bonus action to gain a flying speed of 30 feet until the end of its turn."
-					]
-				},
-				{
-					"name": "Pack Tactics",
-					"entries": [
-						"The dragonwing has advantage on an attack roll against a creature if at least one of the dragonwing's allies is within 5 feet of the creature and the ally isn't incapacitated."
-					]
+					"ac": 15,
+					"condition": "with the Black Dragon Mask",
+					"braces": true
 				}
 			],
-			"action": [
-				{
-					"name": "Multiattack",
-					"entries": [
-						"The dragonwing attacks twice with its scimitar."
-					]
-				},
-				{
-					"name": "Scimitar",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) slashing damage plus 3 (1d6) damage of the type to which the cultist has resistance."
-					]
-				}
+			"senses": [
+				"darkvision 60 ft."
 			],
-			"page": 90
+			"immune": [
+				"lightning"
+			],
+			"hasToken": true,
+			"traitTags": [
+				"Legendary Resistances",
+				"Pack Tactics"
+			],
+			"senseTags": [
+				"D"
+			]
 		},
 		{
-			"name": "Guard Drake",
-			"size": "M",
-			"type": "dragon",
+			"name": "Half-Blue Dragon Gladiator",
 			"source": "RoT",
-			"alignment": "unaligned",
-			"ac": "14 (natural armor)",
-			"hp": "52 (7d8+21)",
-			"speed": "30 ft.",
-			"str": 16,
-			"dex": 11,
-			"con": 16,
-			"int": 4,
-			"wis": 10,
-			"cha": 7,
-			"skill": {
-				"perception": "+2"
-			},
-			"resist": "lightning",
-			"senses": "darkvision 60 ft.",
-			"passive": 12,
-			"languages": "understands Draconic but can't speak it",
-			"cr": "2",
-			"action": [
+			"page": 55,
+			"otherSources": [
 				{
-					"name": "Multiattack",
-					"entries": [
-						"The drake attacks twice, once with its bite and once with its tail."
-					]
-				},
-				{
-					"name": "Bite",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8+3) piercing damage."
-					]
-				},
-				{
-					"name": "Tail",
-					"entries": [
-						"Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) bludgeoning damage."
-					]
+					"source": "DC"
 				}
 			],
-			"page": 90
+			"_copy": {
+				"name": "Gladiator",
+				"source": "MM",
+				"_trait": {
+					"name": "Large or Smaller Half-Blue Dragon",
+					"source": "MM"
+				},
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "gladiator",
+						"with": "half-dragon"
+					}
+				}
+			},
+			"hasToken": true,
+			"senseTags": [
+				"B",
+				"D"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"X"
+			],
+			"damageTags": [
+				"B",
+				"L",
+				"P"
+			],
+			"miscTags": [
+				"AOE",
+				"MW",
+				"RW",
+				"THW"
+			]
+		},
+		{
+			"name": "Half-Green Dragon Assassin",
+			"source": "RoT",
+			"page": 56,
+			"_copy": {
+				"name": "Assassin",
+				"source": "MM",
+				"_trait": {
+					"name": "Large or Smaller Half-Green Dragon",
+					"source": "MM"
+				},
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "assassin",
+						"with": "half-dragon"
+					}
+				}
+			},
+			"hasToken": true,
+			"senseTags": [
+				"B",
+				"D"
+			],
+			"languageTags": [
+				"DR",
+				"TC",
+				"X"
+			],
+			"miscTags": [
+				"AOE",
+				"MW",
+				"RNG",
+				"RW"
+			]
+		},
+		{
+			"name": "Half-Red Dragon Gladiator",
+			"source": "RoT",
+			"page": 56,
+			"_copy": {
+				"name": "Gladiator",
+				"source": "MM",
+				"_trait": {
+					"name": "Large or Smaller Half-Red Dragon",
+					"source": "MM"
+				},
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "gladiator",
+						"with": "half-dragon"
+					}
+				}
+			},
+			"hasToken": true,
+			"senseTags": [
+				"B",
+				"D"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"X"
+			],
+			"damageTags": [
+				"B",
+				"F",
+				"P"
+			],
+			"miscTags": [
+				"AOE",
+				"MW",
+				"RW",
+				"THW"
+			]
 		},
 		{
 			"name": "Ice Toad",
+			"source": "RoT",
+			"page": 90,
 			"size": "M",
 			"type": "monstrosity",
-			"source": "RoT",
-			"alignment": "neutral",
-			"ac": "12 (natural armor)",
-			"hp": "32 (5d8+10)",
-			"speed": "30 ft., swim 30 ft.",
+			"alignment": [
+				"N"
+			],
+			"ac": [
+				{
+					"ac": 12,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 32,
+				"formula": "5d8 + 10"
+			},
+			"speed": {
+				"walk": 30,
+				"swim": 30
+			},
 			"str": 13,
 			"dex": 10,
 			"con": 14,
@@ -346,10 +633,16 @@
 			"skill": {
 				"perception": "+2"
 			},
-			"immune": "cold",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 12,
-			"languages": "Ice Toad",
+			"immune": [
+				"cold"
+			],
+			"languages": [
+				"Ice Toad"
+			],
 			"cr": "1",
 			"trait": [
 				{
@@ -361,7 +654,7 @@
 				{
 					"name": "Cold Aura",
 					"entries": [
-						"Any creature that starts its turn within 5 feet of the toad takes 3 (1d6) cold damage."
+						"Any creature that starts its turn within 5 feet of the toad takes 3 ({@damage 1d6}) cold damage."
 					]
 				},
 				{
@@ -375,44 +668,213 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d8) cold damage. If the target is a Medium or smaller creature it is grappled (escape DC 11). Until this grapple ends, the toad can't bite another target."
+						"{@atk mw} {@hit 3} to hit, reach 5 ft., one target. {@h}4 ({@damage 1d8}) cold damage. If the target is a Medium or smaller creature it is {@condition grappled} (escape {@dc 11}). Until this grapple ends, the toad can't bite another target."
 					]
 				}
 			],
-			"page": 90
+			"hasToken": true,
+			"traitTags": [
+				"Amphibious"
+			],
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"OTH"
+			],
+			"damageTags": [
+				"C"
+			],
+			"miscTags": [
+				"MW"
+			],
+			"conditionInflict": [
+				"grappled"
+			]
+		},
+		{
+			"name": "Ice Troll",
+			"source": "RoT",
+			"page": 30,
+			"_copy": {
+				"name": "Troll",
+				"source": "MM"
+			},
+			"resist": [
+				"cold"
+			],
+			"hasToken": true
+		},
+		{
+			"name": "Iskander",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 62,
+			"_copy": {
+				"name": "Mage",
+				"source": "MM",
+				"_mod": {
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "5etools Note",
+							"entries": [
+								"Iskander is presented in {@adventure The Rise of Tiamat|RoT} as a neutral evil male human wizard. The {@creature mage} statblock has been provided here for ease of use."
+							]
+						}
+					}
+				}
+			},
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"alignment": [
+				"N",
+				"E"
+			],
+			"hasToken": true
+		},
+		{
+			"name": "Maccath the Crimson",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 33,
+			"_copy": {
+				"name": "Mage",
+				"source": "MM",
+				"_trait": {
+					"name": "Tiefling",
+					"source": "PHB"
+				},
+				"_mod": {
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "5etools Note",
+							"entries": [
+								"Maccath the Crimson is presented in {@adventure The Rise of Tiamat|RoT} as a female tiefling sorcerer and member of the Arcane Brotherhood. The {@creature mage} statblock, modified with tiefling racial traits, has been provided here for ease of use."
+							]
+						}
+					}
+				}
+			},
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"I",
+				"X"
+			],
+			"spellcastingTags": [
+				"CW",
+				"I"
+			]
+		},
+		{
+			"name": "Marfulb",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 35,
+			"_copy": {
+				"name": "Ice Toad",
+				"source": "RoT"
+			},
+			"int": 13,
+			"hasToken": true
+		},
+		{
+			"name": "Mend-nets",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 32,
+			"_copy": {
+				"name": "Tribal Warrior",
+				"source": "MM"
+			},
+			"type": {
+				"type": "humanoid",
+				"tags": [
+					"human"
+				]
+			},
+			"hasToken": true
 		},
 		{
 			"name": "Naergoth Bladelord",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 90,
 			"size": "M",
 			"type": "undead",
-			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "18 (plate)",
-			"hp": "135 (18d8+54)",
-			"speed": "30 ft.",
+			"alignment": [
+				"N",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 18,
+					"from": [
+						"{@item plate armor|phb}"
+					]
+				}
+			],
+			"hp": {
+				"average": 135,
+				"formula": "18d8 + 54"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 20,
 			"dex": 12,
 			"con": 16,
 			"int": 12,
 			"wis": 14,
 			"cha": 16,
-			"save": "Dex +5, Wis +4",
+			"save": {
+				"dex": "+5",
+				"wis": "+4"
+			},
 			"skill": {
 				"perception": "+6",
 				"stealth": "+5"
 			},
-			"resist": "necrotic; bludgeoning, piercing, and slashing from nonmagical attacks that aren't silvered",
-			"immune": "poison",
-			"conditionImmune": "exhaustion, poisoned",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 16,
-			"languages": "Common, Draconic",
+			"resist": [
+				"necrotic",
+				{
+					"resist": [
+						"bludgeoning",
+						"piercing",
+						"slashing"
+					],
+					"note": "from nonmagical attacks that aren't silvered"
+				}
+			],
+			"immune": [
+				"poison"
+			],
+			"conditionImmune": [
+				"exhaustion",
+				"poisoned"
+			],
+			"languages": [
+				"Common",
+				"Draconic"
+			],
 			"cr": "11",
 			"trait": [
 				{
 					"name": "Sunlight Sensitivity",
 					"entries": [
-						"While in sunlight, Naergoth has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight."
+						"While in sunlight, Naergoth has disadvantage on attack rolls, as well as on Wisdom ({@skill Perception}) checks that rely on sight."
 					]
 				}
 			],
@@ -426,26 +888,52 @@
 				{
 					"name": "Life Drain",
 					"entries": [
-						"Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 20 (5d6+3) necrotic damage. The target must succeed on a DC 15 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}20 ({@damage 5d6 + 3}) necrotic damage. The target must succeed on a {@dc 15} Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0."
 					]
 				},
 				{
 					"name": "Longsword",
 					"entries": [
-						"Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 9 (1d8+5) slashing damage, or 10 (1d10+5) if used with two hands, plus 10 (3d6) necrotic damage."
+						"{@atk mw} {@hit 9} to hit, reach 5 ft., one target. {@h}9 ({@damage 1d8 + 5}) slashing damage, or 10 ({@dice 1d10 + 5}) if used with two hands, plus 10 ({@damage 3d6}) necrotic damage."
 					]
 				},
 				{
 					"name": "Longbow",
 					"entries": [
-						"Ranged Weapon Attack: +5 to hit, range 150/600 ft., one target. Hit: 5 (1d8+1) piercing damage plus 10 (3d6) necrotic damage."
+						"{@atk rw} {@hit 5} to hit, range 150/600 ft., one target. {@h}5 ({@damage 1d8 + 1}) piercing damage plus 10 ({@damage 3d6}) necrotic damage."
 					]
 				}
 			],
-			"page": 90
+			"hasToken": true,
+			"traitTags": [
+				"Sunlight Sensitivity"
+			],
+			"senseTags": [
+				"D"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR"
+			],
+			"damageTags": [
+				"N",
+				"P",
+				"S"
+			],
+			"miscTags": [
+				"MW",
+				"RNG",
+				"RW"
+			]
 		},
 		{
 			"name": "Neronvain",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 91,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -453,27 +941,52 @@
 					"elf"
 				]
 			},
-			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "17",
-			"hp": "117 (18d8+36)",
-			"speed": "30 ft.",
+			"alignment": [
+				"N",
+				"E"
+			],
+			"ac": [
+				17
+			],
+			"hp": {
+				"average": 117,
+				"formula": "18d8 + 36"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 8,
 			"dex": 17,
 			"con": 15,
 			"int": 16,
 			"wis": 13,
 			"cha": 18,
-			"save": "Con +6, Wis +5",
+			"save": {
+				"con": "+6",
+				"wis": "+5"
+			},
 			"skill": {
 				"arcana": "+7",
 				"perception": "+5"
 			},
-			"immune": "poison",
-			"conditionImmune": "charmed, frightened, poisoned",
-			"senses": "darkvision 60 ft.",
+			"senses": [
+				"darkvision 60 ft."
+			],
 			"passive": 15,
-			"languages": "Common, Draconic, Elvish, Infernal",
+			"immune": [
+				"poison"
+			],
+			"conditionImmune": [
+				"charmed",
+				"frightened",
+				"poisoned"
+			],
+			"languages": [
+				"Common",
+				"Draconic",
+				"Elvish",
+				"Infernal"
+			],
 			"cr": "9",
 			"trait": [
 				{
@@ -481,15 +994,15 @@
 					"entries": [
 						"Neronvain adds his Charisma bonus to his AC (included)."
 					]
-				}
-			],
-			"action": [
+				},
 				{
 					"name": "Fey Ancestry",
 					"entries": [
 						"Magic can't put Neronvain to sleep."
 					]
-				},
+				}
+			],
+			"action": [
 				{
 					"name": "Multiattack",
 					"entries": [
@@ -499,145 +1012,84 @@
 				{
 					"name": "Shortsword",
 					"entries": [
-						"Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 6 (1d6+3) piercing damage plus 13 (3d8) poison damage."
+						"{@atk mw} {@hit 7} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d6 + 3}) piercing damage plus 13 ({@damage 3d8}) poison damage."
 					]
 				},
 				{
 					"name": "Eldritch Arrow",
 					"entries": [
-						"Ranged Spell Attack: +7 to hit, range 120 ft., one target. Hit: 11 (2d10) force damage plus 9 (2d8) poison damage."
+						"{@atk rs} {@hit 7} to hit, range 120 ft., one target. {@h}11 ({@damage 2d10}) force damage plus 9 ({@damage 2d8}) poison damage."
 					]
 				},
 				{
 					"name": "Poisonous Cloud (2/Day)",
 					"entries": [
-						"Poison gas fills a 20-foot-radius sphere centered on a point Neronvain can see within 50 feet of him. The gas spreads around corners and remains until the start of Neronvain's next turn. Each creature that starts its turn in the gas must succeed on a DC 16 Constitution saving throw or be poisoned for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
+						"Poison gas fills a 20-foot-radius sphere centered on a point Neronvain can see within 50 feet of him. The gas spreads around corners and remains until the start of Neronvain's next turn. Each creature that starts its turn in the gas must succeed on a {@dc 16} Constitution saving throw or be {@condition poisoned} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
 					]
 				}
 			],
-			"page": 91
+			"hasToken": true,
+			"traitTags": [
+				"Fey Ancestry"
+			],
+			"senseTags": [
+				"D"
+			],
+			"actionTags": [
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"E",
+				"I"
+			],
+			"damageTags": [
+				"I",
+				"O",
+				"P"
+			],
+			"miscTags": [
+				"AOE",
+				"MW"
+			],
+			"conditionInflict": [
+				"poisoned"
+			]
 		},
 		{
-			"name": "Rath Modar",
-			"size": "M",
-			"type": {
-				"type": "humanoid",
-				"tags": [
-					"human"
-				]
-			},
+			"name": "Paper Whirlwind",
 			"source": "RoT",
-			"alignment": "lawful evil",
-			"ac": "13 (16 with mage armor)",
-			"hp": "71 (11d8+22)",
-			"speed": "30 ft.",
-			"str": 11,
-			"dex": 16,
-			"con": 14,
-			"int": 18,
-			"wis": 14,
-			"cha": 10,
-			"save": "Int +7, Wis +5",
-			"skill": {
-				"arcana": "+7",
-				"deception": "+3",
-				"insight": "+5",
-				"stealth": "+6"
+			"page": 72,
+			"_copy": {
+				"name": "Swarm of Ravens",
+				"source": "MM"
 			},
-			"passive": 12,
-			"languages": "Common, Draconic, Infernal, Primordial, Thayan",
-			"cr": "6",
-			"spellcasting": [
-				{
-					"name": "Spellcasting",
-					"headerEntries": [
-						"Rath is an 11th-level spellcaster who uses Intelligence as his spellcasting ability (spell save DC 15, {@hit 7} to hit with spell attacks). Rath has the following spells prepared from the wizard spell list:"
-					],
-					"spells": {
-						"0": {
-							"spells": [
-								"{@spell fire bolt}",
-								"{@spell minor illusion}",
-								"{@spell prestidigitation}",
-								"{@spell shocking grasp}"
-							]
-						},
-						"1": {
-							"slots": 4,
-							"spells": [
-								"{@spell chromatic orb}",
-								"{@spell color spray}",
-								"{@spell mage armor}",
-								"{@spell magic missile}"
-							]
-						},
-						"2": {
-							"slots": 3,
-							"spells": [
-								"{@spell detect thoughts}",
-								"{@spell mirror image}",
-								"{@spell phantasmal force}"
-							]
-						},
-						"3": {
-							"slots": 3,
-							"spells": [
-								"{@spell counterspell}",
-								"{@spell fireball}",
-								"{@spell major image}"
-							]
-						},
-						"4": {
-							"slots": 3,
-							"spells": [
-								"{@spell confusion}",
-								"{@spell greater invisibility}"
-							]
-						},
-						"5": {
-							"slots": 2,
-							"spells": [
-								"{@spell mislead}",
-								"{@spell seeming}"
-							]
-						},
-						"6": {
-							"slots": 1,
-							"spells": [
-								"{@spell globe of invulnerability}"
-							]
-						}
-					}
-				}
+			"type": {
+				"type": "construct",
+				"swarmSize": "T"
+			},
+			"vulnerable": [
+				"fire"
 			],
-			"trait": [
-				{
-					"name": "Special Equipment",
-					"entries": [
-						"Rath has a {@item staff of fire}, and scrolls of {@spell dimension door}, {@spell feather fall}, and {@spell fireball}."
-					]
-				}
-			],
-			"action": [
-				{
-					"name": "Quarterstaff",
-					"entries": [
-						"Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d8) bludgeoning damage."
-					]
-				}
-			],
-			"reaction": [
-				{
-					"name": "Illusory Self (Recharges on a Short or Long Rest)",
-					"entries": [
-						"When a creature Rath can see makes an attack roll against him, he can interpose an illusory duplicate between the attacker and him. The attack automatically misses Rath, then the illusion dissipates."
-					]
-				}
-			],
-			"page": 91
+			"hasToken": true
+		},
+		{
+			"name": "Red Wizard",
+			"source": "RoT",
+			"page": 76,
+			"_copy": {
+				"name": "Mage",
+				"source": "MM"
+			},
+			"hasToken": true
 		},
 		{
 			"name": "Severin",
+			"isNpc": true,
+			"isNamedCreature": true,
+			"source": "RoT",
+			"page": 92,
 			"size": "M",
 			"type": {
 				"type": "humanoid",
@@ -645,28 +1097,80 @@
 					"human"
 				]
 			},
-			"source": "RoT",
-			"alignment": "neutral evil",
-			"ac": "16",
-			"hp": "150 (20d8+60)",
-			"speed": "30 ft.",
+			"alignment": [
+				"N",
+				"E"
+			],
+			"ac": [
+				16
+			],
+			"hp": {
+				"average": 150,
+				"formula": "20d8 + 60"
+			},
+			"speed": {
+				"walk": 30
+			},
 			"str": 10,
 			"dex": 13,
 			"con": 16,
 			"int": 17,
 			"wis": 12,
 			"cha": 20,
-			"save": "Dex +5, Wis +5",
+			"save": {
+				"dex": "+5",
+				"wis": "+5"
+			},
 			"skill": {
 				"arcana": "+7",
 				"religion": "+7"
 			},
-			"resist": "While wearing the mask of the Dragon Queen: acid, cold, lightning, poison; bludgeoning, piercing, and slashing from nonmagical attacks",
-			"immune": "While wearing the mask of the Dragon Queen: fire",
-			"conditionImmune": "While wearing the mask of the Dragon Queen: charmed, frightened, poisoned",
-			"senses": "While wearing the Mask of the Dragon Queen: darkvision 60 ft.",
+			"senses": [
+				"While wearing the Mask of the Dragon Queen: darkvision 60 ft."
+			],
 			"passive": 11,
-			"languages": "Common, Draconic, Infernal",
+			"resist": [
+				{
+					"resist": [
+						"acid",
+						"cold",
+						"lightning",
+						"poison",
+						{
+							"resist": [
+								"bludgeoning",
+								"piercing",
+								"slashing"
+							],
+							"note": "from nonmagical attacks"
+						}
+					],
+					"preNote": "While wearing the mask of the Dragon Queen:"
+				}
+			],
+			"immune": [
+				{
+					"immune": [
+						"fire"
+					],
+					"preNote": "While wearing the mask of the Dragon Queen:"
+				}
+			],
+			"conditionImmune": [
+				{
+					"conditionImmune": [
+						"charmed",
+						"frightened",
+						"poisoned"
+					],
+					"preNote": "While wearing the mask of the Dragon Queen:"
+				}
+			],
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal"
+			],
 			"cr": "11",
 			"trait": [
 				{
@@ -684,7 +1188,7 @@
 				{
 					"name": "Ignite Enemy",
 					"entries": [
-						"If Severin deals fire damage to a creature while wearing the Mask of the Dragon Queen, the target catches fire. At the start of each of its turns, the burning target takes 5 (1d10) fire damage. A creature within reach of the fire can use an action to extinguish it."
+						"If Severin deals fire damage to a creature while wearing the Mask of the Dragon Queen, the target catches fire. At the start of each of its turns, the burning target takes 5 ({@damage 1d10}) fire damage. A creature within reach of the fire can use an action to extinguish it."
 					]
 				},
 				{
@@ -698,25 +1202,24 @@
 				{
 					"name": "Burning Touch",
 					"entries": [
-						"Melee Spell Attack: +5 to hit, reach 5 ft., one target. Hit: 18 (4d8) fire damage."
+						"{@atk ms} {@hit 5} to hit, reach 5 ft., one target. {@h}18 ({@damage 4d8}) fire damage."
 					]
 				},
 				{
 					"name": "Flaming Orb",
 					"entries": [
-						"Ranged Spell Attack: +5 to hit, range 90 ft., one target. Hit: 40 (9d8) fire damage."
+						"{@atk rs} {@hit 5} to hit, range 90 ft., one target. {@h}40 ({@damage 9d8}) fire damage."
 					]
 				},
 				{
 					"name": "Scorching Burst",
 					"entries": [
-						"Severin chooses a point he can see within 60 feet of him. Each creature within 5 feet of that point must make a DC 17 Dexterity saving throw, taking 18 (4d8) fire damage on a failed save, or half as much damage on a successful one."
+						"Severin chooses a point he can see within 60 feet of him. Each creature within 5 feet of that point must make a {@dc 17} Dexterity saving throw, taking 18 ({@damage 4d8}) fire damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
 			"legendary": [
 				{
-					"name": "Legendary Actions (3/Turn)",
 					"entries": [
 						"If Severin is wearing the Mask of the Dragon Queen, he can take 3 legendary actions, choosing from the options listed. Only one legendary action option can be used at a time and only at the end of another creature's turn. Severin regains spent legendary actions at the start of his turn."
 					]
@@ -730,62 +1233,178 @@
 				{
 					"name": "Fiery Teleport (Costs 2 Actions)",
 					"entries": [
-						"Severin, along with any objects he is wearing or carrying, teleports up to 60 feet to an unoccupied space he can see. Each creature within 5 feet of Severin before he teleports takes 5 (1dlO) fire damage."
-					],
-					"attack": [
-						"Fiery Teleport||1d10"
+						"Severin, along with any objects he is wearing or carrying, teleports up to 60 feet to an unoccupied space he can see. Each creature within 5 feet of Severin before he teleports takes 5 ({@damage 1d10}) fire damage."
 					]
 				},
 				{
 					"name": "Hellish Chains (Costs 3 Actions)",
 					"entries": [
-						"Severin targets one creature he can see within 30 feet of him. The target is wrapped in magical chains of fire and restrained. The restrained target takes 21 (6d6) fire damage at the start of each of its turns. At the end of its turns, the target can make a DC 17 Strength saving throw, ending the effect on itself on a success."
-					],
-					"attack": [
-						"Hellish Chains||6d6"
+						"Severin targets one creature he can see within 30 feet of him. The target is wrapped in magical chains of fire and {@condition restrained}. The {@condition restrained} target takes 21 ({@damage 6d6}) fire damage at the start of each of its turns. At the end of its turns, the target can make a {@dc 17} Strength saving throw, ending the effect on itself on a success."
 					]
 				}
 			],
-			"page": 92
+			"hasToken": true,
+			"traitTags": [
+				"Legendary Resistances"
+			],
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"I"
+			],
+			"damageTags": [
+				"F"
+			],
+			"conditionInflict": [
+				"restrained"
+			]
+		},
+		{
+			"name": "Sled Dog",
+			"source": "RoT",
+			"page": 27,
+			"_copy": {
+				"name": "Wolf",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "wolf",
+						"with": "dog"
+					}
+				}
+			},
+			"hasToken": true
+		},
+		{
+			"name": "Snake Horror",
+			"source": "RoT",
+			"page": 46,
+			"_copy": {
+				"name": "Helmed Horror",
+				"source": "MM",
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "helmed horror",
+						"with": "snake horror"
+					},
+					"action": {
+						"mode": "replaceArr",
+						"replace": "Longsword",
+						"items": {
+							"name": "Longsword",
+							"entries": [
+								"{@atk mw} {@hit 6} to hit, reach 5 ft., one target. {@h}8 ({@damage 1d8 + 4}) slashing damage, or 9 ({@damage 1d10 + 4}) slashing damage if used with two hands, and the target must make a DC 12 Constitution saving throw, taking 9 ({@damage 2d8}) poison damage on a failed save, or half as much damage on a successful one."
+							]
+						}
+					}
+				}
+			},
+			"hasToken": true,
+			"damageTags": [
+				"I",
+				"S"
+			]
 		},
 		{
 			"name": "Tiamat",
+			"isNpc": true,
+			"isNamedCreature": true,
+			"source": "RoT",
+			"page": 92,
+			"otherSources": [
+				{
+					"source": "BGDIA"
+				}
+			],
 			"size": "G",
 			"type": "fiend",
-			"source": "RoT",
-			"alignment": "chaotic evil",
-			"ac": "25 (natural armor)",
-			"hp": "615 (30d20+300)",
-			"speed": "60 ft., fly 120 ft.",
+			"alignment": [
+				"C",
+				"E"
+			],
+			"ac": [
+				{
+					"ac": 25,
+					"from": [
+						"natural armor"
+					]
+				}
+			],
+			"hp": {
+				"average": 615,
+				"formula": "30d20 + 300"
+			},
+			"speed": {
+				"walk": 60,
+				"fly": 120
+			},
 			"str": 30,
 			"dex": 10,
 			"con": 30,
 			"int": 26,
 			"wis": 26,
 			"cha": 28,
-			"save": "Str +19, Dex +9, Wis +17",
+			"save": {
+				"str": "+19",
+				"dex": "+9",
+				"wis": "+17"
+			},
 			"skill": {
 				"arcana": "+17",
 				"perception": "+26",
 				"religion": "+17"
 			},
-			"immune": "acid, cold, fire, lightning, poison; bludgeoning, piercing, and slashing from nonmagical attacks",
-			"conditionImmune": "blinded, charmed, deafened, frightened, poisoned, stunned",
-			"senses": "darkvision 240 ft., truesight 120 ft.",
+			"senses": [
+				"darkvision 240 ft.",
+				"truesight 120 ft."
+			],
 			"passive": 36,
-			"languages": "Common, Draconic, Infernal",
+			"immune": [
+				"acid",
+				"cold",
+				"fire",
+				"lightning",
+				"poison",
+				{
+					"immune": [
+						"bludgeoning",
+						"piercing",
+						"slashing"
+					],
+					"note": "from nonmagical attacks"
+				}
+			],
+			"conditionImmune": [
+				"blinded",
+				"charmed",
+				"deafened",
+				"frightened",
+				"poisoned",
+				"stunned"
+			],
+			"languages": [
+				"Common",
+				"Draconic",
+				"Infernal"
+			],
 			"cr": "30",
 			"spellcasting": [
 				{
 					"name": "Innate Spellcasting",
 					"headerEntries": [
-						"Tiamat can innately cast the following spell, her spellcasting ability is Charisma (spell save DC 26):"
+						"Tiamat can innately cast the following spell, her spellcasting ability is Charisma (spell save {@dc 26}):"
 					],
 					"daily": {
 						"3": [
 							"{@spell divine word}"
 						]
-					}
+					},
+					"ability": "cha"
 				}
 			],
 			"trait": [
@@ -816,7 +1435,7 @@
 				{
 					"name": "Multiple Heads",
 					"entries": [
-						"Tiamat can take one reaction per turn, rather than only one per round. She also has advantage on saving throws against being knocked unconscious. If she fails a saving throw against an effect that would stun a creature, one of her unspent legendary actions is spent."
+						"Tiamat can take one reaction per turn, rather than only one per round. She also has advantage on saving throws against being knocked {@condition unconscious}. If she fails a saving throw against an effect that would stun a creature, one of her unspent legendary actions is spent."
 					]
 				},
 				{
@@ -836,19 +1455,19 @@
 				{
 					"name": "Claw",
 					"entries": [
-						"Melee Weapon Attack: +19 to hit, reach 15 ft., one target. Hit: 24 (4d6+10) slashing damage."
+						"{@atk mw} {@hit 19} to hit, reach 15 ft., one target. {@h}24 ({@damage 4d6 + 10}) slashing damage."
 					]
 				},
 				{
 					"name": "Tail",
 					"entries": [
-						"Melee Weapon Attack: +19 to hit, reach 25 ft., one target. Hit: 28 (4d8+10) piercing damage."
+						"{@atk mw} {@hit 19} to hit, reach 25 ft., one target. {@h}28 ({@damage 4d8 + 10}) piercing damage."
 					]
 				},
 				{
 					"name": "Frightful Presence",
 					"entries": [
-						"Each creature of Tiamat's choice that is within 240 feet of Tiamat and aware of her must succeed on a DC 26 Wisdom saving throw or become frightened for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to Tiamat's Frightful Presence for the next 24 hours."
+						"Each creature of Tiamat's choice that is within 240 feet of Tiamat and aware of her must succeed on a {@dc 26} Wisdom saving throw or become {@condition frightened} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to Tiamat's Frightful Presence for the next 24 hours."
 					]
 				}
 			],
@@ -862,59 +1481,125 @@
 				{
 					"name": "Bite",
 					"entries": [
-						"Melee Weapon Attack: +19 to hit, reach 20 ft., one target. Hit: 32 (4d10+10) slashing damage plus 14 (4d6) acid damage (black dragon head), lightning damage (blue dragon head), poison damage (green dragon head), fire damage (red dragon head), or cold damage (white dragon head)."
-					],
-					"attack": [
-						"Bite|19|4d10+10+4d6"
+						"{@atk mw} {@hit 19} to hit, reach 20 ft., one target. {@h}32 ({@damage 4d10 + 10}) slashing damage plus 14 ({@damage 4d6}) acid damage (black dragon head), lightning damage (blue dragon head), poison damage (green dragon head), fire damage (red dragon head), or cold damage (white dragon head)."
 					]
 				},
 				{
 					"name": "Black Dragon Head: Acid Breath (Costs 2 Actions)",
 					"entries": [
-						"Tiamat breathes acid in a 120-foot line that is 10 feet wide. Each creature in that line must make a DC 27 Dexterity saving throw, taking 67 (15d8) acid damage on a failed save, or half as much damage on a successful one."
-					],
-					"attack": [
-						"Acid Breath||15d8"
+						"Tiamat breathes acid in a 120-foot line that is 10 feet wide. Each creature in that line must make a {@dc 27} Dexterity saving throw, taking 67 ({@damage 15d8}) acid damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "Blue Dragon Head: Lightning Breath (Costs 2 Actions)",
 					"entries": [
-						"Tiamat breathes lightning in a 120-foot line that is 10 feet wide. Each creature in that line must make a DC 27 Dexterity saving throw, taking 88 (16d10) lightning damage on a failed save, or half as much damage on a successful one."
-					],
-					"attack": [
-						"Lightning Breath||16d10"
+						"Tiamat breathes lightning in a 120-foot line that is 10 feet wide. Each creature in that line must make a {@dc 27} Dexterity saving throw, taking 88 ({@damage 16d10}) lightning damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "Green Dragon Head: Poison Breath (Costs 2 Actions)",
 					"entries": [
-						"Tiamat breathes poisonous gas in a 90-foot cone. Each creature in that area must make a DC 27 Constitution saving throw, taking 77 (22d6) poison damage on a failed save, or half as much damage on a successful one."
-					],
-					"attack": [
-						"Poison Breath||22d6"
+						"Tiamat breathes poisonous gas in a 90-foot cone. Each creature in that area must make a {@dc 27} Constitution saving throw, taking 77 ({@damage 22d6}) poison damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "Red Dragon Head: Fire Breath (Costs 2 Actions)",
 					"entries": [
-						"Tiamat breathes fire in a 90-foot cone. Each creature in that area must make a DC 27 Dexterity saving throw, taking 91 (26d6) fire damage on a failed save, or half as much damage on a successful one."
-					],
-					"attack": [
-						"Fire Breath||26d6"
+						"Tiamat breathes fire in a 90-foot cone. Each creature in that area must make a {@dc 27} Dexterity saving throw, taking 91 ({@damage 26d6}) fire damage on a failed save, or half as much damage on a successful one."
 					]
 				},
 				{
 					"name": "White Dragon Head: Cold Breath (Costs 2 Actions)",
 					"entries": [
-						"Tiamat breathes an icy blast in a 90-foot cone. Each creature in that area must make a DC 27 Dexterity saving throw, taking 72 (16d8) cold damage on a failed save, or half as much damage on a successful one."
-					],
-					"attack": [
-						"Cold Breath||16d8"
+						"Tiamat breathes an icy blast in a 90-foot cone. Each creature in that area must make a {@dc 27} Dexterity saving throw, taking 72 ({@damage 16d8}) cold damage on a failed save, or half as much damage on a successful one."
 					]
 				}
 			],
-			"page": 92
+			"hasToken": true,
+			"traitTags": [
+				"Legendary Resistances",
+				"Magic Weapons",
+				"Regeneration"
+			],
+			"senseTags": [
+				"SD",
+				"U"
+			],
+			"actionTags": [
+				"Frightful Presence",
+				"Multiattack"
+			],
+			"languageTags": [
+				"C",
+				"DR",
+				"I"
+			],
+			"damageTags": [
+				"A",
+				"C",
+				"F",
+				"I",
+				"L",
+				"P",
+				"S"
+			],
+			"spellcastingTags": [
+				"I"
+			],
+			"miscTags": [
+				"AOE",
+				"MW",
+				"RCH"
+			],
+			"conditionInflict": [
+				"frightened"
+			],
+			"conditionInflictSpell": [
+				"blinded",
+				"deafened",
+				"stunned"
+			]
+		},
+		{
+			"name": "Varram",
+			"isNpc": true,
+			"source": "RoT",
+			"page": 9,
+			"_copy": {
+				"name": "Dragonsoul",
+				"source": "RoT",
+				"_trait": {
+					"name": "Mountain Dwarf",
+					"source": "PHB"
+				},
+				"_mod": {
+					"*": {
+						"mode": "replaceTxt",
+						"replace": "the dragonsoul",
+						"with": "Varram",
+						"flags": "i"
+					},
+					"trait": {
+						"mode": "prependArr",
+						"items": {
+							"name": "5etools Note",
+							"entries": [
+								"Varram is presented in {@adventure The Rise of Tiamat|RoT} as a male dwarf. The {@creature dragonsoul|RoT} statblock, modified with dwarf racial traits, has been provided here for ease of use."
+							]
+						}
+					}
+				}
+			},
+			"hasToken": true,
+			"senseTags": [
+				"D"
+			],
+			"languageTags": [
+				"C",
+				"D",
+				"DR",
+				"I"
+			]
 		}
 	]
 }

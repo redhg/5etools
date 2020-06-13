@@ -5,6 +5,9 @@ module.exports = {
 		"es6": true,
 		"node": true
 	},
+	"parserOptions": {
+		"ecmaVersion": 9
+	},
 	"rules": {
 		"accessor-pairs": "error",
 		"arrow-spacing": ["error", {"before": true, "after": true}],
@@ -158,6 +161,7 @@ module.exports = {
 		"valid-typeof": ["error", {"requireStringLiterals": true}],
 		"wrap-iife": ["error", "any", {"functionPrototypeMethods": true}],
 		"yield-star-spacing": ["error", "both"],
-		"yoda": ["error", "never"]
+		"yoda": ["error", "never"],
+		"require-atomic-updates": "off"
 	}
-}
+};

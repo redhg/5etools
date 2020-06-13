@@ -1,87 +1,100 @@
 "use strict";
 
-const JSON_URL = "data/rewards.json";
+class RewardsPage extends ListPage {
+	constructor () {
+		const pageFilter = new PageFilterRewards();
+		super({
+			dataSource: "data/rewards.json",
 
-let tableDefault;
-let rewardList;
+			pageFilter,
 
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad);
-};
+			listClass: "rewards",
 
-function onJsonLoad (data) {
-	tableDefault = $("#pagecontent").html();
-	rewardList = data.reward;
+			sublistClass: "subrewards",
 
-	const sourceFilter = getSourceFilter();
-	const typeFilter = new Filter({
-		header: "Type",
-		items: [
-			"Blessing",
-			"Boon",
-			"Charm",
-			"Demonic Boon"
-		]
-	});
-
-	const filterBox = initFilterBox(sourceFilter, typeFilter);
-
-	let tempString = "";
-	for (let i = 0; i < rewardList.length; i++) {
-		const reward = rewardList[i];
-
-		tempString += `
-			<li class='row' ${FLTR_ID}='${i}'>
-				<a id='${i}' href='#${UrlUtil.autoEncodeHash(reward)}' title='${reward.name}'>
-					<span class='name col-xs-10'>${reward.name}</span>
-					<span class='source col-xs-2 source${Parser.sourceJsonToAbv(reward.source)}' title='${Parser.sourceJsonToFull(reward.source)}'>${Parser.sourceJsonToAbv(reward.source)}</span>
-				</a>
-			</li>`;
-
-		// populate filters
-		sourceFilter.addIfAbsent(reward.source);
-	}
-	$("ul.rewards").append(tempString);
-
-	// sort filters
-	sourceFilter.items.sort(SortUtil.ascSort);
-
-	const list = ListUtil.search({
-		valueNames: ["name", "source"],
-		listClass: "rewards"
-	});
-
-	filterBox.render();
-
-	// filtering function
-	$(filterBox).on(
-		FilterBox.EVNT_VALCHANGE,
-		handleFilterChange
-	);
-
-	function handleFilterChange () {
-		const f = filterBox.getValues();
-		list.filter(function (item) {
-			const r = rewardList[$(item.elm).attr(FLTR_ID)];
-			return filterBox.toDisplay(
-				f,
-				r.source,
-				r.type
-			);
+			dataProps: ["reward"]
 		});
 	}
 
-	initHistory();
-	handleFilterChange();
-	RollerUtil.addListRollButton();
+	getListItem (reward, rwI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(reward, isExcluded);
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const source = Parser.sourceJsonToAbv(reward.source);
+		const hash = UrlUtil.autoEncodeHash(reward);
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="col-2 text-center pl-0">${reward.type}</span>
+			<span class="bold col-8">${reward.name}</span>
+			<span class="col-2 text-center ${Parser.sourceJsonToColor(reward.source)} pr-0" title="${Parser.sourceJsonToFull(reward.source)}" ${BrewUtil.sourceJsonToStyle(reward.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			rwI,
+			eleLi,
+			reward.name,
+			{
+				hash,
+				source,
+				type: reward.type
+			},
+			{
+				uniqueId: reward.uniqueId ? reward.uniqueId : rwI,
+				isExcluded
+			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._filterBox.getValues();
+		this._list.filter(item => this._pageFilter.toDisplay(f, this._dataList[item.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (reward, pinId) {
+		const hash = UrlUtil.autoEncodeHash(reward);
+
+		const $ele = $(`<li class="row">
+			<a href="#${hash}" class="lst--border">
+				<span class="name col-2 pl-0 text-center">${reward.type}</span>
+				<span class="name col-10 pr-0">${reward.name}</span>
+			</a>
+		</li>`)
+			.contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			reward.name,
+			{
+				hash,
+				type: reward.type
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		Renderer.get().setFirstSection(true);
+		const reward = this._dataList[id];
+
+		$("#pagecontent").empty().append(RenderRewards.$getRenderedReward(reward));
+
+		ListUtil.updateSelected();
+	}
+
+	async pDoLoadSubHash (sub) {
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
+	}
 }
 
-function loadhash (id) {
-	$("#pagecontent").html(tableDefault);
-	const reward = rewardList[id];
-
-	$("th.name").html(`<span class="stats-name">${reward.name}</span><span class="stats-source source${reward.source}" title="${Parser.sourceJsonToFull(reward.source)}">${Parser.sourceJsonToAbv(reward.source)}</span>`);
-
-	$("tr.text").remove();
-	$("tr#text").after(EntryRenderer.reward.getRenderedString(reward));
-}
+const rewardsPage = new RewardsPage();
+window.addEventListener("load", () => rewardsPage.pOnLoad());

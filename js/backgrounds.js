@@ -1,79 +1,135 @@
 "use strict";
-const JSON_URL = "data/backgrounds.json";
-const renderer = new EntryRenderer();
-let tabledefault = "";
-let bgList;
 
-window.onload = function load () {
-	DataUtil.loadJSON(JSON_URL, onJsonLoad);
-};
+class BackgroundPage extends ListPage {
+	constructor () {
+		const pageFilter = new PageFilterBackgrounds();
+		super({
+			dataSource: "data/backgrounds.json",
+			dataSourceFluff: "data/fluff-backgrounds.json",
 
-function onJsonLoad (data) {
-	bgList = data.background;
+			pageFilter,
 
-	tabledefault = $("#pagecontent").html();
+			listClass: "backgrounds",
 
-	const sourceFilter = getSourceFilter();
-	const filterBox = initFilterBox(sourceFilter);
+			sublistClass: "subbackgrounds",
 
-	const bgTable = $("ul.backgrounds");
-	let tempString = "";
-	for (let i = 0; i < bgList.length; i++) {
-		const bg = bgList[i];
-
-		// populate table
-		tempString +=
-			`<li ${FLTR_ID}="${i}">
-				<a id='${i}' href='#${UrlUtil.autoEncodeHash(bg)}' title='${bg.name}'>
-					<span class='name col-xs-10'>${bg.name.replace("Variant ", "")}</span>
-					<span class='source col-xs-2 source${bg.source}' title='${Parser.sourceJsonToFull(bg.source)}'>${Parser.sourceJsonToAbv(bg.source)}</span>
-				</a>
-			</li>`;
-
-		// populate filters
-		sourceFilter.addIfAbsent(bg.source);
-	}
-	bgTable.append(tempString);
-
-	const list = ListUtil.search({
-		valueNames: ['name', 'source'],
-		listClass: "backgrounds"
-	});
-
-	filterBox.render();
-
-	// sort filters
-	sourceFilter.items.sort(SortUtil.ascSort);
-
-	$(filterBox).on(
-		FilterBox.EVNT_VALCHANGE,
-		handleFilterChange
-	);
-
-	function handleFilterChange () {
-		const f = filterBox.getValues();
-		list.filter(function (item) {
-			const bg = bgList[$(item.elm).attr(FLTR_ID)];
-			return filterBox.toDisplay(f, bg.source);
+			dataProps: ["background"]
 		});
 	}
 
-	initHistory();
-	handleFilterChange();
-	RollerUtil.addListRollButton();
+	getListItem (bg, bgI, isExcluded) {
+		this._pageFilter.mutateAndAddToFilters(bg, isExcluded);
+
+		const eleLi = document.createElement("li");
+		eleLi.className = `row ${isExcluded ? "row--blacklisted" : ""}`;
+
+		const name = bg.name.replace("Variant ", "");
+		const hash = UrlUtil.autoEncodeHash(bg);
+		const source = Parser.sourceJsonToAbv(bg.source);
+
+		eleLi.innerHTML = `<a href="#${hash}" class="lst--border">
+			<span class="bold col-4 pl-0">${name}</span>
+			<span class="col-6">${bg._skillDisplay}</span>
+			<span class="col-2 text-center ${Parser.sourceJsonToColor(bg.source)}" title="${Parser.sourceJsonToFull(bg.source)} pr-0" ${BrewUtil.sourceJsonToStyle(bg.source)}>${source}</span>
+		</a>`;
+
+		const listItem = new ListItem(
+			bgI,
+			eleLi,
+			name,
+			{
+				hash,
+				source,
+				skills: bg._skillDisplay
+			},
+			{
+				uniqueId: bg.uniqueId || bgI,
+				isExcluded
+			}
+		);
+
+		eleLi.addEventListener("click", (evt) => this._list.doSelect(listItem, evt));
+		eleLi.addEventListener("contextmenu", (evt) => ListUtil.openContextMenu(evt, this._list, listItem));
+
+		return listItem;
+	}
+
+	handleFilterChange () {
+		const f = this._filterBox.getValues();
+		this._list.filter(item => this._pageFilter.toDisplay(f, this._dataList[item.ix]));
+		FilterBox.selectFirstVisible(this._dataList);
+	}
+
+	getSublistItem (bg, pinId) {
+		const name = bg.name.replace("Variant ", "");
+		const hash = UrlUtil.autoEncodeHash(bg);
+		const skills = Renderer.background.getSkillSummary(bg.skillProficiencies || [], true);
+
+		const $ele = $$`<li class="row">
+			<a href="#${hash}" class="lst--border">
+				<span class="bold col-4 pl-0">${name}</span>
+				<span class="col-8 pr-0">${skills}</span>
+			</a>
+		</li>`
+			.contextmenu(evt => ListUtil.openSubContextMenu(evt, listItem));
+
+		const listItem = new ListItem(
+			pinId,
+			$ele,
+			name,
+			{
+				hash,
+				source: Parser.sourceJsonToAbv(bg.source),
+				skills
+			}
+		);
+		return listItem;
+	}
+
+	doLoadHash (id) {
+		this._renderer.setFirstSection(true);
+		const $pgContent = $("#pagecontent").empty();
+		const bg = this._dataList[id];
+
+		const buildStatsTab = () => {
+			$pgContent.append(RenderBackgrounds.$getRenderedBackground(bg));
+		};
+
+		const buildFluffTab = (isImageTab) => {
+			return Renderer.utils.pBuildFluffTab({
+				isImageTab,
+				$content: $pgContent,
+				pFnGetFluff: Renderer.background.pGetFluff,
+				entity: bg
+			});
+		};
+
+		const traitTab = Renderer.utils.tabButton(
+			"Traits",
+			() => {},
+			buildStatsTab
+		);
+
+		const infoTab = Renderer.utils.tabButton(
+			"Info",
+			() => {},
+			buildFluffTab
+		);
+		const picTab = Renderer.utils.tabButton(
+			"Images",
+			() => {},
+			buildFluffTab.bind(null, true)
+		);
+		Renderer.utils.bindTabButtons(traitTab, infoTab, picTab);
+
+		ListUtil.updateSelected();
+	}
+
+	async pDoLoadSubHash (sub) {
+		sub = this._filterBox.setFromSubHashes(sub);
+		await ListUtil.pSetFromSubHashes(sub);
+	}
 }
 
-function loadhash (id) {
-	$("#pagecontent").html(tabledefault);
-	const curbg = bgList[id];
-	const name = curbg.name;
-	const source = curbg.source;
-	const sourceAbv = Parser.sourceJsonToAbv(source);
-	const sourceFull = Parser.sourceJsonToFull(source);
-	const renderStack = [];
-	const entryList = {type: "entries", entries: curbg.entries};
-	renderer.recursiveEntryRender(entryList, renderStack, 1);
-	$("th.name").html(`<span class="stats-name">${name}</span> <span title="${sourceFull}" class='stats-source source${sourceAbv}'>${sourceAbv}</span>`);
-	$("tr#traits").after(`<tr class='trait'><td colspan='6'>${renderStack.join("")}</td></tr>`);
-	$("#source").html(`<td colspan=6><b>Source: </b> <i>${sourceFull}</i>, page ${curbg.page}</td>`);
-}
+const backgroundsPage = new BackgroundPage();
+window.addEventListener("load", () => backgroundsPage.pOnLoad());
